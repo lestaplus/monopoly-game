@@ -36,35 +36,43 @@ function createTile(tileData, index) {
   content.innerText = tileData.name;
 
   if (tileData.price) {
-    const price = document.createElement('div');
-    price.className = 'tile-price';
-    price.innerText = `${tileData.price}₴`;
-    content.appendChild(price);
+    content.appendChild(createPrice(tileData.price));
   }
 
-  if (index >= 0 && index <= 10) {
-    tile.classList.add('line-top');
+  const sideClasses = {
+    top: { range: [0, 10], tileLine: 'line-top', textClass: '' },
+    right: { range: [11, 19], tileLine: 'line-right', textClass: 'text-right' },
+    bottom: { range: [20, 30], tileLine: 'line-bottom', textClass: '' },
+    left: { range: [31, 39], tileLine: 'line-left', textClass: 'text-left' },
+  };
+
+  for (const side in sideClasses) {
+    const { range, tileLine, textClass } = sideClasses[side];
+
+    if (index >= range[0] && index <= range[1]) {
+      tile.classList.add(tileLine);
+      if (textClass) {
+        content.classList.add(textClass);
+      }
+    }
   }
 
-  if (index >= 11 && index <= 19) {
-    tile.classList.add('line-right');
-    content.classList.add('text-right');
-  }
-
-  if (index >= 20 && index <= 30) {
-    tile.classList.add('line-bottom');
-  }
-
-  if (index >= 31 && index <= 39) {
-    tile.classList.add('line-left');
-    content.classList.add('text-left');
-  }
   tile.appendChild(content);
   tile.dataset.type = tileData.type;
   return tile;
 }
 
+function createPrice(price) {
+  const priceDiv = document.createElement('div');
+  priceDiv.className = 'tile-price';
+  priceDiv.innerText = `${price}₴`;
+  return priceDiv;
+}
+
 async function loadTiles() {
   const res = await fetch('src/data/tiles.json');
+  if (!res.ok) {
+    throw new Error(`Помилка завантаження клітинок: ${res.status}`);
+  }
   return await res.json();
 }
