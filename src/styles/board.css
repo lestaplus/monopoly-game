@@ -5,13 +5,14 @@
     margin: auto;
     background-color: #e6e5e5;
     border: 4px solid #353535;
+    box-sizing: border-box;
 }
 
 .top-row, .bottom-row {
     display: flex;
     position: absolute;
     width: 100%;
-    height: 60px;
+    height: 80px;
 }
 
 .top-row {
@@ -22,26 +23,25 @@
 .bottom-row {
     bottom: 0;
     left: 0;
-    flex-direction: row-reverse;
+    flex-direction: row;
 }
 
 .left-col, .right-col {
     display: flex;
     flex-direction: column;
     position: absolute;
-    width: 60px;
-    height: calc(100% - 120px);
+    width: 80px;
+    height: calc(100% - 160px);
 }
 
 .left-col {
     left: 0;
-    top: 60px;
-    flex-direction: column-reverse;
+    top: 80px;
 }
 
 .right-col {
     right: 0;
-    top: 60px;
+    top: 80px;
 }
 
 .tile {
@@ -49,8 +49,85 @@
     border: 1px solid #a5a3a3;
     background-color: #f8f7f7;
     display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
+    text-align: center;
+    padding: 2px;
+    box-sizing: border-box;
+    overflow: hidden;
+    position: relative;
+}
+
+.tile::before {
+    content: '';
+    position: absolute;
+}
+
+.tile.line-top::before,
+.tile.line-bottom::before{
+    content: '';
+    width: 100%;
+    height: 10px;
+    top: 0;
+    left: 0;
+}
+
+.tile.line-left::before {
+    content: '';
+    width: 10px;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+.tile.line-right::before {
+    content: '';
+    width: 10px;
+    height: 100%;
+    top: 0;
+    left: auto;
+    right: 0;
+}
+
+.tile.brown::before { background-color: #8b4513; }
+.tile.purple::before { background-color: #952def; }
+.tile.pink::before { background-color: #ff69b4; }
+.tile.orange::before { background-color: #ffa500; }
+.tile.red::before { background-color: #ff0000; }
+.tile.yellow::before { background-color: #ffff00; }
+.tile.green::before { background-color: #008000; }
+.tile.blue::before { background-color: #0000ff; }
+
+.tile[data-type="start"],
+.tile[data-type="jail"],
+.tile[data-type="casino"],
+.tile[data-type="gotojail"] {
+    width: 80px;
+    height: 80px;
+    flex: none;
+}
+
+.tile-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
     justify-content: center;
-    font-size: 0.8rem;
-    padding: 4px;
+    overflow: hidden;
+    padding-top: 8px;
+}
+
+.text-left {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+}
+
+.text-right {
+    writing-mode: vertical-rl;
+    transform: none;
+}
+
+.tile-price {
+    font-size: 0.7rem;
+    color: #353535;
 }
