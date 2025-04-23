@@ -1,5 +1,6 @@
-import { initBoard } from './board.js';
+import Board from './board.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-  initBoard();
+  const board = new Board();
+  board.init();
 });
