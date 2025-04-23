@@ -27,14 +27,26 @@ class Tile {
     }
 
     const sideClasses = {
-      top: { range: [0, 10], tileLine: 'line-top', textClass: '' },
+      top: {
+        range: [0, 10],
+        tileLine: 'line-top',
+        textClass: '',
+      },
       right: {
         range: [11, 19],
         tileLine: 'line-right',
         textClass: 'text-right',
       },
-      bottom: { range: [20, 30], tileLine: 'line-bottom', textClass: '' },
-      left: { range: [31, 39], tileLine: 'line-left', textClass: 'text-left' },
+      bottom: {
+        range: [20, 30],
+        tileLine: 'line-bottom',
+        textClass: '',
+      },
+      left: {
+        range: [31, 39],
+        tileLine: 'line-left',
+        textClass: 'text-left',
+      },
     };
 
     for (const side in sideClasses) {
@@ -73,23 +85,34 @@ class Board {
   }
 
   renderTiles() {
-    const topRow = document.getElementById('top-row');
-    const rightCol = document.getElementById('right-col');
-    const bottomRow = document.getElementById('bottom-row');
-    const leftCol = document.getElementById('left-col');
+    const sectors = [
+      { element: document.getElementById('top-row'), range: [0, 10], step: 1 },
+      {
+        element: document.getElementById('right-col'),
+        range: [11, 19],
+        step: 1,
+      },
+      {
+        element: document.getElementById('bottom-row'),
+        range: [30, 20],
+        step: -1,
+      },
+      {
+        element: document.getElementById('left-col'),
+        range: [39, 31],
+        step: -1,
+      },
+    ];
 
-    for (let i = 0; i < 11; i++) {
-      topRow.appendChild(this.tiles[i].render());
-    }
-    for (let i = 11; i < 20; i++) {
-      rightCol.appendChild(this.tiles[i].render());
-    }
-    for (let i = 30; i >= 20; i--) {
-      bottomRow.appendChild(this.tiles[i].render());
-    }
-    for (let i = 39; i >= 31; i--) {
-      leftCol.appendChild(this.tiles[i].render());
-    }
+    sectors.forEach(({ element, range, step }) => {
+      for (
+        let i = range[0];
+        step > 0 ? i <= range[1] : i >= range[1];
+        i += step
+      ) {
+        element.appendChild(this.tiles[i].render());
+      }
+    });
   }
 }
 
