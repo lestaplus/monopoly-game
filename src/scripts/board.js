@@ -86,7 +86,11 @@ class Board {
 
   renderTiles() {
     const sectors = [
-      { element: document.getElementById('top-row'), range: [0, 10], step: 1 },
+      {
+        element: document.getElementById('top-row'),
+        range: [0, 10],
+        step: 1,
+      },
       {
         element: document.getElementById('right-col'),
         range: [11, 19],
