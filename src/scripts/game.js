@@ -12,6 +12,8 @@ class Game {
       position: 0,
       element: this.createPlayerElement(name, index),
     }));
+
+    this.updatePlayerPanel();
   }
 
   createPlayerElement(name, index) {
@@ -23,4 +25,27 @@ class Game {
 
     return playerElement;
   }
+
+  updatePlayerPanel() {
+    const panel = document.getElementById('player-panel');
+    panel.innerHTML = '';
+    this.players.forEach((player) => {
+      panel.appendChild(player.element);
+    });
+  }
+
+  rollDice() {
+    const firstDice = Math.floor(Math.random() * 6) + 1;
+    const secondDice = Math.floor(Math.random() * 6) + 1;
+
+    alert(`Випало ${firstDice} + ${secondDice} = $${firstDice + secondDice}`);
+    return firstDice + secondDice;
+  }
+
+  movePlayer(player, steps) {
+    player.position = (player.position + steps) % this.board.tiles.length;
+    alert(`${player.name} переміщується на позицію ${player.position}`);
+  }
 }
+
+export default Game;
