@@ -11,6 +11,16 @@
     <link rel="stylesheet" href="src/styles/player-panel.css">
 </head>
 <body>
+    <div id="player-setup">
+        <label for="player-count">Кількість гравців:</label>
+        <select id="player-count">
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+        </select>
+        <div id="player-names"></div>
+        <button id="start-game">Почати гру</button>
+    </div>
     <div id="game-container">
         <div id="board">
             <div class="top-row" id="top-row"></div>
