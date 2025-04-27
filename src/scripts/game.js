@@ -11,8 +11,9 @@ import {
 } from './tileActions.js';
 
 class Game {
-  constructor(board) {
+  constructor(board, menu) {
     this.board = board;
+    this.menu = menu;
     this.players = [];
     this.currentPlayerIndex = 0;
   }
@@ -26,7 +27,9 @@ class Game {
     }));
 
     this.updatePlayerPanel();
-    this.startTurn();
+    this.board.updatePlayerPositions(this.players);
+    this.menu.setRollHandler(() => this.handleRollDice());
+    setTimeout(() => this.startTurn(), 0);
   }
 
   createPlayerElement(name, index) {
@@ -51,23 +54,20 @@ class Game {
     const firstDice = Math.floor(Math.random() * 6) + 1;
     const secondDice = Math.floor(Math.random() * 6) + 1;
 
-    alert(`Випало ${firstDice} + ${secondDice} = $${firstDice + secondDice}`);
+    alert(`Випало ${firstDice} + ${secondDice} = ${firstDice + secondDice}`);
     return firstDice + secondDice;
   }
 
   movePlayer(player, steps) {
     player.position = (player.position + steps) % this.board.tiles.length;
     alert(`${player.name} переміщується на позицію ${player.position}`);
+    this.board.updatePlayerPositions(this.players);
   }
 
   startTurn() {
     const player = this.players[this.currentPlayerIndex];
-    const steps = this.rollDice();
     alert(`Хід гравця: ${player.name}`);
-
-    this.movePlayer(player, steps);
-    this.handleTile(player);
-    this.nextTurn();
+    this.menu.enableRollButton();
   }
 
   handleTile(player) {
@@ -96,6 +96,17 @@ class Game {
     this.currentPlayerIndex =
       (this.currentPlayerIndex + 1) % this.players.length;
     setTimeout(() => this.startTurn(), 1000);
+  }
+
+  handleRollDice() {
+    const player = this.players[this.currentPlayerIndex];
+    const steps = this.rollDice();
+
+    this.movePlayer(player, steps);
+    this.handleTile(player);
+
+    this.menu.disableRollButton();
+    this.nextTurn();
   }
 }
 

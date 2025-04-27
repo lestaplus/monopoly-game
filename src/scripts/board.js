@@ -61,6 +61,8 @@ class Tile {
 
     tile.appendChild(content);
     tile.dataset.type = this.type;
+    tile.dataset.index = this.index;
+
     return tile;
   }
 }
@@ -115,6 +117,24 @@ class Board {
         i += step
       ) {
         element.appendChild(this.tiles[i].render());
+      }
+    });
+  }
+
+  updatePlayerPositions(players) {
+    players.forEach((player, index) => {
+      document
+        .querySelectorAll(`.player-token.player-${index}`)
+        .forEach((element) => element.remove());
+
+      const tileElement = document.querySelector(
+        `.tile[data-index="${player.position}"]`,
+      );
+      if (tileElement) {
+        const token = document.createElement('div');
+        token.className = `player-token player-${index}`;
+        token.innerText = index + 1;
+        tileElement.appendChild(token);
       }
     });
   }

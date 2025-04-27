@@ -131,3 +131,22 @@
     font-size: 0.7rem;
     color: #353535;
 }
+
+.player-token {
+    width: 16px;
+    height: 16px;
+    border-radius: 25%;
+    color: white;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    bottom: 2px;
+    left: 2px;
+}
+
+.player-token.player-0 { background-color: red; }
+.player-token.player-1 { background-color: blue; }
+.player-token.player-2 { background-color: green; }
+.player-token.player-3 { background-color: purple; }

@@ -1,45 +1,47 @@
 import Board from './board.js';
 import Game from './game.js';
+import Menu from './menu.js';
 
-document.addEventListener('DOMContentLoaded', async () => {
-  const board = new Board();
-  await board.init();
+const board = new Board();
+await board.init();
 
-  const playerCountSelect = document.getElementById('player-count');
-  const playerNamesElement = document.getElementById('player-names');
-  const startGameButton = document.getElementById('start-game');
+const menu = new Menu();
+menu.init();
 
-  const getPlayerCount = () => parseInt(playerCountSelect.value);
+const playerCountSelect = document.getElementById('player-count');
+const playerNamesElement = document.getElementById('player-names');
+const startGameButton = document.getElementById('start-game');
 
-  playerCountSelect.addEventListener('change', () => {
-    const count = getPlayerCount();
-    playerNamesElement.innerHTML = '';
+const getPlayerCount = () => parseInt(playerCountSelect.value);
 
-    for (let i = 1; i <= count; i++) {
-      const input = document.createElement('input');
-      input.type = 'text';
-      input.placeholder = `Гравець ${i}`;
-      input.id = `player-${i}`;
-      playerNamesElement.appendChild(input);
-    }
-  });
+playerCountSelect.addEventListener('change', () => {
+  const count = getPlayerCount();
+  playerNamesElement.innerHTML = '';
 
-  playerCountSelect.dispatchEvent(new Event('change'));
+  for (let i = 1; i <= count; i++) {
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.placeholder = `Гравець ${i}`;
+    input.id = `player-${i}`;
+    playerNamesElement.appendChild(input);
+  }
+});
 
-  startGameButton.addEventListener('click', () => {
-    const inputs = document.querySelectorAll('input');
-    const playerNames = Array.from(inputs)
-      .map((name) => name.value.trim())
-      .filter((name) => name !== '');
+playerCountSelect.dispatchEvent(new Event('change'));
 
-    const expectedCount = getPlayerCount();
-    if (playerNames.length < expectedCount) {
-      alert(`Введіть імена для всіх ${expectedCount} гравців`);
-      return;
-    }
+startGameButton.addEventListener('click', () => {
+  const inputs = document.querySelectorAll('input');
+  const playerNames = Array.from(inputs)
+    .map((name) => name.value.trim())
+    .filter((name) => name !== '');
 
-    const game = new Game(board);
-    game.init(playerNames);
-    document.getElementById('player-setup').style.display = 'none';
-  });
+  const expectedCount = getPlayerCount();
+  if (playerNames.length < expectedCount) {
+    alert(`Введіть імена для всіх ${expectedCount} гравців`);
+    return;
+  }
+
+  const game = new Game(board, menu);
+  game.init(playerNames);
+  document.getElementById('player-setup').style.display = 'none';
 });
