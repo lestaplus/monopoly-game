@@ -1,3 +1,15 @@
+import {
+  handleProperty,
+  handleRailroad,
+  handleUtility,
+  handleChance,
+  handleCommunity,
+  handleTax,
+  handleCasino,
+  handleJail,
+  handleGoToJail,
+} from './tileActions.js';
+
 class Game {
   constructor(board) {
     this.board = board;
@@ -14,6 +26,7 @@ class Game {
     }));
 
     this.updatePlayerPanel();
+    this.startTurn();
   }
 
   createPlayerElement(name, index) {
@@ -45,6 +58,44 @@ class Game {
   movePlayer(player, steps) {
     player.position = (player.position + steps) % this.board.tiles.length;
     alert(`${player.name} переміщується на позицію ${player.position}`);
+  }
+
+  startTurn() {
+    const player = this.players[this.currentPlayerIndex];
+    const steps = this.rollDice();
+    alert(`Хід гравця: ${player.name}`);
+
+    this.movePlayer(player, steps);
+    this.handleTile(player);
+    this.nextTurn();
+  }
+
+  handleTile(player) {
+    const tile = this.board.tiles[player.position];
+    alert(`${player.name} стоїть на клітинці ${tile.name}`);
+
+    const tileHandlers = {
+      tax: handleTax,
+      property: handleProperty,
+      railroad: handleRailroad,
+      utility: handleUtility,
+      chance: handleChance,
+      community: handleCommunity,
+      casino: handleCasino,
+      jail: handleJail,
+      gotojail: handleGoToJail,
+    };
+
+    const handler = tileHandlers[tile.type];
+    if (handler) {
+      handler(player, tile);
+    }
+  }
+
+  nextTurn() {
+    this.currentPlayerIndex =
+      (this.currentPlayerIndex + 1) % this.players.length;
+    setTimeout(() => this.startTurn(), 1000);
   }
 }
 

@@ -1,9 +1,9 @@
 [
   { "name": "Старт", "type": "start" },
   { "name": "Чернігів", "type": "property", "color": "brown", "price": 600 },
-  { "name": "Шанс", "type": "chance" },
+  { "name": "Громадська скарбниця", "type": "community" },
   { "name": "Суми", "type": "property", "color": "brown", "price": 600 },
-  { "name": "Податок", "type": "tax" },
+  { "name": "Прибутковий податок", "type": "tax", "amount": 2000 },
   { "name": "Північна залізниця", "type": "railroad", "direction": "north", "price": 2000 },
   { "name": "Краматорськ", "type": "property", "color": "purple", "price": 1000 },
   { "name": "Шанс", "type": "chance" },
@@ -17,7 +17,7 @@
   { "name": "Мукачево", "type": "property", "color": "pink", "price": 1600 },
   { "name": "Східна залізниця", "type": "railroad", "direction": "east", "price": 2000 },
   { "name": "Маріуполь", "type": "property", "color": "orange", "price": 1800 },
-  { "name": "Шанс", "type": "chance" },
+  { "name": "Громадська скарбниця", "type": "community" },
   { "name": "Запоріжжя", "type": "property", "color": "orange", "price": 1800 },
   { "name": "Івано-Франківськ", "type": "property", "color": "orange", "price": 2000 },
 
@@ -35,11 +35,11 @@
   { "name": "Арешт", "type": "gotojail" },
   { "name": "Ужгород", "type": "property", "color": "green", "price": 3000 },
   { "name": "Харків", "type": "property", "color": "green", "price": 3000 },
-  { "name": "Шанс", "type": "chance" },
+  { "name": "Громадська скарбниця", "type": "community" },
   { "name": "Одеса", "type": "property", "color": "green", "price": 3200 },
   { "name": "Західна залізниця", "type": "railroad", "direction": "west", "price": 2000 },
   { "name": "Шанс", "type": "chance" },
   { "name": "Львів", "type": "property", "color": "blue", "price": 3500 },
-  { "name": "Податок", "type": "tax" },
+  { "name": "Податок на розкіш", "type": "tax", "amount": 1000 },
   { "name": "Київ", "type": "property", "color": "blue", "price": 4000 }
 ]
