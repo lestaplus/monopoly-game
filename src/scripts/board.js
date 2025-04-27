@@ -2,6 +2,7 @@ class Tile {
   constructor(data, index) {
     this.name = data.name;
     this.price = data.price;
+    this.amount = data.amount;
     this.color = data.color;
     this.type = data.type;
     this.index = index;
