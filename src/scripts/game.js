@@ -9,6 +9,7 @@ import {
   handleJail,
   handleGoToJail,
 } from './tileActions.js';
+import Player from './player.js';
 
 class Game {
   constructor(board, menu) {
@@ -19,27 +20,12 @@ class Game {
   }
 
   init(playersData) {
-    this.players = playersData.map((name, index) => ({
-      name,
-      balance: 15000,
-      position: 0,
-      element: this.createPlayerElement(name, index),
-    }));
+    this.players = playersData.map((name, index) => new Player(name, index));
 
     this.updatePlayerPanel();
     this.board.updatePlayerPositions(this.players);
     this.menu.setRollHandler(() => this.handleRollDice());
     setTimeout(() => this.startTurn(), 0);
-  }
-
-  createPlayerElement(name, index) {
-    const playerElement = document.createElement('div');
-
-    playerElement.className = 'player';
-    playerElement.innerText = `Player: ${name}`;
-    playerElement.dataset.index = index;
-
-    return playerElement;
   }
 
   updatePlayerPanel() {
@@ -59,7 +45,7 @@ class Game {
   }
 
   movePlayer(player, steps) {
-    player.position = (player.position + steps) % this.board.tiles.length;
+    player.move(steps, this.board.tiles.length);
     alert(`${player.name} переміщується на позицію ${player.position}`);
     this.board.updatePlayerPositions(this.players);
   }

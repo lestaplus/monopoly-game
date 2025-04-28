@@ -125,7 +125,7 @@ class Board {
   updatePlayerPositions(players) {
     players.forEach((player, index) => {
       document
-        .querySelectorAll(`.player-token.player-${index}`)
+        .querySelectorAll(`.player-token.player-${index + 1}`)
         .forEach((element) => element.remove());
 
       const tileElement = document.querySelector(
@@ -133,7 +133,7 @@ class Board {
       );
       if (tileElement) {
         const token = document.createElement('div');
-        token.className = `player-token player-${index}`;
+        token.className = `player-token player-${index + 1}`;
         token.innerText = index + 1;
         tileElement.appendChild(token);
       }

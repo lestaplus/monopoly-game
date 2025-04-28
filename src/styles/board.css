@@ -146,7 +146,7 @@
     left: 2px;
 }
 
-.player-token.player-0 { background-color: red; }
-.player-token.player-1 { background-color: blue; }
-.player-token.player-2 { background-color: green; }
-.player-token.player-3 { background-color: purple; }
+.player-token.player-1 { background-color: red; }
+.player-token.player-2 { background-color: blue; }
+.player-token.player-3 { background-color: green; }
+.player-token.player-4 { background-color: purple; }
