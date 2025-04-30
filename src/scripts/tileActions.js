@@ -19,7 +19,7 @@ export function handleProperty(player, tile) {
     player.setBalance(-rent);
     tile.owner.setBalance(rent);
     alert(
-      `${player.name} сплачує ${rent}₴ оренди гравцю ${tile.owner.name}. Баланс: ${player.balance}₴`,
+      `${player.name} сплачує ${rent}₴ за оренду власності ${tile.owner.name}. Баланс: ${player.balance}₴`,
     );
   } else {
     alert(`${player.name} вже володіє ${tile.name}.`);
@@ -27,19 +27,98 @@ export function handleProperty(player, tile) {
 }
 
 export function handleRailroad(player, tile) {
-  alert(`Це залізниця: ${tile.name}.`);
+  if (!tile.owner) {
+    const wantsToBuy = confirm(
+      `${player.name}, хочеш купити ${tile.name} за ${tile.price}₴?`,
+    );
+
+    if (wantsToBuy) {
+      if (player.balance >= tile.price) {
+        player.setBalance(-tile.price);
+        player.addProperty(tile);
+        tile.owner = player;
+        alert(`${player.name} купив ${tile.name}. Баланс: ${player.balance}₴`);
+      } else {
+        alert(`${player.name} не має достатньо грошей.`);
+      }
+    }
+  } else if (tile.owner !== player) {
+    const ownerRailroads = tile.owner.properties.filter(
+      (p) => p.type === 'railroad',
+    ).length;
+    const rentMap = { 1: 250, 2: 500, 3: 1000, 4: 2000 };
+    const rent = rentMap[ownerRailroads] || 250;
+
+    player.setBalance(-rent);
+    tile.owner.setBalance(rent);
+    alert(
+      `${player.name} сплачує ${rent}₴ за оренду залізниці ${tile.owner.name}. Баланс: ${player.balance}₴`,
+    );
+  } else {
+    alert(`${player.name} вже володіє залізницею.`);
+  }
 }
 
 export function handleUtility(player, tile) {
-  alert(`Це комунальна власність: ${tile.name}.`);
+  if (!tile.owner) {
+    const wantsToBuy = confirm(
+      `${player.name}, хочеш купити ${tile.name} за ${tile.price}₴?`,
+    );
+
+    if (wantsToBuy) {
+      if (player.balance >= tile.price) {
+        player.setBalance(-tile.price);
+        player.addProperty(tile);
+        tile.owner = player;
+        alert(`${player.name} купив ${tile.name}. Баланс: ${player.balance}₴`);
+      } else {
+        alert(`${player.name} не має достатньо грошей.`);
+      }
+    }
+  } else if (tile.owner !== player) {
+    const ownerUtilities = tile.owner.properties.filter(
+      (p) => p.type === 'utility',
+    ).length;
+    const dice =
+      Math.floor(Math.random() * 6 + 1) + Math.floor(Math.random() * 6 + 1);
+    const multiplier = ownerUtilities === 2 ? 10 : 4;
+    const rent = dice * multiplier;
+
+    player.setBalance(-rent);
+    tile.owner.setBalance(rent);
+    alert(
+      `${player.name} сплачує ${rent}₴ (${multiplier}x) комунальні послуги ${tile.owner.name}. Баланс: ${player.balance}₴`,
+    );
+  } else {
+    alert(`${player.name} вже володіє комунальним підприємством.`);
+  }
 }
 
-export function handleChance(player, tile) {
-  alert(`Шанс!`);
+export function handleChance(player) {
+  const events = [
+    () => player.setBalance(100),
+    () => player.setBalance(-100),
+    () => player.setBalance(200),
+    () => player.setBalance(-200),
+    () => player.setBalance(500),
+    () => (player.position = 0),
+  ];
+  const action = events[Math.floor(Math.random() * events.length)];
+  action();
+  alert(`${player.name} потрапив на шанс. Баланс: ${player.balance}₴`);
 }
 
-export function handleCommunity(player, tile) {
-  alert(`Громадська скарбниця!`);
+export function handleCommunity(player) {
+  const events = [
+    () => player.setBalance(100),
+    () => player.setBalance(-100),
+    () => player.setBalance(200),
+    () => player.setBalance(-200),
+    () => player.setBalance(500),
+  ];
+  const action = events[Math.floor(Math.random() * events.length)];
+  action();
+  alert(`${player.name} витягнув картку спільноти. Баланс: ${player.balance}₴`);
 }
 
 export function handleTax(player, tile) {
@@ -50,8 +129,51 @@ export function handleTax(player, tile) {
   );
 }
 
-export function handleCasino(player, tile) {
-  alert(`Казино`);
+export function handleCasino(player) {
+  const wantsToPlay = confirm('Тобі випала можливість зіграти в казино.');
+
+  if (!wantsToPlay) {
+    alert(`${player.name} відмовляється від гри в казино.`);
+    return;
+  }
+
+  const bidAmount = prompt(`${player.name}, введіть ставку (макс. 5000₴):`);
+  const bid = parseInt(bidAmount);
+
+  if (isNaN(bid) || bid < 0 || bid > 5000) {
+    alert('Невірна ставка. Казино скасовано.');
+    return;
+  }
+
+  const outcomes = [
+    { multiplier: 0, chance: 3 },
+    { multiplier: 0.5, chance: 2 },
+    { multiplier: 1, chance: 3 },
+    { multiplier: 2, chance: 1.5 },
+    { multiplier: 3, chance: 0.5 },
+    { multiplier: 5, chance: 0.3 },
+    { multiplier: 10, chance: 0.1 },
+  ];
+
+  const totalChance = outcomes.reduce((sum, o) => sum + o.chance, 0);
+  const random = Math.random() * totalChance;
+  let acc = 0;
+  let result = outcomes[0];
+
+  for (const outcome of outcomes) {
+    acc += outcome.chance;
+    if (random <= acc) {
+      result = outcome;
+      break;
+    }
+  }
+
+  const prize = Math.floor(bid * result.multiplier);
+  player.setBalance(-bid + prize);
+
+  alert(
+    `${player.name} поставив ${bid}₴ і виграв ${prize}₴. Баланс: ${player.balance}₴`,
+  );
 }
 
 export function handleJail(player, tile) {
