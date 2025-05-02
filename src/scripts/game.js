@@ -45,7 +45,16 @@ class Game {
   }
 
   movePlayer(player, steps) {
+    const prevPosition = player.position;
     player.move(steps, this.board.tiles.length);
+
+    if (player.position < prevPosition) {
+      player.setBalance(2000);
+      alert(
+        `${player.name} проходить повз старт та отримує 2000₴. Баланс: ${player.balance}₴`,
+      );
+    }
+
     alert(`${player.name} переміщується на позицію ${player.position}`);
     this.board.updatePlayerPositions(this.players);
   }
