@@ -176,10 +176,11 @@ export function handleCasino(player) {
   );
 }
 
-export function handleJail(player, tile) {
-  alert(`Відвідування в'язниці`);
+export function handleJail(player) {
+  alert(`${player.name} просто відвідує в'язницю.`);
 }
 
-export function handleGoToJail(player, tile) {
-  alert(`Відправляйтесь до в'язниці!`);
+export function handleGoToJail(player) {
+  player.position = 10;
+  alert(`${player.name} відправляється до в'язниці!`);
 }
