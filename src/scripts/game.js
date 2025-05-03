@@ -83,7 +83,7 @@ class Game {
 
     const handler = tileHandlers[tile.type];
     if (handler) {
-      handler(player, tile);
+      handler(player, tile, this.players);
     }
   }
 

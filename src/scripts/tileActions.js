@@ -1,4 +1,6 @@
-export function handleProperty(player, tile) {
+import { startAuction } from './auction.js';
+
+export function handleProperty(player, tile, players) {
   if (!tile.owner) {
     const wantsToBuy = confirm(
       `${player.name}, хочеш купити ${tile.name} за ${tile.price}₴?`,
@@ -11,8 +13,12 @@ export function handleProperty(player, tile) {
         tile.owner = player;
         alert(`${player.name} купив ${tile.name}. Баланс: ${player.balance}₴`);
       } else {
-        alert(`${player.name} не має достатньо грошей.`);
+        alert(`${player.name} не має достатньо грошей. Починаємо аукціон.`);
+        startAuction(tile, players);
       }
+    } else {
+      alert(`${player.name} не купив ${tile.name}. Починаємо аукціон.`);
+      startAuction(tile, players);
     }
   } else if (tile.owner !== player) {
     const rent = Math.floor(tile.price * 0.1);
@@ -26,7 +32,7 @@ export function handleProperty(player, tile) {
   }
 }
 
-export function handleRailroad(player, tile) {
+export function handleRailroad(player, tile, players) {
   if (!tile.owner) {
     const wantsToBuy = confirm(
       `${player.name}, хочеш купити ${tile.name} за ${tile.price}₴?`,
@@ -39,8 +45,12 @@ export function handleRailroad(player, tile) {
         tile.owner = player;
         alert(`${player.name} купив ${tile.name}. Баланс: ${player.balance}₴`);
       } else {
-        alert(`${player.name} не має достатньо грошей.`);
+        alert(`${player.name} не має достатньо грошей. Починаємо аукціон.`);
+        startAuction(tile, players);
       }
+    } else {
+      alert(`${player.name} не купив ${tile.name}. Починаємо аукціон.`);
+      startAuction(tile, players);
     }
   } else if (tile.owner !== player) {
     const ownerRailroads = tile.owner.properties.filter(
@@ -59,7 +69,7 @@ export function handleRailroad(player, tile) {
   }
 }
 
-export function handleUtility(player, tile) {
+export function handleUtility(player, tile, players) {
   if (!tile.owner) {
     const wantsToBuy = confirm(
       `${player.name}, хочеш купити ${tile.name} за ${tile.price}₴?`,
@@ -72,8 +82,12 @@ export function handleUtility(player, tile) {
         tile.owner = player;
         alert(`${player.name} купив ${tile.name}. Баланс: ${player.balance}₴`);
       } else {
-        alert(`${player.name} не має достатньо грошей.`);
+        alert(`${player.name} не має достатньо грошей. Починаємо аукціон.`);
+        startAuction(tile, players);
       }
+    } else {
+      alert(`${player.name} не купив ${tile.name}. Починаємо аукціон.`);
+      startAuction(tile, players);
     }
   } else if (tile.owner !== player) {
     const ownerUtilities = tile.owner.properties.filter(
@@ -137,7 +151,10 @@ export function handleCasino(player) {
     return;
   }
 
-  const bidAmount = prompt(`${player.name}, введіть ставку (макс. 5000₴):`);
+  const bidAmount = prompt(
+    `${player.name}, введіть ставку (макс. 5000₴):`,
+    '0',
+  );
   const bid = parseInt(bidAmount);
 
   if (isNaN(bid) || bid < 0 || bid > 5000) {
