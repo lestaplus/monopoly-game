@@ -5,10 +5,11 @@ export function startAuction(tile, players) {
   let highestBidder = null;
   let activePlayers = players.slice();
 
-  while (activePlayers.length > 1) {
-    const nextRound = [];
+  while (activePlayers.length > 0) {
+    let i = 0;
 
-    for (const player of activePlayers) {
+    while (i < activePlayers.length) {
+      const player = activePlayers[i];
       const minBid = highestBid + 1;
       const maxBid = player.balance;
 
@@ -16,6 +17,7 @@ export function startAuction(tile, players) {
         alert(
           `${player.name} не має достатньо коштів для мінімальної ставки (${minBid}₴).`,
         );
+        activePlayers.splice(i, 1);
         continue;
       }
 
@@ -28,14 +30,28 @@ export function startAuction(tile, players) {
       if (!isNaN(bid) && bid >= minBid && bid <= maxBid) {
         highestBid = bid;
         highestBidder = player;
-        nextRound.push(player);
+        i++;
       } else {
         alert(`${player.name} пропускає ставку.`);
+        activePlayers.splice(i, 1);
+      }
+
+      if (activePlayers.length === 1) {
+        const lastPlayer = activePlayers[0];
+        const confirmBid = confirm(
+          `${lastPlayer.name}, ти єдиний учасник. Бажаєш купити ${tile.name} за ${highestBid}₴?`,
+        );
+
+        if (confirmBid) {
+          highestBidder = lastPlayer;
+        } else {
+          highestBidder = null;
+        }
+
+        activePlayers = [];
+        break;
       }
     }
-
-    if (nextRound.length === 0) break;
-    activePlayers = nextRound;
   }
 
   if (!highestBidder) {
