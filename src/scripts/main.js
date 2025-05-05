@@ -44,4 +44,5 @@ startGameButton.addEventListener('click', () => {
   const game = new Game(board, menu);
   game.init(playerNames);
   document.getElementById('player-setup').style.display = 'none';
+  document.getElementById('game-container').classList.remove('hidden');
 });
