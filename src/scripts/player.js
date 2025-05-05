@@ -1,20 +1,28 @@
 class Player {
   constructor(name, index) {
     this.name = name;
+    this.index = index;
     this.balance = 15000;
     this.position = 0;
     this.properties = [];
-    this.element = this.createPlayerElement(name, index);
+    this.createElement();
   }
 
-  createPlayerElement(name, index) {
-    const playerElement = document.createElement('div');
+  createElement() {
+    const container = document.createElement('div');
+    container.className = 'player-card';
+    container.dataset.index = this.index;
 
-    playerElement.className = 'player';
-    playerElement.innerText = `Player: ${name}`;
-    playerElement.dataset.index = index;
+    const name = document.createElement('div');
+    name.className = 'name';
+    name.textContent = this.name;
 
-    return playerElement;
+    const balance = document.createElement('div');
+    balance.className = 'balance';
+    balance.textContent = `${this.balance}₴`;
+
+    container.append(name, balance);
+    this.element = container;
   }
 
   move(steps, boardLength) {
@@ -23,10 +31,22 @@ class Player {
 
   setBalance(amount) {
     this.balance += amount;
+    this.updateDisplay();
   }
 
   addProperty(property) {
     this.properties.push(property);
+  }
+
+  updateDisplay() {
+    const balanceElement = this.element.querySelector('.balance');
+    if (balanceElement) {
+      balanceElement.textContent = `${this.balance}₴`;
+    }
+  }
+
+  setActive(isActive) {
+    this.element.classList.toggle('active', isActive);
   }
 }
 

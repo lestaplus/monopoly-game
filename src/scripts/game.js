@@ -31,7 +31,8 @@ class Game {
   updatePlayerPanel() {
     const panel = document.getElementById('player-panel');
     panel.innerHTML = '';
-    this.players.forEach((player) => {
+    this.players.forEach((player, index) => {
+      player.setActive(index === this.currentPlayerIndex);
       panel.appendChild(player.element);
     });
   }
@@ -57,10 +58,14 @@ class Game {
 
     alert(`${player.name} переміщується на позицію ${player.position}`);
     this.board.updatePlayerPositions(this.players);
+    player.updateDisplay();
   }
 
   startTurn() {
     const player = this.players[this.currentPlayerIndex];
+    this.players.forEach((player, index) =>
+      player.setActive(index === this.currentPlayerIndex),
+    );
     alert(`Хід гравця: ${player.name}`);
     this.menu.enableRollButton();
   }
@@ -87,21 +92,20 @@ class Game {
     }
   }
 
-  nextTurn() {
-    this.currentPlayerIndex =
-      (this.currentPlayerIndex + 1) % this.players.length;
-    setTimeout(() => this.startTurn(), 1000);
-  }
-
   handleRollDice() {
     const player = this.players[this.currentPlayerIndex];
     const steps = this.rollDice();
 
     this.movePlayer(player, steps);
     this.handleTile(player);
+    this.endTurn();
+  }
 
-    this.menu.disableRollButton();
-    this.nextTurn();
+  endTurn() {
+    this.currentPlayerIndex =
+      (this.currentPlayerIndex + 1) % this.players.length;
+    this.updatePlayerPanel();
+    this.startTurn();
   }
 }
 

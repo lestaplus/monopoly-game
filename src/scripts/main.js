@@ -30,7 +30,7 @@ playerCountSelect.addEventListener('change', () => {
 playerCountSelect.dispatchEvent(new Event('change'));
 
 startGameButton.addEventListener('click', () => {
-  const inputs = document.querySelectorAll('input');
+  const inputs = document.querySelectorAll('#player-names input');
   const playerNames = Array.from(inputs)
     .map((name) => name.value.trim())
     .filter((name) => name !== '');
