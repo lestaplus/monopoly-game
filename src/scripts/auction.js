@@ -1,7 +1,9 @@
 export function startAuction(tile, players) {
+  const MIN_BID = 10;
+
   alert(`${tile.name} виставлено на аукціон. Мінімальна ставка: 10₴`);
 
-  let highestBid = 9;
+  let highestBid = MIN_BID - 1;
   let highestBidder = null;
   let activePlayers = players.slice();
 
@@ -36,7 +38,7 @@ export function startAuction(tile, players) {
         activePlayers.splice(i, 1);
       }
 
-      if (activePlayers.length === 1) {
+      if (activePlayers.length === 1 && highestBid >= MIN_BID) {
         const lastPlayer = activePlayers[0];
         const confirmBid = confirm(
           `${lastPlayer.name}, ти єдиний учасник. Бажаєш купити ${tile.name} за ${highestBid}₴?`,
@@ -54,7 +56,7 @@ export function startAuction(tile, players) {
     }
   }
 
-  if (!highestBidder) {
+  if (!highestBidder || highestBid < MIN_BID) {
     alert(
       `Ніхто не зробив дійсну ставку, тому власність залишається без власника.`,
     );
