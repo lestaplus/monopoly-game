@@ -24,7 +24,7 @@ class Game {
 
     this.updatePlayerPanel();
     this.board.updatePlayerPositions(this.players);
-    this.menu.setRollHandler(() => this.handleRollDice());
+    this.menu.setButtonHandler('dice-btn', () => this.handleRollDice());
     setTimeout(() => this.startTurn(), 0);
   }
 
@@ -67,7 +67,7 @@ class Game {
       player.setActive(index === this.currentPlayerIndex),
     );
     alert(`Хід гравця: ${player.name}`);
-    this.menu.enableRollButton();
+    this.menu.enableButton('dice-btn');
   }
 
   handleTile(player) {
@@ -106,6 +106,14 @@ class Game {
       (this.currentPlayerIndex + 1) % this.players.length;
     this.updatePlayerPanel();
     this.startTurn();
+  }
+
+  getPlayers() {
+    return this.players;
+  }
+
+  getCurrentPlayerIndex() {
+    return this.currentPlayerIndex;
   }
 }
 

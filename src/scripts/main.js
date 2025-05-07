@@ -1,6 +1,7 @@
 import Board from './board.js';
 import Game from './game.js';
 import Menu from './menu.js';
+import Trade from './trade.js';
 
 const board = new Board();
 await board.init();
@@ -41,8 +42,32 @@ startGameButton.addEventListener('click', () => {
     return;
   }
 
-  const game = new Game(board, menu);
-  game.init(playerNames);
   document.getElementById('player-setup').style.display = 'none';
   document.getElementById('game-container').classList.remove('hidden');
+
+  const game = new Game(board, menu);
+  game.init(playerNames);
+
+  const trade = new Trade(game.getPlayers());
+
+  menu.setButtonHandler('trade-btn', () => {
+    const currentPlayerIndex = game.getCurrentPlayerIndex();
+    const currentPlayerName = game.getPlayers()[currentPlayerIndex].name;
+    const toPlayer = prompt(
+      `${currentPlayerName}, з ким хочеш торгувати? Введи індекс гравця:`,
+    );
+    const toPlayerIndex = parseInt(toPlayer);
+
+    if (
+      !isNaN(toPlayerIndex) &&
+      toPlayerIndex !== currentPlayerIndex &&
+      toPlayerIndex >= 0 &&
+      toPlayerIndex < game.getPlayers().length
+    ) {
+      trade.startTrade(currentPlayerIndex, toPlayerIndex);
+    } else {
+      alert(`Некоректний індекс гравця.`);
+    }
+  });
+  menu.enableButton('trade-btn');
 });

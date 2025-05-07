@@ -1,32 +1,38 @@
 class Menu {
   constructor() {
-    this.rollButton = null;
+    this.menuElement = document.getElementById('menu');
+    this.buttons = {};
   }
 
   init() {
-    const menu = document.getElementById('menu');
-    this.rollButton = document.createElement('button');
-    this.rollButton.id = 'roll-dice';
-    this.rollButton.innerText = 'Кинути кубики';
-    this.rollButton.disabled = true;
-    menu.appendChild(this.rollButton);
+    this.addButton('dice-btn', 'Кинути кубики');
+    this.addButton('trade-btn', 'Торгівля');
   }
 
-  setRollHandler(callback) {
-    if (this.rollButton) {
-      this.rollButton.onclick = callback;
+  addButton(id, text) {
+    const button = document.createElement('button');
+    button.id = id;
+    button.innerText = text;
+    button.disabled = true;
+    this.menuElement.appendChild(button);
+    this.buttons[id] = button;
+  }
+
+  setButtonHandler(id, callback) {
+    if (this.buttons[id]) {
+      this.buttons[id].onclick = callback;
     }
   }
 
-  enableRollButton() {
-    if (this.rollButton) {
-      this.rollButton.disabled = false;
+  enableButton(id) {
+    if (this.buttons[id]) {
+      this.buttons[id].disabled = false;
     }
   }
 
-  disableRollButton() {
-    if (this.rollButton) {
-      this.rollButton.disabled = true;
+  disableButton(id) {
+    if (this.buttons[id]) {
+      this.buttons[id].disabled = true;
     }
   }
 }

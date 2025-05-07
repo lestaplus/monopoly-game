@@ -25,7 +25,7 @@ export function handleProperty(player, tile, players) {
     player.setBalance(-rent);
     tile.owner.setBalance(rent);
     alert(
-      `${player.name} сплачує ${rent}₴ за оренду власності ${tile.owner.name}. Баланс: ${player.balance}₴`,
+      `${player.name} сплачує ${rent}₴ за оренду власності гравцю ${tile.owner.name}. Баланс: ${player.balance}₴`,
     );
   } else {
     alert(`${player.name} вже володіє ${tile.name}.`);
@@ -62,7 +62,7 @@ export function handleRailroad(player, tile, players) {
     player.setBalance(-rent);
     tile.owner.setBalance(rent);
     alert(
-      `${player.name} сплачує ${rent}₴ за оренду залізниці ${tile.owner.name}. Баланс: ${player.balance}₴`,
+      `${player.name} сплачує ${rent}₴ за оренду залізниці гравцю ${tile.owner.name}. Баланс: ${player.balance}₴`,
     );
   } else {
     alert(`${player.name} вже володіє залізницею.`);
@@ -95,13 +95,13 @@ export function handleUtility(player, tile, players) {
     ).length;
     const dice =
       Math.floor(Math.random() * 6 + 1) + Math.floor(Math.random() * 6 + 1);
-    const multiplier = ownerUtilities === 2 ? 10 : 4;
+    const multiplier = ownerUtilities === 2 ? 100 : 40;
     const rent = dice * multiplier;
 
     player.setBalance(-rent);
     tile.owner.setBalance(rent);
     alert(
-      `${player.name} сплачує ${rent}₴ (${multiplier}x) комунальні послуги ${tile.owner.name}. Баланс: ${player.balance}₴`,
+      `${player.name} сплачує ${rent}₴ (${multiplier}x) за комунальні послуги гравцю ${tile.owner.name}. Баланс: ${player.balance}₴`,
     );
   } else {
     alert(`${player.name} вже володіє комунальним підприємством.`);
