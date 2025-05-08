@@ -2,9 +2,15 @@ import Board from './board.js';
 import Game from './game.js';
 import Menu from './menu.js';
 import Trade from './trade.js';
+import CardManager from './cardManager.js';
+import { setCardManager } from './tileActions.js';
 
 const board = new Board();
 await board.init();
+
+const cardManager = new CardManager(board.tiles);
+await cardManager.loadCards();
+setCardManager(cardManager);
 
 const menu = new Menu();
 menu.init();

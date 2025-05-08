@@ -1,4 +1,5 @@
 import { startAuction } from './auction.js';
+import CardManager from './cardManager.js';
 
 export function handleProperty(player, tile, players) {
   if (!tile.owner) {
@@ -108,31 +109,22 @@ export function handleUtility(player, tile, players) {
   }
 }
 
+let cardManager;
+
+export function setCardManager(manager) {
+  cardManager = manager;
+}
+
 export function handleChance(player) {
-  const events = [
-    () => player.setBalance(100),
-    () => player.setBalance(-100),
-    () => player.setBalance(200),
-    () => player.setBalance(-200),
-    () => player.setBalance(500),
-    () => (player.position = 0),
-  ];
-  const action = events[Math.floor(Math.random() * events.length)];
-  action();
-  alert(`${player.name} потрапив на шанс. Баланс: ${player.balance}₴`);
+  const roll = cardManager.rollDice();
+  const card = cardManager.draw('chance', roll);
+  cardManager.apply(card, player);
 }
 
 export function handleCommunity(player) {
-  const events = [
-    () => player.setBalance(100),
-    () => player.setBalance(-100),
-    () => player.setBalance(200),
-    () => player.setBalance(-200),
-    () => player.setBalance(500),
-  ];
-  const action = events[Math.floor(Math.random() * events.length)];
-  action();
-  alert(`${player.name} витягнув картку спільноти. Баланс: ${player.balance}₴`);
+  const roll = cardManager.rollDice();
+  const card = cardManager.draw('community', roll);
+  cardManager.apply(card, player);
 }
 
 export function handleTax(player, tile) {

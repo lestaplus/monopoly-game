@@ -72,10 +72,15 @@ class Game {
       }
     }
 
+    if (player.shouldSkipTurn()) {
+      this.endTurn();
+      return;
+    }
+
     this.players.forEach((player, index) =>
       player.setActive(index === this.currentPlayerIndex),
     );
-    alert(`Хід гравця: ${player.name}`);
+    setTimeout(() => alert(`Хід гравця: ${player.name}`), 0);
     this.menu.enableButton('dice-btn');
   }
 

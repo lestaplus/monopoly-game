@@ -6,6 +6,8 @@ class Player {
     this.position = 0;
     this.properties = [];
     this.inJail = false;
+    this.hasJailKey = false;
+    this.skipTurn = false;
     this.createElement();
   }
 
@@ -48,6 +50,10 @@ class Player {
 
   setActive(isActive) {
     this.element.classList.toggle('active', isActive);
+  }
+
+  setPosition(index) {
+    this.position = index;
   }
 
   goToJail() {
@@ -102,6 +108,15 @@ class Player {
 
       return false;
     }
+  }
+
+  shouldSkipTurn() {
+    if (this.skipTurn) {
+      this.skipTurn = false;
+      alert(`${this.name} пропускає хід`);
+      return true;
+    }
+    return false;
   }
 }
 
