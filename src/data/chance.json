@@ -1,0 +1,79 @@
+[
+  {
+    "text": "Їдь в Київ",
+    "action": "move",
+    "toTile": "Київ"
+  },
+  {
+    "text": "Відправляйся до найближчої залізниці",
+    "action": "move",
+    "toNearest": "railroad"
+  },
+  {
+    "text": "Заплати штраф 600₴ за порушення ПДР",
+    "action": "pay",
+    "amount": 600
+  },
+  {
+    "text": "Повернись на Старт та отримай 2000₴",
+    "action": "move",
+    "toTile": "Старт"
+  },
+  {
+    "text": "Отримай подарунок на День народження - 500₴",
+    "action": "receive",
+    "amount": 500
+  },
+  {
+    "text": "Відправляйся до електростанції",
+    "action": "move",
+    "utilityType": "electric"
+  },
+  {
+    "text": "Ти запізнився на поїзд. Пропуск ходу",
+    "action": "skipTurn"
+  },
+  {
+    "text": "Їдь у Полтаву",
+    "action": "move",
+    "toTile": "Полтава"
+  },
+  {
+    "text": "Повернись на 3 клітинки назад",
+    "action": "move",
+    "relative": -3
+  },
+  {
+    "text": "Йди у в'язницю",
+    "action": "goToJail"
+  },
+  {
+    "text": "Заплати 500₴ за інтернет",
+    "action": "pay",
+    "amount": 500
+  },
+  {
+    "text": "Отримай кешбек від Монобанку 800₴",
+    "action": "receive",
+    "amount": 800
+  },
+  {
+    "text": "Йди на 5 клітинок вперед",
+    "action": "move",
+    "relative": 5
+  },
+  {
+    "text": "Отримай ключ для виходу з в'язниці",
+    "action": "getOutOfJailKey"
+  },
+  {
+    "text": "Відправляйся до Південної залізниці",
+    "action": "move",
+    "railroadDirection": "east"
+  },
+  {
+    "text": "Ти виграв у лотерею 1500₴",
+    "action": "receive",
+    "amount": 1500
+  }
+]
