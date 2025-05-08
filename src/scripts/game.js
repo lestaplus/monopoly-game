@@ -63,6 +63,15 @@ class Game {
 
   startTurn() {
     const player = this.players[this.currentPlayerIndex];
+
+    if (player.inJail) {
+      const freed = player.tryExitJail();
+      if (!freed) {
+        this.endTurn();
+        return;
+      }
+    }
+
     this.players.forEach((player, index) =>
       player.setActive(index === this.currentPlayerIndex),
     );

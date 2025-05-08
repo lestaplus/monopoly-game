@@ -5,6 +5,7 @@ class Player {
     this.balance = 15000;
     this.position = 0;
     this.properties = [];
+    this.inJail = false;
     this.createElement();
   }
 
@@ -47,6 +48,60 @@ class Player {
 
   setActive(isActive) {
     this.element.classList.toggle('active', isActive);
+  }
+
+  goToJail() {
+    this.position = 10;
+    this.inJail = true;
+  }
+
+  tryExitJail() {
+    if (this.hasJailKey) {
+      alert(`${this.name} використав ключ для виходу з в'язниці.`);
+      this.hasJailKey = false;
+      this.inJail = false;
+      this.jailTurns = 0;
+      return true;
+    }
+
+    const choice = prompt(
+      `${this.name}, ви у в'язниці. Спробувати дубль (1) чи сплатити штраф 500₴ (2)`,
+      '1',
+    );
+
+    if (choice === '2') {
+      alert(`${this.name} сплатив штраф 500₴ і виходить з в'язниці`);
+      this.setBalance(-500);
+      this.inJail = false;
+      this.jailTurns = 0;
+      return true;
+    }
+
+    const firstDice = Math.floor(Math.random() * 6) + 1;
+    const secondDice = Math.floor(Math.random() * 6) + 1;
+    alert(
+      `${this.name} кидає кубики для виходу з в'язниці: ${firstDice} + ${secondDice}`,
+    );
+
+    if (firstDice === secondDice) {
+      alert(`${this.name} вибив дубль і виходить з в'язниці`);
+      this.inJail = false;
+      this.jailTurns = 0;
+      return true;
+    } else {
+      this.jailTurns = (this.jailTurns || 0) + 1;
+      alert(`${this.name} не вибив дубль. Спроба ${this.jailTurns}/3`);
+
+      if (this.jailTurns >= 3) {
+        alert(`${this.name} не вибив дубль за 3 спроби. Сплачує 500₴`);
+        this.setBalance(-500);
+        this.inJail = false;
+        this.jailTurns = 0;
+        return true;
+      }
+
+      return false;
+    }
   }
 }
 

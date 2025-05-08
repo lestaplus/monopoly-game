@@ -198,6 +198,6 @@ export function handleJail(player) {
 }
 
 export function handleGoToJail(player) {
-  player.position = 10;
+  player.goToJail();
   alert(`${player.name} відправляється до в'язниці!`);
 }
