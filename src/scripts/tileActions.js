@@ -1,5 +1,4 @@
 import { startAuction } from './auction.js';
-import CardManager from './cardManager.js';
 
 export function handleProperty(player, tile, players) {
   if (!tile.owner) {
@@ -119,12 +118,14 @@ export function handleChance(player) {
   const roll = cardManager.rollDice();
   const card = cardManager.draw('chance', roll);
   cardManager.apply(card, player);
+  gameInstance.board.updatePlayerPositions(gameInstance.players);
 }
 
 export function handleCommunity(player) {
   const roll = cardManager.rollDice();
   const card = cardManager.draw('community', roll);
   cardManager.apply(card, player);
+  gameInstance.board.updatePlayerPositions(gameInstance.players);
 }
 
 export function handleTax(player, tile) {
@@ -192,4 +193,10 @@ export function handleJail(player) {
 export function handleGoToJail(player) {
   player.goToJail();
   alert(`${player.name} відправляється до в'язниці!`);
+}
+
+let gameInstance;
+
+export function setGameInstance(game) {
+  gameInstance = game;
 }
