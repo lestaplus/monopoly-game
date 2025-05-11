@@ -30,10 +30,14 @@ class CardManager {
     return deck[index];
   }
 
-  apply(card, player) {
+  apply(card, player, context) {
     alert(card.text);
     const action = this.cardHandlers[card.action];
     if (action) action(card, player, this.tiles);
+
+    if (context?.board) {
+      context.board.updatePlayerPositions(context.players);
+    }
   }
 
   cardHandlers = {

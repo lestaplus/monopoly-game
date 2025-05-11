@@ -2,7 +2,7 @@ class Player {
   constructor(name, index) {
     this.name = name;
     this.index = index;
-    this.balance = 15000;
+    this.balance = 1500;
     this.position = 0;
     this.properties = [];
     this.inJail = false;
@@ -71,13 +71,13 @@ class Player {
     }
 
     const choice = prompt(
-      `${this.name}, ви у в'язниці. Спробувати дубль (1) чи сплатити штраф 500₴ (2)`,
+      `${this.name}, ви у в'язниці. Спробувати дубль (1) чи сплатити штраф 50₴ (2)`,
       '1',
     );
 
     if (choice === '2') {
-      alert(`${this.name} сплатив штраф 500₴ і виходить з в'язниці`);
-      this.setBalance(-500);
+      alert(`${this.name} сплатив штраф 50₴ і виходить з в'язниці`);
+      this.setBalance(-50);
       this.inJail = false;
       this.jailTurns = 0;
       return true;
@@ -99,8 +99,8 @@ class Player {
       alert(`${this.name} не вибив дубль. Спроба ${this.jailTurns}/3`);
 
       if (this.jailTurns >= 3) {
-        alert(`${this.name} не вибив дубль за 3 спроби. Сплачує 500₴`);
-        this.setBalance(-500);
+        alert(`${this.name} не вибив дубль за 3 спроби. Сплачує 50₴`);
+        this.setBalance(-50);
         this.inJail = false;
         this.jailTurns = 0;
         return true;

@@ -3,14 +3,12 @@ import Game from './game.js';
 import Menu from './menu.js';
 import Trade from './trade.js';
 import CardManager from './cardManager.js';
-import { setCardManager, setGameInstance } from './tileActions.js';
 
 const board = new Board();
 await board.init();
 
 const cardManager = new CardManager(board.tiles);
 await cardManager.loadCards();
-setCardManager(cardManager);
 
 const menu = new Menu();
 menu.init();
@@ -51,8 +49,7 @@ startGameButton.addEventListener('click', () => {
   document.getElementById('player-setup').style.display = 'none';
   document.getElementById('game-container').classList.remove('hidden');
 
-  const game = new Game(board, menu);
-  setGameInstance(game);
+  const game = new Game(board, menu, cardManager);
   game.init(playerNames);
 
   const trade = new Trade(game.getPlayers());

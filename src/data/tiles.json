@@ -1,45 +1,291 @@
 [
-  { "name": "Старт", "type": "start" },
-  { "name": "Чернігів", "type": "property", "color": "brown", "price": 600 },
-  { "name": "Громадська скарбниця", "type": "community" },
-  { "name": "Суми", "type": "property", "color": "brown", "price": 600 },
-  { "name": "Прибутковий податок", "type": "tax", "amount": 2000 },
-  { "name": "Північна залізниця", "type": "railroad", "railroadDirection": "north", "price": 2000 },
-  { "name": "Краматорськ", "type": "property", "color": "purple", "price": 1000 },
-  { "name": "Шанс", "type": "chance" },
-  { "name": "Житомир", "type": "property", "color": "purple", "price": 1000 },
-  { "name": "Рівне", "type": "property", "color": "purple", "price": 1200 },
-  { "name": "В'язниця", "type": "jail" },
+  {
+    "name": "Старт",
+    "type": "start"
+  },
+  {
+    "name": "Чернігів",
+    "type": "property",
+    "color": "brown",
+    "price": 60,
+    "rentLevels": [1, 5, 15, 45, 80, 125],
+    "buildingCost": 50
+  },
+  {
+    "name": "Громадська скарбниця",
+    "type": "community"
+  },
+  {
+    "name": "Суми",
+    "type": "property",
+    "color": "brown",
+    "price": 60,
+    "rentLevels": [1, 5, 15, 45, 80, 125],
+    "buildingCost": 50
+  },
+  {
+    "name": "Прибутковий податок",
+    "type": "tax",
+    "amount": 200
+  },
+  {
+    "name": "Північна залізниця",
+    "type": "railroad",
+    "railroadDirection": "north",
+    "price": 200,
+    "rentMap": {
+      "1": 25,
+      "2": 50,
+      "3": 100,
+      "4": 200
+    }
+  },
+  {
+    "name": "Житомир",
+    "type": "property",
+    "color": "purple",
+    "price": 100,
+    "rentLevels": [1, 5, 15, 45, 67, 92],
+    "buildingCost": 50
+  },
+  {
+    "name": "Шанс",
+    "type": "chance"
+  },
+  {
+    "name": "Рівне",
+    "type": "property",
+    "color": "purple",
+    "price": 100,
+    "rentLevels": [1, 5, 15, 45, 67, 92],
+    "buildingCost": 50
+  },
+  {
+    "name": "Луцьк",
+    "type": "property",
+    "color": "purple",
+    "price": 120,
+    "rentLevels": [1, 5, 15, 45, 67, 92],
+    "buildingCost": 50
+  },
 
-  { "name": "Полтава", "type": "property", "color": "pink", "price": 1400 },
-  { "name": "Електростанція", "type": "utility", "utilityType": "electric", "price": 1500 },
-  { "name": "Сєвєродонецьк", "type": "property", "color": "pink", "price": 1400 },
-  { "name": "Мукачево", "type": "property", "color": "pink", "price": 1600 },
-  { "name": "Східна залізниця", "type": "railroad", "railroadDirection": "east", "price": 2000 },
-  { "name": "Маріуполь", "type": "property", "color": "orange", "price": 1800 },
-  { "name": "Громадська скарбниця", "type": "community" },
-  { "name": "Запоріжжя", "type": "property", "color": "orange", "price": 1800 },
-  { "name": "Івано-Франківськ", "type": "property", "color": "orange", "price": 2000 },
+  {
+    "name": "В'язниця",
+    "type": "jail"
+  },
+  {
+    "name": "Тернопіль",
+    "type": "property",
+    "color": "pink",
+    "price": 140,
+    "rentLevels": [1, 5, 15, 44, 61, 75],
+    "buildingCost": 100
+  },
+  {
+    "name": "Електростанція",
+    "type": "utility",
+    "utilityType": "electric",
+    "price": 150
+  },
+  {
+    "name": "Вінниця",
+    "type": "property",
+    "color": "pink",
+    "price": 140,
+    "rentLevels": [1, 5, 15, 44, 61, 75],
+    "buildingCost": 100
+  },
+  {
+    "name": "Полтава",
+    "type": "property",
+    "color": "pink",
+    "price": 160,
+    "rentLevels": [1, 5, 15, 44, 61, 75],
+    "buildingCost": 100
+  },
+  {
+    "name": "Східна залізниця",
+    "type": "railroad",
+    "railroadDirection": "east",
+    "price": 200,
+    "rentMap": {
+      "1": 25,
+      "2": 50,
+      "3": 100,
+      "4": 200
+    }
+  },
+  {
+    "name": "Миколаїв",
+    "type": "property",
+    "color": "orange",
+    "price": 180,
+    "rentLevels": [1, 5, 14, 39, 52, 66],
+    "buildingCost": 100
+  },
+  {
+    "name": "Громадська скарбниця",
+    "type": "community"
+  },
+  {
+    "name": "Херсон",
+    "type": "property",
+    "color": "orange",
+    "price": 180,
+    "rentLevels": [1, 5, 14, 39, 52, 66],
+    "buildingCost": 100
+  },
+  {
+    "name": "Івано-Франківськ",
+    "type": "property",
+    "color": "orange",
+    "price": 200,
+    "rentLevels": [1, 5, 14, 39, 52, 66],
+    "buildingCost": 100
+  },
 
-  { "name": "Казино", "type": "casino" },
-  { "name": "Херсон", "type": "property", "color": "red", "price": 2200 },
-  { "name": "Шанс", "type": "chance" },
-  { "name": "Миколаїв", "type": "property", "color": "red", "price": 2200 },
-  { "name": "Тернопіль", "type": "property", "color": "red", "price": 2400 },
-  { "name": "Південна залізниця", "type": "railroad", "railroadDirection": "south", "price": 2000 },
-  { "name": "Сімферополь", "type": "property", "color": "yellow", "price": 2600 },
-  { "name": "Севастополь", "type": "property", "color": "yellow", "price": 2600 },
-  { "name": "Водоканал", "type": "utility", "utilityType": "water", "price": 1500 },
-  { "name": "Керч", "type": "property", "color": "yellow", "price": 2800 },
+  {
+    "name": "Казино",
+    "type": "casino"
+  },
+  {
+    "name": "Маріуполь",
+    "type": "property",
+    "color": "red",
+    "price": 220,
+    "rentLevels": [1, 5, 14, 38, 48, 57],
+    "buildingCost": 150
+  },
+  {
+    "name": "Шанс",
+    "type": "chance"
+  },
+  {
+    "name": "Запоріжжя",
+    "type": "property",
+    "color": "red",
+    "price": 220,
+    "rentLevels": [1, 5, 14, 38, 48, 57],
+    "buildingCost": 150
+  },
+  {
+    "name": "Кривий Ріг",
+    "type": "property",
+    "color": "red",
+    "price": 240,
+    "rentLevels": [1, 5, 14, 38, 48, 57],
+    "buildingCost": 150
+  },
+  {
+    "name": "Південна залізниця",
+    "type": "railroad",
+    "railroadDirection": "south",
+    "price": 200,
+    "rentMap": {
+      "1": 25,
+      "2": 50,
+      "3": 100,
+      "4": 200
+    }
+  },
+  {
+    "name": "Сімферополь",
+    "type": "property",
+    "color": "yellow",
+    "price": 260,
+    "rentLevels": [1, 5, 15, 36, 44, 52],
+    "buildingCost": 150
+  },
+  {
+    "name": "Севастополь",
+    "type": "property",
+    "color": "yellow",
+    "price": 260,
+    "rentLevels": [1, 5, 15, 36, 44, 52],
+    "buildingCost": 150
+  },
+  {
+    "name": "Водоканал",
+    "type": "utility",
+    "utilityType": "water",
+    "price": 150
+  },
+  {
+    "name": "Ужгород",
+    "type": "property",
+    "color": "yellow",
+    "price": 280,
+    "rentLevels": [1, 5, 15, 36, 44, 52],
+    "buildingCost": 150
+  },
 
-  { "name": "Арешт", "type": "gotojail" },
-  { "name": "Ужгород", "type": "property", "color": "green", "price": 3000 },
-  { "name": "Харків", "type": "property", "color": "green", "price": 3000 },
-  { "name": "Громадська скарбниця", "type": "community" },
-  { "name": "Одеса", "type": "property", "color": "green", "price": 3200 },
-  { "name": "Західна залізниця", "type": "railroad", "railroadDirection": "west", "price": 2000 },
-  { "name": "Шанс", "type": "chance" },
-  { "name": "Львів", "type": "property", "color": "blue", "price": 3500 },
-  { "name": "Податок на розкіш", "type": "tax", "amount": 1000 },
-  { "name": "Київ", "type": "property", "color": "blue", "price": 4000 }
+  {
+    "name": "Арешт",
+    "type": "gotojail"
+  },
+  {
+    "name": "Одеса",
+    "type": "property",
+    "color": "green",
+    "price": 300,
+    "rentLevels": [1, 5, 15, 35, 42, 49],
+    "buildingCost": 200
+  },
+  {
+    "name": "Харків",
+    "type": "property",
+    "color": "green",
+    "price": 300,
+    "rentLevels": [1, 5, 15, 35, 42, 49],
+    "buildingCost": 200
+  },
+  {
+    "name": "Громадська скарбниця",
+    "type": "community"
+  },
+  {
+    "name": "Львів",
+    "type": "property",
+    "color": "green",
+    "price": 320,
+    "rentLevels": [1, 5, 15, 35, 42, 49],
+    "buildingCost": 200
+  },
+  {
+    "name": "Західна залізниця",
+    "type": "railroad",
+    "railroadDirection": "west",
+    "price": 200,
+    "rentMap": {
+      "1": 25,
+      "2": 50,
+      "3": 100,
+      "4": 200
+    }
+  },
+  {
+    "name": "Шанс",
+    "type": "chance"
+  },
+  {
+    "name": "Дніпро",
+    "type": "property",
+    "color": "blue",
+    "price": 350,
+    "rentLevels": [1, 4, 12, 30, 36, 41],
+    "buildingCost": 200
+  },
+  {
+    "name": "Податок на розкіш",
+    "type": "tax",
+    "amount": 100
+  },
+  {
+    "name": "Київ",
+    "type": "property",
+    "color": "blue",
+    "price": 400,
+    "rentLevels": [1, 4, 12, 30, 36, 41],
+    "buildingCost": 200
+  }
 ]
