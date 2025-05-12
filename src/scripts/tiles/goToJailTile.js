@@ -5,9 +5,11 @@ class GoToJailTile extends BaseTile {
     super(data);
   }
 
-  activate(player) {
-    player.goToJail();
+  activate(player, players, context) {
     alert(`${player.name} відправляється до в'язниці!`);
+    player.goToJail();
+
+    context.board.updatePlayerPositions(players);
   }
 }
 

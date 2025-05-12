@@ -35,9 +35,7 @@ class CardManager {
     const action = this.cardHandlers[card.action];
     if (action) action(card, player, this.tiles);
 
-    if (context?.board) {
-      context.board.updatePlayerPositions(context.players);
-    }
+    context.board.updatePlayerPositions(context.players);
   }
 
   cardHandlers = {

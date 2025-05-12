@@ -5,8 +5,10 @@ class JailTile extends BaseTile {
     super(data);
   }
 
-  activate(player) {
-    alert(`${player.name} просто відвідує в'язницю.`);
+  activate(player, players, context) {
+    if (!player.inJail) {
+      alert(`${player.name} просто відвідує в'язницю.`);
+    }
   }
 }
 

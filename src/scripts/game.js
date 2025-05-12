@@ -39,7 +39,7 @@ class Game {
     const prevPosition = player.position;
     player.move(steps, this.board.tiles.length);
 
-    if (player.position < prevPosition) {
+    if (player.position > 0 && player.position < prevPosition) {
       player.setBalance(200);
       alert(
         `${player.name} проходить повз старт та отримує 200₴. Баланс: ${player.balance}₴`,
@@ -74,15 +74,27 @@ class Game {
     this.menu.enableButton('dice-btn');
   }
 
-  handleTile(player) {
+  handleTile(player, context = {}) {
     const tile = this.board.tiles[player.position];
+    const initialPosition = player.position;
     alert(`${player.name} стоїть на клітинці ${tile.name}`);
 
-    tile.activate(player, this.players, {
+    const localContext = {
+      ...context,
       cardManager: this.cardManager,
       board: this.board,
       players: this.players,
-    });
+      game: this,
+    };
+
+    tile.activate(player, this.players, localContext);
+
+    const moved = player.position !== initialPosition;
+    const newTile = this.board.tiles[player.position];
+
+    if (moved && newTile !== tile) {
+      this.handleTile(player, context);
+    }
   }
 
   handleRollDice() {
