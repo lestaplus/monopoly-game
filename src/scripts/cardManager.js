@@ -42,7 +42,14 @@ class CardManager {
     pay: (card, player) => player.setBalance(-card.amount),
     receive: (card, player) => player.setBalance(card.amount),
     goToJail: (_, player) => player.goToJail(),
-    getOutOfJailKey: (_, player) => (player.hasJailKey = true),
+    getOutOfJailKey: (_, player) => {
+      if (player.hasJailKey) {
+        alert(`${player.name} вже має ключ від в'язниці.`);
+      } else {
+        player.hasJailKey = true;
+        alert(`${player.name} отримує ключ від в'язниці.`);
+      }
+    },
     skipTurn: (_, player) => (player.skipTurn = true),
     move: (card, player, tiles) => {
       if ('position' in card) {

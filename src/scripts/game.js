@@ -31,8 +31,10 @@ class Game {
     const firstDice = Math.floor(Math.random() * 6) + 1;
     const secondDice = Math.floor(Math.random() * 6) + 1;
 
-    alert(`Випало ${firstDice} + ${secondDice} = ${firstDice + secondDice}`);
-    return firstDice + secondDice;
+    const total = firstDice + secondDice;
+    alert(`Випало ${firstDice} + ${secondDice} = ${total}`);
+
+    return { firstDice, secondDice, total };
   }
 
   movePlayer(player, steps) {
@@ -99,7 +101,28 @@ class Game {
 
   handleRollDice() {
     const player = this.players[this.currentPlayerIndex];
-    const steps = this.rollDice();
+    const roll = this.rollDice();
+    const { firstDice, secondDice, total: steps } = roll;
+
+    if (firstDice === secondDice) {
+      player.incrementDoubleRolls();
+
+      if (player.getDoubleRollsCount() >= 3) {
+        alert(`${player.name} викинув 3 дублі поспіль і йде до в'язниці!`);
+        player.goToJail();
+        this.board.updatePlayerPositions(this.players);
+        this.endTurn();
+        return;
+      } else {
+        alert(`${player.name} викинув дубль і ходить ще раз.`);
+        this.movePlayer(player, steps);
+        this.handleTile(player);
+        this.startTurn();
+        return;
+      }
+    } else {
+      player.resetDoubleRolls();
+    }
 
     this.movePlayer(player, steps);
     this.handleTile(player);
@@ -109,6 +132,7 @@ class Game {
   endTurn() {
     this.currentPlayerIndex =
       (this.currentPlayerIndex + 1) % this.players.length;
+    this.players[this.currentPlayerIndex].rollDoubleCount = 0;
     this.updatePlayerPanel();
     this.startTurn();
   }

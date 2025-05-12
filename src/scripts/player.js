@@ -8,6 +8,7 @@ class Player {
     this.inJail = false;
     this.hasJailKey = false;
     this.skipTurn = false;
+    this.doubleRollsCount = 0;
     this.createElement();
   }
 
@@ -117,6 +118,18 @@ class Player {
       return true;
     }
     return false;
+  }
+
+  incrementDoubleRolls() {
+    this.doubleRollsCount++;
+  }
+
+  resetDoubleRolls() {
+    this.doubleRollsCount = 0;
+  }
+
+  getDoubleRollsCount() {
+    return this.doubleRollsCount;
   }
 }
 
