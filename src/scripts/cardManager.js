@@ -64,18 +64,6 @@ class CardManager {
           }
           offset++;
         }
-      } else if ('railroadDirection' in card) {
-        const tile = tiles.find(
-          (t) =>
-            t.type === 'railroad' &&
-            t.railroadDirection === card.railroadDirection,
-        );
-        if (tile) player.setPosition(tile.index);
-      } else if ('utilityType' in card) {
-        const tile = tiles.find(
-          (t) => t.type === 'utility' && t.utilityType === card.utilityType,
-        );
-        if (tile) player.setPosition(tile.index);
       }
     },
   };
