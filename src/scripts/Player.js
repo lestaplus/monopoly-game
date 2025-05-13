@@ -1,3 +1,5 @@
+import PlayerUI from './ui/PlayerUI.js';
+
 class Player {
   constructor(name, index) {
     this.name = name;
@@ -9,24 +11,10 @@ class Player {
     this.hasJailKey = false;
     this.skipTurn = false;
     this.doubleRollsCount = 0;
-    this.createElement();
-  }
 
-  createElement() {
-    const container = document.createElement('div');
-    container.className = 'player-card';
-    container.dataset.index = this.index;
-
-    const name = document.createElement('div');
-    name.className = 'name';
-    name.textContent = this.name;
-
-    const balance = document.createElement('div');
-    balance.className = 'balance';
-    balance.textContent = `${this.balance}₴`;
-
-    container.append(name, balance);
-    this.element = container;
+    this.ui = new PlayerUI(name, index);
+    this.element = this.ui.element;
+    this.ui.updateDisplay(this.balance);
   }
 
   move(steps, boardLength) {
@@ -35,7 +23,7 @@ class Player {
 
   setBalance(amount) {
     this.balance += amount;
-    this.updateDisplay();
+    this.ui.updateDisplay(this.balance);
   }
 
   addProperty(property) {
@@ -43,14 +31,11 @@ class Player {
   }
 
   updateDisplay() {
-    const balanceElement = this.element.querySelector('.balance');
-    if (balanceElement) {
-      balanceElement.textContent = `${this.balance}₴`;
-    }
+    this.ui.updateDisplay(this.balance);
   }
 
   setActive(isActive) {
-    this.element.classList.toggle('active', isActive);
+    this.ui.setActive(isActive);
   }
 
   setPosition(index) {

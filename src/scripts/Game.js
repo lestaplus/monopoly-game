@@ -1,9 +1,9 @@
-import Player from './player.js';
+import Player from './Player.js';
 
 class Game {
-  constructor(board, menu, cardManager) {
+  constructor(board, ui, cardManager) {
     this.board = board;
-    this.menu = menu;
+    this.ui = ui;
     this.cardManager = cardManager;
     this.players = [];
     this.currentPlayerIndex = 0;
@@ -12,26 +12,18 @@ class Game {
   init(playersData) {
     this.players = playersData.map((name, index) => new Player(name, index));
 
-    this.updatePlayerPanel();
+    this.ui.updatePlayerPanel(this.players, this.currentPlayerIndex);
     this.board.updatePlayerPositions(this.players);
-    this.menu.setButtonHandler('dice-btn', () => this.handleRollDice());
-    setTimeout(() => this.startTurn(), 0);
-  }
+    this.ui.setDiceButtonHandler(() => this.handleRollDice());
 
-  updatePlayerPanel() {
-    const panel = document.getElementById('player-panel');
-    panel.innerHTML = '';
-    this.players.forEach((player, index) => {
-      player.setActive(index === this.currentPlayerIndex);
-      panel.appendChild(player.element);
-    });
+    setTimeout(() => this.startTurn(), 0);
   }
 
   rollDice() {
     const firstDice = Math.floor(Math.random() * 6) + 1;
     const secondDice = Math.floor(Math.random() * 6) + 1;
-
     const total = firstDice + secondDice;
+
     alert(`Випало ${firstDice} + ${secondDice} = ${total}`);
 
     return { firstDice, secondDice, total };
@@ -73,7 +65,7 @@ class Game {
       player.setActive(index === this.currentPlayerIndex),
     );
     setTimeout(() => alert(`Хід гравця: ${player.name}`), 0);
-    this.menu.enableButton('dice-btn');
+    this.ui.enableDiceButton();
   }
 
   handleTile(player, context = {}) {
@@ -133,7 +125,7 @@ class Game {
     this.currentPlayerIndex =
       (this.currentPlayerIndex + 1) % this.players.length;
     this.players[this.currentPlayerIndex].rollDoubleCount = 0;
-    this.updatePlayerPanel();
+    this.ui.updatePlayerPanel(this.players, this.currentPlayerIndex);
     this.startTurn();
   }
 

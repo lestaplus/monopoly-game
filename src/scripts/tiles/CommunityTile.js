@@ -1,6 +1,6 @@
-import BaseTile from './baseTile.js';
+import BaseTile from './BaseTile.js';
 
-class ChanceTile extends BaseTile {
+class CommunityTile extends BaseTile {
   constructor(data) {
     super(data);
   }
@@ -12,9 +12,9 @@ class ChanceTile extends BaseTile {
     }
 
     const roll = cardManager.rollDice();
-    const card = cardManager.draw('chance', roll);
+    const card = cardManager.draw('community', roll);
     cardManager.apply(card, player, context);
   }
 }
 
-export default ChanceTile;
+export default CommunityTile;

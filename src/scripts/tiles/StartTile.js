@@ -1,4 +1,4 @@
-import BaseTile from './baseTile.js';
+import BaseTile from './BaseTile.js';
 
 class StartTile extends BaseTile {
   constructor(data) {

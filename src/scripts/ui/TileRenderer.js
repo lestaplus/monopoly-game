@@ -1,4 +1,4 @@
-class TileRendering {
+class TileRenderer {
   constructor(data, index) {
     this.name = data.name;
     this.price = data.price;
@@ -68,4 +68,4 @@ class TileRendering {
   }
 }
 
-export default TileRendering;
+export default TileRenderer;

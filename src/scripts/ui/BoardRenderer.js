@@ -1,29 +1,7 @@
-import { createTile } from './createTile.js';
-import TileRendering from './TileRendering.js';
+import TileRenderer from './TileRenderer.js';
 
-class Board {
-  constructor() {
-    this.tiles = [];
-  }
-
-  async init() {
-    this.tiles = await this.loadTiles();
-    this.renderTiles();
-  }
-
-  async loadTiles() {
-    const res = await fetch('src/data/tiles.json');
-    if (!res.ok) {
-      throw new Error(`Помилка завантаження клітинок: ${res.status}`);
-    }
-    const tilesData = await res.json();
-    return tilesData.map((data, index) => {
-      data.index = index;
-      return createTile(data);
-    });
-  }
-
-  renderTiles() {
+class BoardRenderer {
+  renderTiles(tiles) {
     const sectors = [
       {
         element: document.getElementById('top-row'),
@@ -53,8 +31,8 @@ class Board {
         step > 0 ? i <= range[1] : i >= range[1];
         i += step
       ) {
-        const rendering = new TileRendering(this.tiles[i], i);
-        element.appendChild(rendering.render());
+        const renderer = new TileRenderer(tiles[i], i);
+        element.appendChild(renderer.render());
       }
     });
   }
@@ -78,4 +56,4 @@ class Board {
   }
 }
 
-export default Board;
+export default BoardRenderer;

@@ -1,4 +1,4 @@
-import BaseTile from './baseTile.js';
+import BaseTile from './BaseTile.js';
 import { startAuction } from '../auction.js';
 
 class RailroadTile extends BaseTile {

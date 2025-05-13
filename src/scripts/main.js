@@ -1,8 +1,9 @@
-import Board from './board.js';
-import Game from './game.js';
-import Menu from './menu.js';
-import Trade from './trade.js';
-import CardManager from './cardManager.js';
+import Board from './Board.js';
+import Game from './Game.js';
+import GameUI from './ui/GameUI.js';
+import Menu from './ui/Menu.js';
+import Trade from './Trade.js';
+import CardManager from './CardManager.js';
 
 const board = new Board();
 await board.init();
@@ -12,6 +13,8 @@ await cardManager.loadCards();
 
 const menu = new Menu();
 menu.init();
+
+const gameUI = new GameUI(menu);
 
 const playerCountSelect = document.getElementById('player-count');
 const playerNamesElement = document.getElementById('player-names');
@@ -49,7 +52,7 @@ startGameButton.addEventListener('click', () => {
   document.getElementById('player-setup').style.display = 'none';
   document.getElementById('game-container').classList.remove('hidden');
 
-  const game = new Game(board, menu, cardManager);
+  const game = new Game(board, gameUI, cardManager);
   game.init(playerNames);
 
   const trade = new Trade(game.getPlayers());
