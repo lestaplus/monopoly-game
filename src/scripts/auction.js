@@ -63,7 +63,7 @@ export function startAuction(tile, players) {
     return;
   }
 
-  highestBidder.setBalance(-highestBid);
+  highestBidder.changeBalance(-highestBid);
   highestBidder.addProperty(tile);
   tile.owner = highestBidder;
 

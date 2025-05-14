@@ -1,58 +1,78 @@
 import PlayerUI from './ui/PlayerUI.js';
 
 class Player {
+  #balance = 1500;
+  #position = 0;
+  #properties = [];
+  #inJail = false;
+  #hasJailKey = false;
+  #skipTurn = false;
+  #doubleRollsCount = 0;
+  #jailTurns = 0;
+
   constructor(name, index) {
     this.name = name;
     this.index = index;
-    this.balance = 1500;
-    this.position = 0;
-    this.properties = [];
-    this.inJail = false;
-    this.hasJailKey = false;
-    this.skipTurn = false;
-    this.doubleRollsCount = 0;
 
     this.ui = new PlayerUI(name, index);
     this.element = this.ui.element;
     this.ui.updateDisplay(this.balance);
   }
 
+  get position() {
+    return this.#position;
+  }
+
+  set position(index) {
+    this.#position = index;
+  }
+
   move(steps, boardLength) {
-    this.position = (this.position + steps) % boardLength;
+    this.#position = (this.#position + steps) % boardLength;
   }
 
-  setBalance(amount) {
-    this.balance += amount;
-    this.ui.updateDisplay(this.balance);
+  get balance() {
+    return this.#balance;
   }
 
-  addProperty(property) {
-    this.properties.push(property);
+  set balance(amount) {
+    this.#balance = amount;
+    this.ui.updateDisplay(this.#balance);
   }
 
-  updateDisplay() {
-    this.ui.updateDisplay(this.balance);
+  changeBalance(amount) {
+    this.#balance += amount;
+    this.ui.updateDisplay(this.#balance);
   }
 
-  setActive(isActive) {
-    this.ui.setActive(isActive);
+  get doubleRollsCount() {
+    return this.#doubleRollsCount;
   }
 
-  setPosition(index) {
-    this.position = index;
+  incrementDoubleRolls() {
+    this.#doubleRollsCount++;
+  }
+
+  resetDoubleRolls() {
+    this.#doubleRollsCount = 0;
+  }
+
+  get inJail() {
+    return this.#inJail;
   }
 
   goToJail() {
-    this.position = 10;
-    this.inJail = true;
+    this.#position = 10;
+    this.#inJail = true;
+    this.#jailTurns = 0;
   }
 
   tryExitJail() {
-    if (this.hasJailKey) {
+    if (this.#hasJailKey) {
       alert(`${this.name} використав ключ для виходу з в'язниці.`);
-      this.hasJailKey = false;
-      this.inJail = false;
-      this.jailTurns = 0;
+      this.#hasJailKey = false;
+      this.#inJail = false;
+      this.#jailTurns = 0;
       return true;
     }
 
@@ -63,9 +83,9 @@ class Player {
 
     if (choice === '2') {
       alert(`${this.name} сплатив штраф 50₴ і виходить з в'язниці`);
-      this.setBalance(-50);
-      this.inJail = false;
-      this.jailTurns = 0;
+      this.changeBalance(-50);
+      this.#inJail = false;
+      this.#jailTurns = 0;
       return true;
     }
 
@@ -77,44 +97,48 @@ class Player {
 
     if (firstDice === secondDice) {
       alert(`${this.name} вибив дубль і виходить з в'язниці`);
-      this.inJail = false;
-      this.jailTurns = 0;
+      this.#inJail = false;
+      this.#jailTurns = 0;
       return true;
-    } else {
-      this.jailTurns = (this.jailTurns || 0) + 1;
-      alert(`${this.name} не вибив дубль. Спроба ${this.jailTurns}/3`);
-
-      if (this.jailTurns >= 3) {
-        alert(`${this.name} не вибив дубль за 3 спроби. Сплачує 50₴`);
-        this.setBalance(-50);
-        this.inJail = false;
-        this.jailTurns = 0;
-        return true;
-      }
-
-      return false;
     }
+
+    this.#jailTurns++;
+    alert(`${this.name} не вибив дубль. Спроба ${this.#jailTurns}/3`);
+
+    if (this.#jailTurns >= 3) {
+      alert(`${this.name} не вибив дубль за 3 спроби. Сплачує 50₴`);
+      this.changeBalance(-50);
+      this.#inJail = false;
+      this.#jailTurns = 0;
+      return true;
+    }
+
+    return false;
   }
 
   shouldSkipTurn() {
-    if (this.skipTurn) {
-      this.skipTurn = false;
+    if (this.#skipTurn) {
+      this.#skipTurn = false;
       alert(`${this.name} пропускає хід`);
       return true;
     }
     return false;
   }
 
-  incrementDoubleRolls() {
-    this.doubleRollsCount++;
+  get properties() {
+    return [...this.#properties];
   }
 
-  resetDoubleRolls() {
-    this.doubleRollsCount = 0;
+  addProperty(property) {
+    this.#properties.push(property);
   }
 
-  getDoubleRollsCount() {
-    return this.doubleRollsCount;
+  updateDisplay() {
+    this.ui.updateDisplay(this.#balance);
+  }
+
+  setActive(isActive) {
+    this.ui.setActive(isActive);
   }
 }
 

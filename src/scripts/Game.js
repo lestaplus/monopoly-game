@@ -1,22 +1,39 @@
 import Player from './Player.js';
 
 class Game {
+  #players = [];
+  #currentPlayerIndex = 0;
+
   constructor(board, ui, cardManager) {
     this.board = board;
     this.ui = ui;
     this.cardManager = cardManager;
-    this.players = [];
-    this.currentPlayerIndex = 0;
   }
 
-  init(playersData) {
-    this.players = playersData.map((name, index) => new Player(name, index));
+  init(playersNames) {
+    this.#players = playersNames.map((name, index) => {
+      const player = new Player(name, index);
+      this.ui.addPlayer(player);
+      return player;
+    });
 
-    this.ui.updatePlayerPanel(this.players, this.currentPlayerIndex);
-    this.board.updatePlayerPositions(this.players);
+    this.board.updatePlayerPositions(this.#players);
     this.ui.setDiceButtonHandler(() => this.handleRollDice());
+    this.ui.setActivePlayer(this.#currentPlayerIndex);
 
     setTimeout(() => this.startTurn(), 0);
+  }
+
+  get players() {
+    return [...this.#players];
+  }
+
+  get currentPlayer() {
+    return this.#players[this.#currentPlayerIndex];
+  }
+
+  get currentPlayerIndex() {
+    return this.#currentPlayerIndex;
   }
 
   rollDice() {
@@ -25,7 +42,6 @@ class Game {
     const total = firstDice + secondDice;
 
     alert(`Випало ${firstDice} + ${secondDice} = ${total}`);
-
     return { firstDice, secondDice, total };
   }
 
@@ -34,19 +50,19 @@ class Game {
     player.move(steps, this.board.tiles.length);
 
     if (player.position > 0 && player.position < prevPosition) {
-      player.setBalance(200);
+      player.changeBalance(200);
       alert(
         `${player.name} проходить повз старт та отримує 200₴. Баланс: ${player.balance}₴`,
       );
     }
 
     alert(`${player.name} переміщується на позицію ${player.position}`);
-    this.board.updatePlayerPositions(this.players);
+    this.board.updatePlayerPositions(this.#players);
     player.updateDisplay();
   }
 
   startTurn() {
-    const player = this.players[this.currentPlayerIndex];
+    const player = this.currentPlayer;
 
     if (player.inJail) {
       const freed = player.tryExitJail();
@@ -61,23 +77,22 @@ class Game {
       return;
     }
 
-    this.players.forEach((player, index) =>
-      player.setActive(index === this.currentPlayerIndex),
-    );
+    this.ui.setActivePlayer(this.currentPlayerIndex);
     setTimeout(() => alert(`Хід гравця: ${player.name}`), 0);
-    this.ui.enableDiceButton();
+    this.ui.enableButton('dice-btn');
   }
 
   handleTile(player, context = {}) {
-    const tile = this.board.tiles[player.position];
     const initialPosition = player.position;
+    const tile = this.board.tiles[initialPosition];
+
     alert(`${player.name} стоїть на клітинці ${tile.name}`);
 
     const localContext = {
       ...context,
       cardManager: this.cardManager,
       board: this.board,
-      players: this.players,
+      players: this.#players,
       game: this,
     };
 
@@ -92,17 +107,17 @@ class Game {
   }
 
   handleRollDice() {
-    const player = this.players[this.currentPlayerIndex];
+    const player = this.currentPlayer;
     const roll = this.rollDice();
     const { firstDice, secondDice, total: steps } = roll;
 
     if (firstDice === secondDice) {
       player.incrementDoubleRolls();
 
-      if (player.getDoubleRollsCount() >= 3) {
+      if (player.doubleRollsCount >= 3) {
         alert(`${player.name} викинув 3 дублі поспіль і йде до в'язниці!`);
         player.goToJail();
-        this.board.updatePlayerPositions(this.players);
+        this.board.updatePlayerPositions(this.#players);
         this.endTurn();
         return;
       } else {
@@ -122,19 +137,11 @@ class Game {
   }
 
   endTurn() {
-    this.currentPlayerIndex =
-      (this.currentPlayerIndex + 1) % this.players.length;
-    this.players[this.currentPlayerIndex].rollDoubleCount = 0;
-    this.ui.updatePlayerPanel(this.players, this.currentPlayerIndex);
+    this.#currentPlayerIndex =
+      (this.#currentPlayerIndex + 1) % this.#players.length;
+    this.ui.updatePlayers(this.players);
+    this.ui.setActivePlayer(this.currentPlayerIndex);
     this.startTurn();
-  }
-
-  getPlayers() {
-    return this.players;
-  }
-
-  getCurrentPlayerIndex() {
-    return this.currentPlayerIndex;
   }
 }
 

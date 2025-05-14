@@ -1,8 +1,10 @@
 class CardManager {
+  #tiles;
+  #chanceCards = [];
+  #communityCards = [];
+
   constructor(tiles) {
-    this.tiles = tiles;
-    this.chanceCards = [];
-    this.communityCards = [];
+    this.#tiles = tiles;
   }
 
   async loadCards() {
@@ -10,8 +12,8 @@ class CardManager {
       fetch('src/data/chance.json'),
       fetch('src/data/community.json'),
     ]);
-    this.chanceCards = await chanceRes.json();
-    this.communityCards = await communityRes.json();
+    this.#chanceCards = await chanceRes.json();
+    this.#communityCards = await communityRes.json();
   }
 
   rollDice() {
@@ -25,55 +27,76 @@ class CardManager {
   }
 
   draw(type, roll) {
-    const deck = type === 'chance' ? this.chanceCards : this.communityCards;
+    const deck = type === 'chance' ? this.#chanceCards : this.#communityCards;
     const index = Math.min(deck.length - 1, roll - 3);
     return deck[index];
   }
 
   apply(card, player, context) {
     alert(card.text);
-    const action = this.cardHandlers[card.action];
-    if (action) action(card, player, this.tiles);
+    const action = this.#getHandler(card.action);
+    if (action) action.call(this, card, player, this.#tiles);
 
     context.board.updatePlayerPositions(context.players);
   }
 
-  cardHandlers = {
-    pay: (card, player) => player.setBalance(-card.amount),
-    receive: (card, player) => player.setBalance(card.amount),
-    goToJail: (_, player) => player.goToJail(),
-    getOutOfJailKey: (_, player) => {
-      if (player.hasJailKey) {
-        alert(`${player.name} вже має ключ від в'язниці.`);
-      } else {
-        player.hasJailKey = true;
-        alert(`${player.name} отримує ключ від в'язниці.`);
-      }
-    },
-    skipTurn: (_, player) => (player.skipTurn = true),
-    move: (card, player, tiles) => {
-      if ('position' in card) {
-        player.setPosition(card.position);
-      } else if ('relative' in card) {
-        player.setPosition(
-          (player.position + card.relative + tiles.length) % tiles.length,
-        );
-      } else if ('toTile' in card) {
-        const tile = tiles.find((t) => t.name === card.toTile);
-        if (tile) player.setPosition(tile.index);
-      } else if ('toNearest' in card) {
-        let offset = 1;
-        while (offset < tiles.length) {
-          const next = (player.position + offset) % tiles.length;
-          if (tiles[next].type === card.toNearest) {
-            player.setPosition(next);
-            break;
-          }
-          offset++;
+  #getHandler(action) {
+    return {
+      pay: this.#handlePay,
+      receive: this.#handleReceive,
+      goToJail: this.#handleGoToJail,
+      getOutOfJailKey: this.#handleJailKey,
+      skipTurn: this.#handleSkipTurn,
+      move: this.#handleMove,
+    }[action];
+  }
+
+  #handlePay(card, player) {
+    player.changeBalance(-card.amount);
+  }
+
+  #handleReceive(card, player) {
+    player.changeBalance(card.amount);
+  }
+
+  #handleGoToJail(_, player) {
+    player.goToJail();
+  }
+
+  #handleJailKey(_, player) {
+    if (player.hasJailKey) {
+      alert(`${player.name} вже має ключ від в'язниці.`);
+    } else {
+      player.hasJailKey = true;
+      alert(`${player.name} отримує ключ від в'язниці.`);
+    }
+  }
+
+  #handleSkipTurn(_, player) {
+    player.skipTurn = true;
+  }
+
+  #handleMove(card, player, tiles) {
+    if ('position' in card) {
+      player.position = card.position;
+    } else if ('relative' in card) {
+      player.position =
+        (player.position + card.relative + tiles.length) % tiles.length;
+    } else if ('toTile' in card) {
+      const tile = tiles.find((t) => t.name === card.toTile);
+      if (tile) player.position = tile.index;
+    } else if ('toNearest' in card) {
+      let offset = 1;
+      while (offset < tiles.length) {
+        const next = (player.position + offset) % tiles.length;
+        if (tiles[next].type === card.toNearest) {
+          player.position = next;
+          break;
         }
+        offset++;
       }
-    },
-  };
+    }
+  }
 }
 
 export default CardManager;

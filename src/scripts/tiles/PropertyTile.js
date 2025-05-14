@@ -30,7 +30,7 @@ class PropertyTile extends BaseTile {
   buyHouse(player) {
     if (this.canBuyHouse(player)) {
       this.houses++;
-      player.setBalance(-this.buildingCost);
+      player.changeBalance(-this.buildingCost);
     }
   }
 
@@ -47,7 +47,7 @@ class PropertyTile extends BaseTile {
     if (this.canBuyHotel(player)) {
       this.hotel = true;
       this.houses = 0;
-      player.setBalance(-this.buildingCost);
+      player.changeBalance(-this.buildingCost);
     }
   }
 
@@ -82,8 +82,8 @@ class PropertyTile extends BaseTile {
       }
     } else if (this.owner !== player) {
       const rent = this.getRent();
-      player.setBalance(-rent);
-      this.owner.setBalance(rent);
+      player.changeBalance(-rent);
+      this.owner.changeBalance(rent);
       alert(
         `${player.name} сплачує ${rent}₴ за оренду власності гравцю ${this.owner.name}. Баланс: ${player.balance}₴`,
       );

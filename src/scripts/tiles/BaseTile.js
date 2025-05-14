@@ -16,7 +16,7 @@ class BaseTile {
   setOwner(player) {
     this.owner = player;
     player.addProperty(this);
-    player.setBalance(-this.price);
+    player.changeBalance(-this.price);
   }
 
   activate(player, players) {

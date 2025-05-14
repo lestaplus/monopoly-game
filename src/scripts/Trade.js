@@ -86,8 +86,8 @@ class Trade {
       tile.owner = from;
     });
 
-    from.setBalance(-moneyFrom + moneyTo);
-    to.setBalance(-moneyTo + moneyFrom);
+    from.changeBalance(-moneyFrom + moneyTo);
+    to.changeBalance(-moneyTo + moneyFrom);
 
     from.updateDisplay();
     to.updateDisplay();

@@ -49,7 +49,7 @@ class CasinoTile extends BaseTile {
     }
 
     const prize = Math.floor(bid * result.multiplier);
-    player.setBalance(-bid + prize);
+    player.changeBalance(-bid + prize);
 
     alert(
       `${player.name} поставив ${bid}₴ і виграв ${prize}₴. Баланс: ${player.balance}₴`,

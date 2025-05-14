@@ -55,11 +55,11 @@ startGameButton.addEventListener('click', () => {
   const game = new Game(board, gameUI, cardManager);
   game.init(playerNames);
 
-  const trade = new Trade(game.getPlayers());
+  const trade = new Trade(game.players);
 
   menu.setButtonHandler('trade-btn', () => {
-    const currentPlayerIndex = game.getCurrentPlayerIndex();
-    const currentPlayerName = game.getPlayers()[currentPlayerIndex].name;
+    const currentPlayerIndex = game.currentPlayerIndex;
+    const currentPlayerName = game.currentPlayer.name;
     const toPlayer = prompt(
       `${currentPlayerName}, з ким хочеш торгувати? Введи індекс гравця:`,
     );
@@ -69,7 +69,7 @@ startGameButton.addEventListener('click', () => {
       !isNaN(toPlayerIndex) &&
       toPlayerIndex !== currentPlayerIndex &&
       toPlayerIndex >= 0 &&
-      toPlayerIndex < game.getPlayers().length
+      toPlayerIndex < game.players.length
     ) {
       trade.startTrade(currentPlayerIndex, toPlayerIndex);
     } else {
