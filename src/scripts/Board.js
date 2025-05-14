@@ -2,17 +2,19 @@ import { createTile } from './createTile.js';
 import BoardRenderer from './ui/BoardRenderer.js';
 
 class Board {
+  #tiles = [];
+  #renderer;
+
   constructor() {
-    this.tiles = [];
-    this.renderer = new BoardRenderer();
+    this.#renderer = new BoardRenderer();
   }
 
   async init() {
-    this.tiles = await this.loadTiles();
-    this.renderer.renderTiles(this.tiles);
+    this.#tiles = await this.#loadTiles();
+    this.#renderer.renderTiles(this.#tiles);
   }
 
-  async loadTiles() {
+  async #loadTiles() {
     const res = await fetch('src/data/tiles.json');
     if (!res.ok) {
       throw new Error(`Помилка завантаження клітинок: ${res.status}`);
@@ -25,7 +27,11 @@ class Board {
   }
 
   updatePlayerPositions(players) {
-    this.renderer.updatePlayerPositions(players);
+    this.#renderer.updatePlayerPositions(players);
+  }
+
+  get tiles() {
+    return [...this.#tiles];
   }
 }
 

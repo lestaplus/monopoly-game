@@ -133,6 +133,10 @@ class Player {
     this.#properties.push(property);
   }
 
+  removeProperty(property) {
+    this.#properties = this.#properties.filter((p) => p !== property);
+  }
+
   updateDisplay() {
     this.ui.updateDisplay(this.#balance);
   }

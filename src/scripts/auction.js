@@ -63,10 +63,7 @@ export function startAuction(tile, players) {
     return;
   }
 
-  highestBidder.changeBalance(-highestBid);
-  highestBidder.addProperty(tile);
-  tile.owner = highestBidder;
-
+  tile.assignOwner(highestBidder, highestBid);
   alert(
     `${highestBidder.name} виграв аукціон та купив ${tile.name} за ${highestBid}₴. Баланс: ${highestBidder.balance}₴`,
   );

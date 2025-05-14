@@ -1,38 +1,41 @@
 class Menu {
+  #menuElement;
+  #buttons;
+
   constructor() {
-    this.menuElement = document.getElementById('menu');
-    this.buttons = {};
+    this.#menuElement = document.getElementById('menu');
+    this.#buttons = {};
   }
 
   init() {
-    this.addButton('dice-btn', 'Кинути кубики');
-    this.addButton('trade-btn', 'Торгівля');
+    this.#addButton('dice-btn', 'Кинути кубики');
+    this.#addButton('trade-btn', 'Торгівля');
   }
 
-  addButton(id, text) {
+  #addButton(id, text) {
     const button = document.createElement('button');
     button.id = id;
     button.innerText = text;
     button.disabled = true;
-    this.menuElement.appendChild(button);
-    this.buttons[id] = button;
+    this.#menuElement.appendChild(button);
+    this.#buttons[id] = button;
   }
 
   setButtonHandler(id, callback) {
-    if (this.buttons[id]) {
-      this.buttons[id].onclick = callback;
+    if (this.#buttons[id]) {
+      this.#buttons[id].onclick = callback;
     }
   }
 
   enableButton(id) {
-    if (this.buttons[id]) {
-      this.buttons[id].disabled = false;
+    if (this.#buttons[id]) {
+      this.#buttons[id].disabled = false;
     }
   }
 
   disableButton(id) {
-    if (this.buttons[id]) {
-      this.buttons[id].disabled = true;
+    if (this.#buttons[id]) {
+      this.#buttons[id].disabled = true;
     }
   }
 }

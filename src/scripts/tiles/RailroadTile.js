@@ -25,7 +25,7 @@ class RailroadTile extends BaseTile {
 
       if (wantsToBuy) {
         if (player.balance >= this.price) {
-          this.setOwner(player);
+          this.assignOwner(player, this.price);
           alert(
             `${player.name} купив ${this.name}. Баланс: ${player.balance}₴`,
           );
