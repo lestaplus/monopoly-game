@@ -57,6 +57,14 @@ class Player {
     this.#doubleRollsCount = 0;
   }
 
+  get hasJailKey() {
+    return this.#hasJailKey;
+  }
+
+  set hasJailKey(value) {
+    this.#hasJailKey = value;
+  }
+
   get inJail() {
     return this.#inJail;
   }
@@ -114,6 +122,10 @@ class Player {
     }
 
     return false;
+  }
+
+  set skipTurn(value) {
+    this.#skipTurn = value;
   }
 
   shouldSkipTurn() {

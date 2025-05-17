@@ -1,0 +1,48 @@
+.modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+.modal-content {
+    background: white;
+    padding: 16px;
+    border-radius: 8px;
+    width: 360px;
+    max-width: 90vw;
+    pointer-events: auto;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.purchase-actions {
+    display: flex;
+    justify-content: center;
+}
+
+.auction-actions {
+    display: flex;
+    justify-content: center;
+}
+
+.trade-modal {
+    display: flex;
+    flex-direction: column;
+}
+
+.trade-modal .player-side {
+    display: flex;
+    flex-direction: column;
+}
+
+.trade-actions {
+    display: flex;
+    justify-content: center;
+}

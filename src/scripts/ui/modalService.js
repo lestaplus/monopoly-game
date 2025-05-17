@@ -1,0 +1,14 @@
+import ModalManager from './ModalManager.js';
+import PurchaseModal from './modals/PurchaseModal.js';
+import NoFundsModal from './modals/NoFundsModal.js';
+import TradeModal from './modals/TradeModal.js';
+import AuctionModal from './modals/AuctionModal.js';
+
+const modalManager = new ModalManager();
+
+export const modalService = {
+  purchaseModal: new PurchaseModal(modalManager),
+  noFundsModal: new NoFundsModal(modalManager),
+  tradeModal: new TradeModal(modalManager),
+  auctionModal: new AuctionModal(modalManager),
+};

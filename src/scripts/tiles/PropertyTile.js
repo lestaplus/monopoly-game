@@ -60,46 +60,63 @@ class PropertyTile extends BaseTile {
     return sameColorTiles.length === requiredCount;
   }
 
-  activate(player, players) {
-    if (!this.isOwned()) {
-      const wantsToBuy = confirm(
-        `${player.name}, хочеш купити ${this.name} за ${this.price}₴?`,
-      );
+  async handleUnowned(player, players, modals) {
+    const choice = await modals.purchaseModal.show(this);
 
-      if (wantsToBuy) {
-        if (player.balance >= this.price) {
-          this.assignOwner(player, this.price);
-          alert(
-            `${player.name} купив ${this.name}. Баланс: ${player.balance}₴`,
-          );
-        } else {
-          alert(`${player.name} не має достатньо грошей. Починаємо аукціон.`);
-          startAuction(this, players);
-        }
-      } else {
-        alert(`${player.name} не купив ${this.name}. Починаємо аукціон.`);
-        startAuction(this, players);
-      }
-    } else if (this.owner !== player) {
-      const rent = this.getRent();
-      player.changeBalance(-rent);
-      this.owner.changeBalance(rent);
-      alert(
-        `${player.name} сплачує ${rent}₴ за оренду власності гравцю ${this.owner.name}. Баланс: ${player.balance}₴`,
-      );
-    } else {
-      if (this.canBuyHotel(player)) {
-        const upgrade = confirm(
-          `У тебе є 4 будинки. Побудувати готель за ${this.buildingCost}₴?`,
+    if (choice === 'buy') {
+      if (player.balance >= this.price) {
+        this.assignOwner(player, this.price);
+        console.log(
+          `${player.name} купив ${this.name}. Баланс: ${player.balance}₴`,
         );
-        if (upgrade) this.buyHotel(player);
-      } else if (this.canBuyHouse(player)) {
-        const build = confirm(`Побудувати будинок за ${this.buildingCost}₴?`);
-        if (build) this.buyHouse(player);
       } else {
-        alert(`${player.name} вже володіє ${this.name}.`);
+        await modals.noFundsModal.show();
+        console.log(
+          `${player.name} не має достатньо грошей. Починаємо аукціон.`,
+        );
+        await startAuction(this, players);
       }
+    } else if (choice === 'auction') {
+      console.log(`${player.name} не купив ${this.name}. Починаємо аукціон.`);
+      await startAuction(this, players);
     }
+  }
+
+  handleRentPayment(player) {
+    const rent = this.getRent();
+    player.changeBalance(-rent);
+    this.owner.changeBalance(rent);
+    console.log(`${player.name} сплачує ${rent}₴ гравцю ${this.owner.name}.`);
+  }
+
+  handlePropertyUpgrades(player) {
+    if (this.canBuyHotel(player)) {
+      const upgrade = confirm(
+        `У тебе є 4 будинки. Побудувати готель за ${this.buildingCost}₴?`,
+      );
+      if (upgrade) this.buyHotel(player);
+    } else if (this.canBuyHouse(player)) {
+      const build = confirm(`Побудувати будинок за ${this.buildingCost}₴?`);
+      if (build) this.buyHouse(player);
+    } else {
+      alert(`${player.name} вже володіє ${this.name}.`);
+    }
+  }
+
+  async activate(player, players, context) {
+    const modals = context.modals;
+
+    if (!this.isOwned()) {
+      await this.handleUnowned(player, players, modals);
+      return;
+    }
+
+    if (this.owner !== player) {
+      this.handleRentPayment(player);
+      return;
+    }
+
+    this.handlePropertyUpgrades(player);
   }
 
   static colorGroups = {

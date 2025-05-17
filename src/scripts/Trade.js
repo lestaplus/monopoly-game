@@ -4,86 +4,35 @@ class Trade {
   constructor(players) {
     this.#players = players;
   }
-  startTrade(fromIndex, toIndex) {
-    const from = this.#players[fromIndex];
-    const to = this.#players[toIndex];
-
-    const tilesFrom = this.#selectTiles(from);
-    const moneyFrom = this.#inputMoney(from);
-
-    const tilesTo = this.#selectTiles(to);
-    const moneyTo = this.#inputMoney(to);
-
-    const confirmed = this.#confirmTrade(
-      from,
-      to,
-      tilesFrom,
-      moneyFrom,
-      tilesTo,
-      moneyTo,
-    );
-
-    if (confirmed) {
-      this.#applyTrade(from, to, tilesFrom, moneyFrom, tilesTo, moneyTo);
-      alert(`Торгівлю завершено успішно!`);
-    } else {
-      alert(`Торгівлю скасовано.`);
+  async startTrade(currentPlayerIndex, tradeModal) {
+    const result = await tradeModal.show(this.#players, currentPlayerIndex);
+    if (!result) {
+      console.log('Торгівлю скасовано.');
+      return;
     }
-  }
 
-  #selectTiles(player) {
-    if (player.properties.length === 0) return [];
+    const { fromIndex, toIndex, moneyFrom, moneyTo, tilesFrom, tilesTo } =
+      result;
+    const fromPlayer = this.#players[fromIndex];
+    const toPlayer = this.#players[toIndex];
 
-    const selectedTiles = prompt(
-      `${player.name}, введи майно (через кому), яке хочеш передати:\n
-            ${player.properties.map((p) => p.name).join(', ')}`,
+    const propsFrom = fromPlayer.properties.filter((tile) =>
+      tilesFrom.includes(tile.name),
+    );
+    const propsTo = toPlayer.properties.filter((tile) =>
+      tilesTo.includes(tile.name),
     );
 
-    const selectedList = selectedTiles
-      ? selectedTiles
-          .split(',')
-          .map((tile) => tile.trim())
-          .filter((tile) => tile.length > 0)
-      : [];
+    propsFrom.forEach((tile) => tile.changeOwner(fromPlayer, toPlayer));
+    propsTo.forEach((tile) => tile.changeOwner(toPlayer, fromPlayer));
 
-    return player.properties.filter((p) => selectedList.includes(p.name));
-  }
+    fromPlayer.changeBalance(-moneyFrom + moneyTo);
+    toPlayer.changeBalance(-moneyTo + moneyFrom);
 
-  #inputMoney(player) {
-    const input = prompt(
-      `${player.name}, скільки грошей хочеш додати до торгу?`,
-      '0',
-    );
-    const amount = parseInt(input);
+    fromPlayer.updateDisplay();
+    toPlayer.updateDisplay();
 
-    return isNaN(amount) || amount < 0 || amount > player.balance ? 0 : amount;
-  }
-
-  #confirmTrade(from, to, tilesFrom, moneyFrom, tilesTo, moneyTo) {
-    const total = `
-      ${from.name} пропонує:
-      - ${tilesFrom.map((tile) => tile.name).join(', ') || 'нічого'}
-      - ${moneyFrom}
-      
-      ${to.name} пропонує:
-      - ${tilesTo.map((tile) => tile.name).join(', ') || 'нічого'}
-      - ${moneyTo}
-      
-      ${to.name}, приймаєш торгівлю?
-      `;
-
-    return confirm(total);
-  }
-
-  #applyTrade(from, to, tilesFrom, moneyFrom, tilesTo, moneyTo) {
-    tilesFrom.forEach((tile) => tile.changeOwner(from, to));
-    tilesTo.forEach((tile) => tile.changeOwner(to, from));
-
-    from.changeBalance(-moneyFrom + moneyTo);
-    to.changeBalance(-moneyTo + moneyFrom);
-
-    from.updateDisplay();
-    to.updateDisplay();
+    console.log('Торгівлю завершено.');
   }
 }
 

@@ -4,10 +4,11 @@ class Game {
   #players = [];
   #currentPlayerIndex = 0;
 
-  constructor(board, ui, cardManager) {
+  constructor(board, ui, cardManager, modalService) {
     this.board = board;
     this.ui = ui;
     this.cardManager = cardManager;
+    this.modalService = modalService;
   }
 
   init(playersNames) {
@@ -82,18 +83,18 @@ class Game {
     this.ui.enableButton('dice-btn');
   }
 
-  handleTile(player, context = {}) {
+  handleTile(player) {
     const initialPosition = player.position;
     const tile = this.board.tiles[initialPosition];
 
     alert(`${player.name} стоїть на клітинці ${tile.name}`);
 
     const localContext = {
-      ...context,
       cardManager: this.cardManager,
       board: this.board,
       players: this.#players,
       game: this,
+      modals: this.modalService,
     };
 
     tile.activate(player, this.players, localContext);
@@ -102,7 +103,7 @@ class Game {
     const newTile = this.board.tiles[player.position];
 
     if (moved && newTile !== tile) {
-      this.handleTile(player, context);
+      this.handleTile(player);
     }
   }
 

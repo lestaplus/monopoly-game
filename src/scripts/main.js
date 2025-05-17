@@ -4,6 +4,7 @@ import GameUI from './ui/GameUI.js';
 import Menu from './ui/Menu.js';
 import Trade from './Trade.js';
 import CardManager from './CardManager.js';
+import { modalService } from './ui/modalService.js';
 
 const board = new Board();
 await board.init();
@@ -52,29 +53,14 @@ startGameButton.addEventListener('click', () => {
   document.getElementById('player-setup').style.display = 'none';
   document.getElementById('game-container').classList.remove('hidden');
 
-  const game = new Game(board, gameUI, cardManager);
+  const game = new Game(board, gameUI, cardManager, modalService);
   game.init(playerNames);
 
   const trade = new Trade(game.players);
 
-  menu.setButtonHandler('trade-btn', () => {
+  menu.setButtonHandler('trade-btn', async () => {
     const currentPlayerIndex = game.currentPlayerIndex;
-    const currentPlayerName = game.currentPlayer.name;
-    const toPlayer = prompt(
-      `${currentPlayerName}, з ким хочеш торгувати? Введи індекс гравця:`,
-    );
-    const toPlayerIndex = parseInt(toPlayer);
-
-    if (
-      !isNaN(toPlayerIndex) &&
-      toPlayerIndex !== currentPlayerIndex &&
-      toPlayerIndex >= 0 &&
-      toPlayerIndex < game.players.length
-    ) {
-      trade.startTrade(currentPlayerIndex, toPlayerIndex);
-    } else {
-      alert(`Некоректний індекс гравця.`);
-    }
+    await trade.startTrade(currentPlayerIndex, modalService.tradeModal);
   });
   menu.enableButton('trade-btn');
 });
