@@ -1,5 +1,4 @@
 import BaseTile from './BaseTile.js';
-import { startAuction } from '../auction.js';
 
 class UtilityTile extends BaseTile {
   constructor(data) {
@@ -25,34 +24,27 @@ class UtilityTile extends BaseTile {
     return dice * multiplier;
   }
 
-  activate(player, players) {
-    if (!this.isOwned()) {
-      const wantsToBuy = confirm(
-        `${player.name}, хочеш купити ${this.name} за ${this.price}₴?`,
-      );
+  async activate(player, players, context) {
+    const modals = context.modals;
 
-      if (wantsToBuy) {
-        if (player.balance >= this.price) {
-          this.assignOwner(player, this.price);
-          alert(
-            `${player.name} купив ${this.name}. Баланс: ${player.balance}₴`,
-          );
-        } else {
-          alert(`${player.name} не має достатньо грошей. Починаємо аукціон.`);
-          startAuction(this, players);
-        }
-      } else {
-        alert(`${player.name} не купив ${this.name}. Починаємо аукціон.`);
-        startAuction(this, players);
-      }
-    } else if (this.owner !== player) {
-      const rent = this.getRent(this.owner);
-      alert(
-        `${player.name} сплачує ${rent}₴ за ${this.name} гравцю ${this.owner.name}. Баланс: ${player.balance}₴`,
-      );
-    } else {
-      alert(`${player.name} вже володіє ${this.name}.`);
+    if (!this.isOwned()) {
+      await this.handleUnowned(player, players, modals);
+      return;
     }
+
+    if (this.owner !== player) {
+      this.#handleRent(player);
+      return;
+    }
+
+    console.log(`${player.name} вже володіє ${this.name}.`);
+  }
+
+  #handleRent(player) {
+    const rent = this.getRent(this.owner);
+    console.log(
+      `${player.name} сплачує ${rent}₴ за ${this.name} гравцю ${this.owner.name}. Баланс: ${player.balance}₴`,
+    );
   }
 }
 

@@ -58,9 +58,7 @@ export default class AuctionModal {
     const minBid = this.highestBidder ? this.highestBid + 1 : this.tile.price;
 
     if (isNaN(value) || value < minBid || value > player.balance) {
-      alert(
-        `Ставка має бути не меншою за ${minBid}₴ та не перевищувати баланс.`,
-      );
+      alert(`Недостатньо грошей або ставка є меншою за ${minBid}₴`);
       return;
     }
 

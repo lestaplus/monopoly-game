@@ -8,7 +8,9 @@ export async function startAuction(tile, players) {
     return;
   }
 
-  tile.assignOwner(winner, price);
+  tile.assignOwner(winner);
+  winner.changeBalance(-price);
+
   console.log(
     `${winner.name} виграв аукціон і купив ${tile.name} за ${price}₴.`,
   );

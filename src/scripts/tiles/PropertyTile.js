@@ -1,5 +1,4 @@
 import BaseTile from './BaseTile.js';
-import { startAuction } from '../auction.js';
 
 class PropertyTile extends BaseTile {
   constructor(data) {
@@ -60,36 +59,14 @@ class PropertyTile extends BaseTile {
     return sameColorTiles.length === requiredCount;
   }
 
-  async handleUnowned(player, players, modals) {
-    const choice = await modals.purchaseModal.show(this);
-
-    if (choice === 'buy') {
-      if (player.balance >= this.price) {
-        this.assignOwner(player, this.price);
-        console.log(
-          `${player.name} купив ${this.name}. Баланс: ${player.balance}₴`,
-        );
-      } else {
-        await modals.noFundsModal.show();
-        console.log(
-          `${player.name} не має достатньо грошей. Починаємо аукціон.`,
-        );
-        await startAuction(this, players);
-      }
-    } else if (choice === 'auction') {
-      console.log(`${player.name} не купив ${this.name}. Починаємо аукціон.`);
-      await startAuction(this, players);
-    }
-  }
-
-  handleRentPayment(player) {
+  #handleRentPayment(player) {
     const rent = this.getRent();
     player.changeBalance(-rent);
     this.owner.changeBalance(rent);
     console.log(`${player.name} сплачує ${rent}₴ гравцю ${this.owner.name}.`);
   }
 
-  handlePropertyUpgrades(player) {
+  #handlePropertyUpgrades(player) {
     if (this.canBuyHotel(player)) {
       const upgrade = confirm(
         `У тебе є 4 будинки. Побудувати готель за ${this.buildingCost}₴?`,
@@ -112,11 +89,11 @@ class PropertyTile extends BaseTile {
     }
 
     if (this.owner !== player) {
-      this.handleRentPayment(player);
+      this.#handleRentPayment(player);
       return;
     }
 
-    this.handlePropertyUpgrades(player);
+    this.#handlePropertyUpgrades(player);
   }
 
   static colorGroups = {
