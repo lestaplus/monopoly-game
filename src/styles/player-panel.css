@@ -1,4 +1,4 @@
-#player-panel {
+.player-panel {
     display: flex;
     flex-direction: column;
     width: 220px;

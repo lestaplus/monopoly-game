@@ -60,7 +60,7 @@ export default class TradeModal {
         <h3 id="${prefix}-name">Гравець: ${player.name}</h3>
         ${selectHTML}
         <label for="money-${prefix}">Гроші:</label>
-        <input id="money-${prefix}" type="number" value="0" />
+        <input id="money-${prefix}" type="number" value="0"/>
         <label for="tiles-${prefix}">Майно:</label>
         <select id="tiles-${prefix}" multiple></select>
       </div>
@@ -78,6 +78,38 @@ export default class TradeModal {
   }
 
   #bindHandlers(resolve, currentPlayerIndex) {
+    const fromPlayer = this.players[currentPlayerIndex];
+    const toPlayer = this.#getInitialToPlayer(currentPlayerIndex);
+
+    this.#bindActionButtons(resolve, currentPlayerIndex);
+    this.#bindMoneyLimits(fromPlayer, toPlayer);
+    this.#bindTargetChangeHandler(fromPlayer);
+  }
+
+  #bindMoneyLimits(fromPlayer, toPlayer) {
+    const fromInput = document.getElementById('money-from');
+    const toInput = document.getElementById('money-to');
+
+    const bind = (input, max) => {
+      input.min = 0;
+      input.max = max;
+
+      const check = () => {
+        let value = parseInt(input.value);
+        if (isNaN(value) || value < 0) value = 0;
+        if (value > max) value = max;
+        input.value = value;
+      };
+
+      input.addEventListener('input', check);
+      check();
+    };
+
+    if (fromInput) bind(fromInput, fromPlayer.balance);
+    if (toInput) bind(toInput, toPlayer.balance);
+  }
+
+  #bindActionButtons(resolve, currentPlayerIndex) {
     document.getElementById('confirm-btn').onclick = () => {
       const data = this.#collectData(currentPlayerIndex);
       this.modalManager.close();
@@ -88,36 +120,56 @@ export default class TradeModal {
       this.modalManager.close();
       resolve(null);
     };
+  }
 
+  #getInitialToPlayer(currentPlayerIndex) {
     const tradeTarget = document.getElementById('trade-target');
-    if (tradeTarget) {
-      tradeTarget.addEventListener('change', (e) => {
-        const targetIndex = parseInt(e.target.value);
-        const targetPlayer = this.players[targetIndex];
+    const toIndex = tradeTarget
+      ? parseInt(tradeTarget.value)
+      : this.players.findIndex((_, i) => i !== currentPlayerIndex);
 
-        const tilesToSelect = document.getElementById('tiles-to');
-        this.#fillTiles(tilesToSelect, targetPlayer.properties);
+    return this.players[toIndex];
+  }
 
-        const header = document.getElementById('to-name');
-        if (header) header.textContent = `Гравець: ${targetPlayer.name}`;
-      });
-    }
+  #bindTargetChangeHandler(fromPlayer) {
+    const tradeTarget = document.getElementById('trade-target');
+    if (!tradeTarget) return;
+
+    tradeTarget.addEventListener('change', (e) => {
+      const toIndex = parseInt(e.target.value);
+      const toPlayer = this.players[toIndex];
+
+      const tilesToSelect = document.getElementById('tiles-to');
+      this.#fillTiles(tilesToSelect, toPlayer.properties);
+
+      const header = document.getElementById('to-name');
+      if (header) header.textContent = `Гравець: ${toPlayer.name}`;
+
+      this.#bindMoneyLimits(fromPlayer, toPlayer);
+    });
+  }
+
+  #getSelectedTileValues(selectorId) {
+    return Array.from(
+      document.querySelectorAll(`#${selectorId} option:checked`),
+    ).map((option) => option.value);
   }
 
   #collectData(currentPlayerIndex) {
     const fromIndex = currentPlayerIndex;
     const toIndex = parseInt(document.getElementById('trade-target').value);
 
-    const moneyFrom =
-      parseInt(document.getElementById('money-from').value) || 0;
-    const moneyTo = parseInt(document.getElementById('money-to').value) || 0;
+    const fromPlayer = this.players[fromIndex];
+    const toPlayer = this.players[toIndex];
 
-    const tilesFrom = Array.from(
-      document.querySelectorAll('#tiles-from option:checked'),
-    ).map((option) => option.value);
-    const tilesTo = Array.from(
-      document.querySelectorAll('#tiles-to option:checked'),
-    ).map((option) => option.value);
+    let moneyFrom = parseInt(document.getElementById('money-from').value) || 0;
+    let moneyTo = parseInt(document.getElementById('money-to').value) || 0;
+
+    moneyFrom = Math.max(0, Math.min(moneyFrom, fromPlayer.balance));
+    moneyTo = Math.max(0, Math.min(moneyTo, toPlayer.balance));
+
+    const tilesFrom = this.#getSelectedTileValues('tiles-from');
+    const tilesTo = this.#getSelectedTileValues('tiles-to');
 
     return { fromIndex, toIndex, moneyFrom, moneyTo, tilesFrom, tilesTo };
   }

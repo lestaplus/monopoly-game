@@ -7,8 +7,8 @@ class StartTile extends BaseTile {
 
   activate(player) {
     player.changeBalance(200);
-    alert(
-      `${player.name} стає на клітинку Старт та отримує 200₴. Баланс: ${player.balance}₴`,
+    this.gameNotifier.message(
+      `${player.name} стає на клітинку Старт та отримує 200₴.`,
     );
   }
 }

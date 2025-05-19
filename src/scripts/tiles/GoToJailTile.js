@@ -6,7 +6,7 @@ class GoToJailTile extends BaseTile {
   }
 
   activate(player, players, context) {
-    alert(`${player.name} відправляється до в'язниці!`);
+    this.gameNotifier.message(`${player.name} відправляється до в'язниці!`);
     player.goToJail();
 
     context.board.updatePlayerPositions(players);

@@ -7,8 +7,8 @@ class TaxTile extends BaseTile {
 
   activate(player) {
     player.changeBalance(-this.amount);
-    alert(
-      `${player.name} сплачує податок ${this.amount}₴. Баланс: ${player.balance}₴`,
+    this.gameNotifier.message(
+      `${player.name} сплачує податок ${this.amount}₴.`,
     );
   }
 }

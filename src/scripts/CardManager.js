@@ -1,3 +1,5 @@
+import GameNotifier from './ui/GameNotifier.js';
+
 class CardManager {
   #tiles;
   #chanceCards = [];
@@ -5,6 +7,7 @@ class CardManager {
 
   constructor(tiles) {
     this.#tiles = tiles;
+    this.gameNotifier = GameNotifier.getInstance();
   }
 
   async loadCards() {
@@ -65,10 +68,10 @@ class CardManager {
 
   #handleJailKey(_, player) {
     if (player.hasJailKey) {
-      alert(`${player.name} вже має ключ від в'язниці.`);
+      this.gameNotifier.message(`${player.name} вже має ключ від в'язниці.`);
     } else {
       player.hasJailKey = true;
-      alert(`${player.name} отримує ключ від в'язниці.`);
+      this.gameNotifier.message(`${player.name} отримує ключ від в'язниці.`);
     }
   }
 

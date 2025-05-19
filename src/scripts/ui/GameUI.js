@@ -7,7 +7,7 @@ class GameUI {
   }
 
   addPlayer(player) {
-    const panel = document.getElementById('player-panel');
+    const panel = document.getElementById('player-list');
     if (panel && player.element) {
       panel.appendChild(player.element);
       this.#players.push(player);
@@ -21,7 +21,7 @@ class GameUI {
   }
 
   updatePlayers(players) {
-    const panel = document.getElementById('player-panel');
+    const panel = document.getElementById('player-list');
     panel.innerHTML = '';
     this.#players = [];
 

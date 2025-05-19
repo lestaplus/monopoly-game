@@ -1,4 +1,5 @@
 import PlayerUI from './ui/PlayerUI.js';
+import GameNotifier from './ui/GameNotifier.js';
 
 class Player {
   #balance = 1500;
@@ -17,6 +18,7 @@ class Player {
     this.ui = new PlayerUI(name, index);
     this.element = this.ui.element;
     this.ui.updateDisplay(this.balance);
+    this.gameNotifier = GameNotifier.getInstance();
   }
 
   get position() {
@@ -77,7 +79,9 @@ class Player {
 
   tryExitJail() {
     if (this.#hasJailKey) {
-      alert(`${this.name} використав ключ для виходу з в'язниці.`);
+      this.gameNotifier.message(
+        `${this.name} використав ключ для виходу з в'язниці.`,
+      );
       this.#hasJailKey = false;
       this.#inJail = false;
       this.#jailTurns = 0;
@@ -90,7 +94,9 @@ class Player {
     );
 
     if (choice === '2') {
-      alert(`${this.name} сплатив штраф 50₴ і виходить з в'язниці`);
+      this.gameNotifier.message(
+        `${this.name} сплатив штраф 50₴ і виходить з в'язниці`,
+      );
       this.changeBalance(-50);
       this.#inJail = false;
       this.#jailTurns = 0;
@@ -104,7 +110,9 @@ class Player {
     );
 
     if (firstDice === secondDice) {
-      alert(`${this.name} вибив дубль і виходить з в'язниці`);
+      this.gameNotifier.message(
+        `${this.name} вибив дубль і виходить з в'язниці`,
+      );
       this.#inJail = false;
       this.#jailTurns = 0;
       return true;
@@ -114,7 +122,9 @@ class Player {
     alert(`${this.name} не вибив дубль. Спроба ${this.#jailTurns}/3`);
 
     if (this.#jailTurns >= 3) {
-      alert(`${this.name} не вибив дубль за 3 спроби. Сплачує 50₴`);
+      this.gameNotifier.message(
+        `${this.name} не вибив дубль за 3 спроби. Сплачує 50₴`,
+      );
       this.changeBalance(-50);
       this.#inJail = false;
       this.#jailTurns = 0;
@@ -131,7 +141,7 @@ class Player {
   shouldSkipTurn() {
     if (this.#skipTurn) {
       this.#skipTurn = false;
-      alert(`${this.name} пропускає хід`);
+      this.gameNotifier.message(`${this.name} пропускає хід`);
       return true;
     }
     return false;

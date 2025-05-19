@@ -9,7 +9,9 @@ class CasinoTile extends BaseTile {
     const wantsToPlay = confirm('Тобі випала можливість зіграти в казино.');
 
     if (!wantsToPlay) {
-      alert(`${player.name} відмовляється від гри в казино.`);
+      this.gameNotifier.message(
+        `${player.name} відмовляється від гри в казино.`,
+      );
       return;
     }
 
@@ -51,8 +53,8 @@ class CasinoTile extends BaseTile {
     const prize = Math.floor(bid * result.multiplier);
     player.changeBalance(-bid + prize);
 
-    alert(
-      `${player.name} поставив ${bid}₴ і виграв ${prize}₴. Баланс: ${player.balance}₴`,
+    this.gameNotifier.message(
+      `${player.name} поставив ${bid}₴ і виграв ${prize}₴.`,
     );
   }
 }

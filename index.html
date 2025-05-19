@@ -22,9 +22,12 @@
         <div id="player-names"></div>
         <button id="start-game">Почати гру</button>
     </div>
-    <div id="game-container" class="hidden">
-        <div id="player-panel"></div>
-        <div id="board">
+    <div id="game-container" class="game-container hidden">
+        <div class="player-panel" id="player-panel">
+            <div id="player-list"></div>
+            <div id="menu"></div>
+        </div>
+        <div class="board" id="board">
             <div class="top-row" id="top-row"></div>
             <div class="right-col" id="right-col"></div>
             <div class="bottom-row" id="bottom-row"></div>
@@ -35,7 +38,7 @@
                 </div>
             </div>
         </div>
-        <div id="menu"></div>
+        <div class="game-notifier" id="game-notifier"></div>
     </div>
     <script type="module" src="src/scripts/main.js"></script>
 </body>

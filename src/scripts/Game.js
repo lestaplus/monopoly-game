@@ -1,4 +1,5 @@
 import Player from './Player.js';
+import GameNotifier from './ui/GameNotifier.js';
 
 class Game {
   #players = [];
@@ -9,6 +10,7 @@ class Game {
     this.ui = ui;
     this.cardManager = cardManager;
     this.modalService = modalService;
+    this.gameNotifier = GameNotifier.getInstance();
   }
 
   init(playersNames) {
@@ -52,8 +54,8 @@ class Game {
 
     if (player.position > 0 && player.position < prevPosition) {
       player.changeBalance(200);
-      alert(
-        `${player.name} проходить повз старт та отримує 200₴. Баланс: ${player.balance}₴`,
+      this.gameNotifier.message(
+        `${player.name} проходить повз старт та отримує 200₴.`,
       );
     }
 
@@ -116,13 +118,17 @@ class Game {
       player.incrementDoubleRolls();
 
       if (player.doubleRollsCount >= 3) {
-        alert(`${player.name} викинув 3 дублі поспіль і йде до в'язниці!`);
+        this.gameNotifier.message(
+          `${player.name} викинув 3 дублі поспіль і йде до в'язниці!`,
+        );
         player.goToJail();
         this.board.updatePlayerPositions(this.#players);
         this.endTurn();
         return;
       } else {
-        alert(`${player.name} викинув дубль і ходить ще раз.`);
+        this.gameNotifier.message(
+          `${player.name} викинув дубль і ходить ще раз.`,
+        );
         this.movePlayer(player, steps);
         this.handleTile(player);
         this.startTurn();

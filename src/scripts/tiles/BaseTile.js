@@ -1,4 +1,5 @@
 import { startAuction } from '../auction.js';
+import GameNotifier from '../ui/GameNotifier.js';
 
 class BaseTile {
   #name;
@@ -16,6 +17,8 @@ class BaseTile {
     this.#amount = data.amount;
     this.#index = data.index;
     this.#color = data.color;
+
+    this.gameNotifier = GameNotifier.getInstance();
   }
 
   isOwned() {
@@ -40,18 +43,18 @@ class BaseTile {
       if (player.balance >= this.price) {
         this.assignOwner(player);
         player.changeBalance(-this.price);
-        console.log(
-          `${player.name} купив ${this.name}. Баланс: ${player.balance}₴`,
-        );
+        this.gameNotifier.message(`${player.name} купив ${this.name}.`);
       } else {
         await modals.noFundsModal.show();
-        console.log(
+        this.gameNotifier.message(
           `${player.name} не має достатньо грошей. Починаємо аукціон.`,
         );
         await startAuction(this, players);
       }
     } else if (choice === 'auction') {
-      console.log(`${player.name} не купив ${this.name}. Починаємо аукціон.`);
+      this.gameNotifier.message(
+        `${player.name} не купив ${this.name}. Починаємо аукціон.`,
+      );
       await startAuction(this, players);
     }
   }

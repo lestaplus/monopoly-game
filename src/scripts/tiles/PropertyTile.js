@@ -63,7 +63,9 @@ class PropertyTile extends BaseTile {
     const rent = this.getRent();
     player.changeBalance(-rent);
     this.owner.changeBalance(rent);
-    console.log(`${player.name} сплачує ${rent}₴ гравцю ${this.owner.name}.`);
+    this.gameNotifier.message(
+      `${player.name} сплачує ${rent}₴ гравцю ${this.owner.name}.`,
+    );
   }
 
   #handlePropertyUpgrades(player) {
