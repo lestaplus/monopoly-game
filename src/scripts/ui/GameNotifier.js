@@ -21,6 +21,7 @@ class GameNotifier {
     message.classList.add('notification');
     message.innerText = text;
     this.#element.appendChild(message);
+    this.#element.scrollTop = this.#element.scrollHeight;
   }
 }
 

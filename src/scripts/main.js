@@ -59,8 +59,12 @@ startGameButton.addEventListener('click', () => {
   const trade = new Trade(game.players);
 
   menu.setButtonHandler('trade-btn', async () => {
+    menu.disableButton('trade-btn');
+
     const currentPlayerIndex = game.currentPlayerIndex;
     await trade.startTrade(currentPlayerIndex, modalService.tradeModal);
+
+    menu.enableButton('trade-btn');
   });
   menu.enableButton('trade-btn');
 });

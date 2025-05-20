@@ -18,8 +18,7 @@ export default class AuctionModal {
       this.#bindElements();
       this.#bindHandlers(resolve);
 
-      this.modalManager.open('');
-      document.getElementById('modal-body').appendChild(this.container);
+      this.modalManager.open(this.container);
       this.#updateInfo();
     });
   }
@@ -27,6 +26,7 @@ export default class AuctionModal {
   #createContainer() {
     const container = document.createElement('div');
     container.className = 'auction-modal';
+
     container.innerHTML = `
       <h2>Аукціон: ${this.tile.name}</h2>
       <div id="current-info"></div>
@@ -36,6 +36,7 @@ export default class AuctionModal {
         <button class="pass-btn" id="pass-btn">Пропустити</button>
       </div>
     `;
+
     return container;
   }
 

@@ -7,3 +7,18 @@
 .game-container.hidden {
     display: none;
 }
+
+.game-notifier {
+    width: 250px;
+    max-height: 500px;
+    background-color: #f6f5f5;
+    border: 1px solid #c8c8c8;
+    border-radius: 10px;
+    padding: 10px;
+    overflow-y: auto;
+}
+
+.notification {
+    margin-bottom: 8px;
+    color: #474747;
+}

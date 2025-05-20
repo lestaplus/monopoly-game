@@ -81,11 +81,11 @@ class Game {
     }
 
     this.ui.setActivePlayer(this.currentPlayerIndex);
-    setTimeout(() => alert(`Хід гравця: ${player.name}`), 0);
+    setTimeout(() => this.modalService.turnModal.show(player.name), 0);
     this.ui.enableButton('dice-btn');
   }
 
-  handleTile(player) {
+  async handleTile(player) {
     const initialPosition = player.position;
     const tile = this.board.tiles[initialPosition];
 
@@ -99,20 +99,21 @@ class Game {
       modals: this.modalService,
     };
 
-    tile.activate(player, this.players, localContext);
+    await tile.activate(player, this.players, localContext);
 
     const moved = player.position !== initialPosition;
     const newTile = this.board.tiles[player.position];
 
     if (moved && newTile !== tile) {
-      this.handleTile(player);
+      await this.handleTile(player);
     }
   }
 
-  handleRollDice() {
+  async handleRollDice() {
+    this.ui.disableButton('dice-btn');
+
     const player = this.currentPlayer;
-    const roll = this.rollDice();
-    const { firstDice, secondDice, total: steps } = roll;
+    const { firstDice, secondDice, total: steps } = this.rollDice();
 
     if (firstDice === secondDice) {
       player.incrementDoubleRolls();
@@ -130,7 +131,7 @@ class Game {
           `${player.name} викинув дубль і ходить ще раз.`,
         );
         this.movePlayer(player, steps);
-        this.handleTile(player);
+        await this.handleTile(player);
         this.startTurn();
         return;
       }
@@ -139,16 +140,17 @@ class Game {
     }
 
     this.movePlayer(player, steps);
-    this.handleTile(player);
+    await this.handleTile(player);
     this.endTurn();
   }
 
   endTurn() {
+    this.modalService.modalManager.clearStack();
     this.#currentPlayerIndex =
       (this.#currentPlayerIndex + 1) % this.#players.length;
     this.ui.updatePlayers(this.players);
     this.ui.setActivePlayer(this.currentPlayerIndex);
-    this.startTurn();
+    setTimeout(() => this.startTurn(), 0);
   }
 }
 

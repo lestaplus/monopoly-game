@@ -12,15 +12,18 @@ export default class PurchaseModal {
   }
 
   #createContainer(tile) {
-    return `
-      <div class="purchase-modal">
-        <h2>Ви можете купити ${tile.name} за ${tile.price}₴.</h2>
+    const container = document.createElement('div');
+    container.className = 'purchase-modal';
+
+    container.innerHTML = `
+      <h2>Ви можете купити ${tile.name} за ${tile.price}₴.</h2>
         <div class="purchase-actions">
           <button class="buy-btn" id="buy-btn">Купити</button>
           <button class="auction-btn" id="auction-btn">Аукціон</button>
         </div>
-      </div>
     `;
+
+    return container;
   }
 
   #bindHandlers(resolve) {

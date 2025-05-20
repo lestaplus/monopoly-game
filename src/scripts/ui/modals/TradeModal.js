@@ -6,22 +6,21 @@ export default class TradeModal {
   show(players, currentPlayerIndex) {
     return new Promise((resolve) => {
       this.players = players;
-      const wrapper = this.#renderForm(players, currentPlayerIndex);
-      this.modalManager.open('');
-      document.getElementById('modal-body').appendChild(wrapper);
+      const container = this.#renderForm(players, currentPlayerIndex);
+      this.modalManager.open(container);
       this.#bindHandlers(resolve, currentPlayerIndex);
     });
   }
 
   #renderForm(players, currentPlayerIndex) {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'trade-modal';
+    const container = document.createElement('div');
+    container.className = 'trade-modal';
 
     const fromPlayer = players[currentPlayerIndex];
     const otherPlayers = players.filter((_, i) => i !== currentPlayerIndex);
     const toPlayer = otherPlayers[0];
 
-    wrapper.innerHTML = `
+    container.innerHTML = `
         ${this.#renderPlayerSection(fromPlayer, 'from')}
         ${this.#renderPlayerSection(toPlayer, 'to', otherPlayers)}
       <div class="trade-actions">
@@ -31,12 +30,12 @@ export default class TradeModal {
     `;
 
     this.#fillTiles(
-      wrapper.querySelector('#tiles-from'),
+      container.querySelector('#tiles-from'),
       fromPlayer.properties,
     );
-    this.#fillTiles(wrapper.querySelector('#tiles-to'), toPlayer.properties);
+    this.#fillTiles(container.querySelector('#tiles-to'), toPlayer.properties);
 
-    return wrapper;
+    return container;
   }
 
   #renderPlayerOptions(players) {

@@ -12,13 +12,16 @@ export default class NoFundsModal {
   }
 
   #createContainer() {
-    return `
-      <div class="funds-modal">
-        <h2>Недостатньо грошей</h2>
-        <p>Починаємо аукціон.</p>
-        <button id="auction-btn">Аукціон</button>
-      </div>
+    const container = document.createElement('div');
+    container.className = 'funds-modal';
+
+    container.innerHTML = `
+      <h2>Недостатньо грошей</h2>
+      <p>Починаємо аукціон.</p>
+      <button id="auction-btn">Аукціон</button>
     `;
+
+    return container;
   }
 
   #bindHandler(resolve) {
