@@ -11,8 +11,11 @@ class Trade {
       return;
     }
 
-    const { fromIndex, toIndex, moneyFrom, moneyTo, tilesFrom, tilesTo } =
-      result;
+    const {
+      from: { fromIndex, moneyFrom, tilesFrom },
+      to: { toIndex, moneyTo, tilesTo },
+    } = result;
+
     const fromPlayer = this.#players[fromIndex];
     const toPlayer = this.#players[toIndex];
 
@@ -26,11 +29,11 @@ class Trade {
     propsFrom.forEach((tile) => tile.changeOwner(fromPlayer, toPlayer));
     propsTo.forEach((tile) => tile.changeOwner(toPlayer, fromPlayer));
 
-    fromPlayer.changeBalance(-moneyFrom + moneyTo);
-    toPlayer.changeBalance(-moneyTo + moneyFrom);
+    fromPlayer.pay(moneyFrom);
+    fromPlayer.receive(moneyTo);
 
-    fromPlayer.updateDisplay();
-    toPlayer.updateDisplay();
+    toPlayer.pay(moneyTo);
+    toPlayer.receive(moneyFrom);
 
     console.log('Торгівлю завершено.');
   }

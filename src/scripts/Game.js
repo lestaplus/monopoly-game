@@ -55,7 +55,7 @@ class Game {
     player.move(steps, this.board.tiles.length);
 
     if (player.position > 0 && player.position < prevPosition) {
-      player.changeBalance(200);
+      player.receive(200);
       this.gameNotifier.message(
         `${player.name} проходить повз старт та отримує 200₴.`,
       );

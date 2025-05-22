@@ -29,7 +29,7 @@ class PropertyTile extends BaseTile {
   buyHouse(player) {
     if (this.canBuyHouse(player)) {
       this.houses++;
-      player.changeBalance(-this.buildingCost);
+      player.pay(this.buildingCost);
     }
   }
 
@@ -46,7 +46,7 @@ class PropertyTile extends BaseTile {
     if (this.canBuyHotel(player)) {
       this.hotel = true;
       this.houses = 0;
-      player.changeBalance(-this.buildingCost);
+      player.pay(this.buildingCost);
     }
   }
 
@@ -61,8 +61,8 @@ class PropertyTile extends BaseTile {
 
   #handleRentPayment(player) {
     const rent = this.getRent();
-    player.changeBalance(-rent);
-    this.owner.changeBalance(rent);
+    player.pay(rent);
+    this.owner.receive(rent);
     this.gameNotifier.message(
       `${player.name} сплачує ${rent}₴ гравцю ${this.owner.name}.`,
     );

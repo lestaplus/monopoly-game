@@ -51,7 +51,8 @@ class CasinoTile extends BaseTile {
     }
 
     const prize = Math.floor(bid * result.multiplier);
-    player.changeBalance(-bid + prize);
+    player.pay(bid);
+    player.receive(prize);
 
     this.gameNotifier.message(
       `${player.name} поставив ${bid}₴ і виграв ${prize}₴.`,

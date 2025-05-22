@@ -46,3 +46,19 @@
     display: flex;
     justify-content: center;
 }
+
+.tile-checkboxes {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #333333;
+    border-radius: 4px;
+    padding: 4px;
+    overflow-y: auto;
+    min-height: 30px;
+    max-height: 80px;
+}
+
+.tile-checkboxes label {
+    display: flex;
+    cursor: pointer;
+}

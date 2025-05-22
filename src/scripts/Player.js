@@ -17,7 +17,7 @@ class Player {
 
     this.ui = new PlayerUI(name, index);
     this.element = this.ui.element;
-    this.ui.updateDisplay(this.balance);
+    this.ui.updateDisplay(this.#balance);
     this.gameNotifier = GameNotifier.getInstance();
   }
 
@@ -42,7 +42,12 @@ class Player {
     this.ui.updateDisplay(this.#balance);
   }
 
-  changeBalance(amount) {
+  pay(amount) {
+    this.#balance -= amount;
+    this.ui.updateDisplay(this.#balance);
+  }
+
+  receive(amount) {
     this.#balance += amount;
     this.ui.updateDisplay(this.#balance);
   }
@@ -97,7 +102,7 @@ class Player {
       this.gameNotifier.message(
         `${this.name} сплатив штраф 50₴ і виходить з в'язниці`,
       );
-      this.changeBalance(-50);
+      this.pay(50);
       this.#inJail = false;
       this.#jailTurns = 0;
       return true;
@@ -125,7 +130,7 @@ class Player {
       this.gameNotifier.message(
         `${this.name} не вибив дубль за 3 спроби. Сплачує 50₴`,
       );
-      this.changeBalance(-50);
+      this.pay(50);
       this.#inJail = false;
       this.#jailTurns = 0;
       return true;

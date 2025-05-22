@@ -8,11 +8,12 @@ export async function startAuction(tile, players, ui) {
 
   if (!winner || !price || price < tile.price) {
     gameNotifier.message(`Поле ${tile.name} залишилось без власника.`);
+    ui.enableButton('trade-btn');
     return;
   }
 
   tile.assignOwner(winner);
-  winner.changeBalance(-price);
+  winner.pay(price);
 
   gameNotifier.message(
     `${winner.name} виграв аукціон і купив ${tile.name} за ${price}₴.`,

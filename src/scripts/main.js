@@ -55,12 +55,15 @@ startGameButton.addEventListener('click', () => {
   const trade = new Trade(game.players);
 
   document.getElementById('trade-btn')?.addEventListener('click', async () => {
+    gameUI.disableButton('dice-btn');
     gameUI.disableButton('trade-btn');
 
     const currentPlayerIndex = game.currentPlayerIndex;
     await trade.startTrade(currentPlayerIndex, modalService.tradeModal);
 
     gameUI.enableButton('trade-btn');
+    gameUI.enableButton('dice-btn');
   });
   gameUI.enableButton('trade-btn');
+  gameUI.enableButton('dice-btn');
 });

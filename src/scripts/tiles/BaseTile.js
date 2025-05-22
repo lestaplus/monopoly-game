@@ -43,7 +43,7 @@ class BaseTile {
     if (choice === 'buy') {
       if (player.balance >= this.price) {
         this.assignOwner(player);
-        player.changeBalance(-this.price);
+        player.pay(this.price);
         this.gameNotifier.message(`${player.name} купив ${this.name}.`);
       } else {
         await modals.noFundsModal.show();

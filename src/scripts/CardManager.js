@@ -55,11 +55,11 @@ class CardManager {
   }
 
   #handlePay(card, player) {
-    player.changeBalance(-card.amount);
+    player.pay(card.amount);
   }
 
   #handleReceive(card, player) {
-    player.changeBalance(card.amount);
+    player.receive(card.amount);
   }
 
   #handleGoToJail(_, player) {

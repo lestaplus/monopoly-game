@@ -32,11 +32,13 @@ class GameUI {
   }
 
   enableButton(id) {
-    document.getElementById(id)?.removeAttribute('disabled');
+    const btn = document.getElementById(id);
+    if (btn) btn.disabled = false;
   }
 
   disableButton(id) {
-    document.getElementById(id)?.setAttribute('disabled', 'true');
+    const btn = document.getElementById(id);
+    if (btn) btn.disabled = true;
   }
 }
 
