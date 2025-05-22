@@ -23,14 +23,15 @@ export default class TurnModal {
   #waitForRoll() {
     const diceBtn = document.getElementById('dice-btn');
 
-    const handler = () => {
-      const modalContent = this.modalManager.modalBody.firstChild;
-      if (modalContent?.classList.contains('turn-modal')) {
-        this.modalManager.close();
-      }
-      diceBtn.removeEventListener('click', handler);
-    };
-
-    diceBtn.addEventListener('click', handler);
+    diceBtn?.addEventListener(
+      'click',
+      () => {
+        const modalContent = this.modalManager.modalBody.firstChild;
+        if (modalContent?.classList.contains('turn-modal')) {
+          this.modalManager.close();
+        }
+      },
+      { once: true },
+    );
   }
 }

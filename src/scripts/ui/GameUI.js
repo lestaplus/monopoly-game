@@ -31,16 +31,12 @@ class GameUI {
     });
   }
 
-  setDiceButtonHandler(handler) {
-    this.#menu.setButtonHandler('dice-btn', handler);
-  }
-
   enableButton(id) {
-    this.#menu.enableButton(id);
+    document.getElementById(id)?.removeAttribute('disabled');
   }
 
   disableButton(id) {
-    this.#menu.disableButton(id);
+    document.getElementById(id)?.setAttribute('disabled', 'true');
   }
 }
 

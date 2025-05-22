@@ -36,7 +36,8 @@ class BaseTile {
     this.#owner = toPlayer;
   }
 
-  async handleUnowned(player, players, modals) {
+  async handleUnowned(player, players, context) {
+    const { modals, ui } = context;
     const choice = await modals.purchaseModal.show(this);
 
     if (choice === 'buy') {
@@ -49,13 +50,13 @@ class BaseTile {
         this.gameNotifier.message(
           `${player.name} не має достатньо грошей. Починаємо аукціон.`,
         );
-        await startAuction(this, players);
+        await startAuction(this, players, ui);
       }
     } else if (choice === 'auction') {
       this.gameNotifier.message(
         `${player.name} не купив ${this.name}. Починаємо аукціон.`,
       );
-      await startAuction(this, players);
+      await startAuction(this, players, ui);
     }
   }
 

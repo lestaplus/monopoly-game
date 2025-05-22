@@ -1,13 +1,17 @@
 export default class TradeModal {
+  #moneyInputHandlers = {};
+  #targetChangeHandler = null;
+
   constructor(modalManager) {
     this.modalManager = modalManager;
   }
 
   show(players, currentPlayerIndex) {
+    this.players = players;
+    const container = this.#renderForm(players, currentPlayerIndex);
+    this.modalManager.open(container);
+
     return new Promise((resolve) => {
-      this.players = players;
-      const container = this.#renderForm(players, currentPlayerIndex);
-      this.modalManager.open(container);
       this.#bindHandlers(resolve, currentPlayerIndex);
     });
   }
@@ -89,7 +93,11 @@ export default class TradeModal {
     const fromInput = document.getElementById('money-from');
     const toInput = document.getElementById('money-to');
 
-    const bind = (input, max) => {
+    const bind = (input, max, key) => {
+      if (this.#moneyInputHandlers[key]) {
+        input.removeEventListener('input', this.#moneyInputHandlers[key]);
+      }
+
       input.min = 0;
       input.max = max;
 
@@ -101,24 +109,33 @@ export default class TradeModal {
       };
 
       input.addEventListener('input', check);
+      this.#moneyInputHandlers[key] = check;
       check();
     };
 
-    if (fromInput) bind(fromInput, fromPlayer.balance);
-    if (toInput) bind(toInput, toPlayer.balance);
+    if (fromInput) bind(fromInput, fromPlayer.balance, 'from');
+    if (toInput) bind(toInput, toPlayer.balance, 'to');
   }
 
   #bindActionButtons(resolve, currentPlayerIndex) {
-    document.getElementById('confirm-btn').onclick = () => {
-      const data = this.#collectData(currentPlayerIndex);
-      this.modalManager.close();
-      resolve(data);
-    };
+    document.getElementById('confirm-btn')?.addEventListener(
+      'click',
+      () => {
+        const data = this.#collectData(currentPlayerIndex);
+        this.modalManager.close();
+        resolve(data);
+      },
+      { once: true },
+    );
 
-    document.getElementById('cancel-btn').onclick = () => {
-      this.modalManager.close();
-      resolve(null);
-    };
+    document.getElementById('cancel-btn')?.addEventListener(
+      'click',
+      () => {
+        this.modalManager.close();
+        resolve(null);
+      },
+      { once: true },
+    );
   }
 
   #getInitialToPlayer(currentPlayerIndex) {
@@ -134,7 +151,11 @@ export default class TradeModal {
     const tradeTarget = document.getElementById('trade-target');
     if (!tradeTarget) return;
 
-    tradeTarget.addEventListener('change', (e) => {
+    if (this.#targetChangeHandler) {
+      tradeTarget.removeEventListener('change', this.#targetChangeHandler);
+    }
+
+    const handler = (e) => {
       const toIndex = parseInt(e.target.value);
       const toPlayer = this.players[toIndex];
 
@@ -145,7 +166,10 @@ export default class TradeModal {
       if (header) header.textContent = `Гравець: ${toPlayer.name}`;
 
       this.#bindMoneyLimits(fromPlayer, toPlayer);
-    });
+    };
+
+    tradeTarget.addEventListener('change', handler);
+    this.#targetChangeHandler = handler;
   }
 
   #getSelectedTileValues(selectorId) {

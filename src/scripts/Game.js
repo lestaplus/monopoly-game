@@ -21,7 +21,9 @@ class Game {
     });
 
     this.board.updatePlayerPositions(this.#players);
-    this.ui.setDiceButtonHandler(() => this.handleRollDice());
+    document.getElementById('dice-btn')?.addEventListener('click', async () => {
+      await this.handleRollDice();
+    });
     this.ui.setActivePlayer(this.#currentPlayerIndex);
 
     setTimeout(() => this.startTurn(), 0);
@@ -97,6 +99,7 @@ class Game {
       players: this.#players,
       game: this,
       modals: this.modalService,
+      ui: this.ui,
     };
 
     await tile.activate(player, this.players, localContext);

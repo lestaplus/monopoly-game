@@ -1,7 +1,6 @@
 import Board from './Board.js';
 import Game from './Game.js';
 import GameUI from './ui/GameUI.js';
-import Menu from './ui/Menu.js';
 import Trade from './Trade.js';
 import CardManager from './CardManager.js';
 import { modalService } from './ui/modalService.js';
@@ -12,10 +11,7 @@ await board.init();
 const cardManager = new CardManager(board.tiles);
 await cardManager.loadCards();
 
-const menu = new Menu();
-menu.init();
-
-const gameUI = new GameUI(menu);
+const gameUI = new GameUI();
 
 const playerCountSelect = document.getElementById('player-count');
 const playerNamesElement = document.getElementById('player-names');
@@ -58,13 +54,13 @@ startGameButton.addEventListener('click', () => {
 
   const trade = new Trade(game.players);
 
-  menu.setButtonHandler('trade-btn', async () => {
-    menu.disableButton('trade-btn');
+  document.getElementById('trade-btn')?.addEventListener('click', async () => {
+    gameUI.disableButton('trade-btn');
 
     const currentPlayerIndex = game.currentPlayerIndex;
     await trade.startTrade(currentPlayerIndex, modalService.tradeModal);
 
-    menu.enableButton('trade-btn');
+    gameUI.enableButton('trade-btn');
   });
-  menu.enableButton('trade-btn');
+  gameUI.enableButton('trade-btn');
 });

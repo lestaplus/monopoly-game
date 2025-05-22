@@ -1,7 +1,8 @@
 import { modalService } from './ui/modalService.js';
 import GameNotifier from './ui/GameNotifier.js';
 
-export async function startAuction(tile, players) {
+export async function startAuction(tile, players, ui) {
+  ui.disableButton('trade-btn');
   const { winner, price } = await modalService.auctionModal.show(tile, players);
   const gameNotifier = GameNotifier.getInstance();
 
@@ -16,4 +17,5 @@ export async function startAuction(tile, players) {
   gameNotifier.message(
     `${winner.name} виграв аукціон і купив ${tile.name} за ${price}₴.`,
   );
+  ui.enableButton('trade-btn');
 }

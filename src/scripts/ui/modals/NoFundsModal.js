@@ -4,9 +4,10 @@ export default class NoFundsModal {
   }
 
   show() {
+    const container = this.#createContainer();
+    this.modalManager.open(container);
+
     return new Promise((resolve) => {
-      const container = this.#createContainer();
-      this.modalManager.open(container);
       this.#bindHandler(resolve);
     });
   }
@@ -25,9 +26,13 @@ export default class NoFundsModal {
   }
 
   #bindHandler(resolve) {
-    document.getElementById('auction-btn').onclick = () => {
-      this.modalManager.close();
-      resolve();
-    };
+    document.getElementById('auction-btn')?.addEventListener(
+      'click',
+      () => {
+        this.modalManager.close();
+        resolve();
+      },
+      { once: true },
+    );
   }
 }

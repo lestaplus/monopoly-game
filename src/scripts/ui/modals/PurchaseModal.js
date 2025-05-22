@@ -4,9 +4,10 @@ export default class PurchaseModal {
   }
 
   show(tile) {
+    const container = this.#createContainer(tile);
+    this.modalManager.open(container);
+
     return new Promise((resolve) => {
-      const container = this.#createContainer(tile);
-      this.modalManager.open(container);
       this.#bindHandlers(resolve);
     });
   }
@@ -27,14 +28,22 @@ export default class PurchaseModal {
   }
 
   #bindHandlers(resolve) {
-    document.getElementById('buy-btn').onclick = () => {
-      this.modalManager.close();
-      resolve('buy');
-    };
+    document.getElementById('buy-btn')?.addEventListener(
+      'click',
+      () => {
+        this.modalManager.close();
+        resolve('buy');
+      },
+      { once: true },
+    );
 
-    document.getElementById('auction-btn').onclick = () => {
-      this.modalManager.close();
-      resolve('auction');
-    };
+    document.getElementById('auction-btn')?.addEventListener(
+      'click',
+      () => {
+        this.modalManager.close();
+        resolve('auction');
+      },
+      { once: true },
+    );
   }
 }

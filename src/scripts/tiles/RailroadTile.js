@@ -17,10 +17,8 @@ class RailroadTile extends BaseTile {
   }
 
   async activate(player, players, context) {
-    const modals = context.modals;
-
     if (!this.isOwned()) {
-      await this.handleUnowned(player, players, modals);
+      await this.handleUnowned(player, players, context);
       return;
     }
 

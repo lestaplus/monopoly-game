@@ -4,22 +4,22 @@ export default class AuctionModal {
   }
 
   show(tile, players) {
+    this.tile = tile;
+    this.players = players;
+    this.active = [...players];
+    this.bids = new Map();
+    this.passed = new Set();
+    this.currentPlayerIndex = 0;
+    this.highestBid = tile.price;
+    this.highestBidder = null;
+
+    this.container = this.#createContainer();
+    this.#bindElements();
+    this.modalManager.open(this.container);
+    this.#updateInfo();
+
     return new Promise((resolve) => {
-      this.tile = tile;
-      this.players = players;
-      this.active = [...players];
-      this.bids = new Map();
-      this.passed = new Set();
-      this.currentPlayerIndex = 0;
-      this.highestBid = tile.price;
-      this.highestBidder = null;
-
-      this.container = this.#createContainer();
-      this.#bindElements();
       this.#bindHandlers(resolve);
-
-      this.modalManager.open(this.container);
-      this.#updateInfo();
     });
   }
 
@@ -43,13 +43,28 @@ export default class AuctionModal {
   #bindElements() {
     this.info = this.container.querySelector('#current-info');
     this.input = this.container.querySelector('#bid-input');
-    this.bidBtn = this.container.querySelector('#bid-btn');
-    this.passBtn = this.container.querySelector('#pass-btn');
   }
 
   #bindHandlers(resolve) {
-    this.bidBtn.onclick = () => this.#handleBid(resolve);
-    this.passBtn.onclick = () => this.#handlePass(resolve);
+    if (this.clickHandler) {
+      document
+        .getElementById('modal-body')
+        ?.removeEventListener('click', this.clickHandler);
+    }
+
+    this.clickHandler = (e) => {
+      if (e.target.id === 'bid-btn') {
+        this.#handleBid(resolve);
+      }
+
+      if (e.target.id === 'pass-btn') {
+        this.#handlePass(resolve);
+      }
+    };
+
+    document
+      .getElementById('modal-body')
+      .addEventListener('click', this.clickHandler);
   }
 
   #handleBid(resolve) {
