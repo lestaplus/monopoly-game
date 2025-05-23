@@ -1,4 +1,6 @@
 export default class AuctionModal {
+  #moneyInputHandler = null;
+
   constructor(modalManager) {
     this.modalManager = modalManager;
   }
@@ -31,6 +33,7 @@ export default class AuctionModal {
       <h2>Аукціон: ${this.tile.name}</h2>
       <div id="current-info"></div>
       <input type="number" id="bid-input" placeholder="Ваша ставка">
+      <div id="bid-error"></div>
       <div class="auction-actions">
         <button class="bid-btn" id="bid-btn">Ставка</button>
         <button class="pass-btn" id="pass-btn">Пропустити</button>
@@ -43,6 +46,7 @@ export default class AuctionModal {
   #bindElements() {
     this.info = this.container.querySelector('#current-info');
     this.input = this.container.querySelector('#bid-input');
+    this.errorBox = this.container.querySelector('#bid-error');
   }
 
   #bindHandlers(resolve) {
@@ -67,6 +71,31 @@ export default class AuctionModal {
       .addEventListener('click', this.clickHandler);
   }
 
+  #bindMoneyLimits(player) {
+    if (!this.input) return;
+
+    const max = player.balance;
+
+    if (this.#moneyInputHandler) {
+      this.input.removeEventListener('input', this.#moneyInputHandler);
+    }
+
+    this.input.min = '0';
+    this.input.max = String(max);
+
+    const check = () => {
+      this.errorBox.textContent = '';
+      let value = parseInt(this.input.value);
+      if (isNaN(value) || value < 0) value = 0;
+      if (value > max) value = max;
+      this.input.value = String(value);
+    };
+
+    this.input.addEventListener('input', check);
+    this.#moneyInputHandler = check;
+    check();
+  }
+
   #handleBid(resolve) {
     const value = parseInt(this.input.value);
     const player = this.active[this.currentPlayerIndex];
@@ -74,9 +103,11 @@ export default class AuctionModal {
     const minBid = this.highestBidder ? this.highestBid + 1 : this.tile.price;
 
     if (isNaN(value) || value < minBid || value > player.balance) {
-      alert(`Недостатньо грошей або ставка є меншою за ${minBid}₴`);
+      this.errorBox.textContent = 'Ставка не валідна';
       return;
     }
+
+    this.errorBox.textContent = '';
 
     this.highestBid = value;
     this.highestBidder = player;
@@ -136,5 +167,6 @@ export default class AuctionModal {
     `;
     this.input.value = '';
     this.input.focus();
+    this.#bindMoneyLimits(player);
   }
 }

@@ -115,8 +115,8 @@ export default class TradeModal {
         input.removeEventListener('input', this.#moneyInputHandlers[key]);
       }
 
-      input.min = 0;
-      input.max = max;
+      input.min = '0';
+      input.max = String(max);
 
       const check = () => {
         let value = parseInt(input.value);
