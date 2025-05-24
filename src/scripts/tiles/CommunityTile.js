@@ -1,19 +1,31 @@
 import BaseTile from './BaseTile.js';
+import { drawCard } from '../eventCards.js';
 
 class CommunityTile extends BaseTile {
   constructor(data) {
     super(data);
   }
 
-  activate(player, players, context) {
-    const cardManager = context?.cardManager;
-    if (!cardManager) {
-      throw new Error('cardManager не передано в activate()');
-    }
+  async activate(player, players, context) {
+    const { modals } = context;
 
-    const roll = cardManager.rollDice();
-    const card = cardManager.draw('community', roll);
-    cardManager.apply(card, player, context);
+    const card = drawCard('community');
+    await modals.messageModal.show(card.text);
+    this.#applyCardEvent(card, player);
+  }
+
+  #applyCardEvent(card, player) {
+    switch (card.action) {
+      case 'pay':
+        player.pay(card.amount);
+        break;
+      case 'receive':
+        player.receive(card.amount);
+        break;
+      case 'skipTurn':
+        player.skipTurn(true);
+        break;
+    }
   }
 }
 

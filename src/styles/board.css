@@ -101,7 +101,7 @@
 
 .tile[data-type="start"],
 .tile[data-type="jail"],
-.tile[data-type="casino"],
+.tile[data-type="parking"],
 .tile[data-type="gotojail"] {
     width: 80px;
     height: 80px;

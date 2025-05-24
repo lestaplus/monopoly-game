@@ -4,6 +4,7 @@ import NoFundsModal from './modals/NoFundsModal.js';
 import TradeModal from './modals/TradeModal.js';
 import AuctionModal from './modals/AuctionModal.js';
 import TurnModal from './modals/TurnModal.js';
+import MessageModal from './modals/MessageModal.js';
 
 const modalManager = new ModalManager();
 
@@ -14,4 +15,5 @@ export const modalService = {
   tradeModal: new TradeModal(modalManager),
   auctionModal: new AuctionModal(modalManager),
   turnModal: new TurnModal(modalManager),
+  messageModal: new MessageModal(modalManager),
 };

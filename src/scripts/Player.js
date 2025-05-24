@@ -69,6 +69,11 @@ class Player {
   }
 
   set hasJailKey(value) {
+    if (this.hasJailKey) {
+      console.log(`${this.name} вже має ключ від в'язниці.`);
+      return;
+    }
+    console.log(`${this.name} отримує ключ від в'язниці.`);
     this.#hasJailKey = value;
   }
 

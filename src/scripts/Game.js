@@ -5,10 +5,9 @@ class Game {
   #players = [];
   #currentPlayerIndex = 0;
 
-  constructor(board, ui, cardManager, modalService) {
+  constructor(board, ui, modalService) {
     this.board = board;
     this.ui = ui;
-    this.cardManager = cardManager;
     this.modalService = modalService;
     this.gameNotifier = GameNotifier.getInstance();
   }
@@ -88,28 +87,28 @@ class Game {
   }
 
   async handleTile(player) {
-    const initialPosition = player.position;
-    const tile = this.board.tiles[initialPosition];
+    let currentTile;
+    let moved;
 
-    alert(`${player.name} стоїть на клітинці ${tile.name}`);
+    do {
+      const previousPosition = player.position;
+      currentTile = this.board.tiles[previousPosition];
 
-    const localContext = {
-      cardManager: this.cardManager,
-      board: this.board,
-      players: this.#players,
-      game: this,
-      modals: this.modalService,
-      ui: this.ui,
-    };
+      alert(`${player.name} стоїть на клітинці ${currentTile.name}`);
 
-    await tile.activate(player, this.players, localContext);
+      await currentTile.activate(player, this.players, {
+        board: this.board,
+        players: this.#players,
+        game: this,
+        modals: this.modalService,
+        ui: this.ui,
+      });
 
-    const moved = player.position !== initialPosition;
-    const newTile = this.board.tiles[player.position];
-
-    if (moved && newTile !== tile) {
-      await this.handleTile(player);
-    }
+      if (player.position !== previousPosition) {
+        this.board.updatePlayerPositions(this.players);
+      }
+      moved = player.position !== previousPosition;
+    } while (moved);
   }
 
   async handleRollDice() {
@@ -121,11 +120,12 @@ class Game {
     if (firstDice === secondDice) {
       player.incrementDoubleRolls();
 
-      if (player.doubleRollsCount >= 3) {
+      if (player.doubleRollsCount === 3) {
         this.gameNotifier.message(
           `${player.name} викинув 3 дублі поспіль і йде до в'язниці!`,
         );
         player.goToJail();
+        player.resetDoubleRolls();
         this.board.updatePlayerPositions(this.#players);
         this.endTurn();
         return;

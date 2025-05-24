@@ -1,4 +1,4 @@
-import CasinoTile from './CasinoTile.js';
+import ParkingTile from './ParkingTile.js';
 import ChanceTile from './ChanceTile.js';
 import CommunityTile from './CommunityTile.js';
 import GoToJailTile from './GoToJailTile.js';
@@ -18,6 +18,6 @@ export const tileClasses = {
   community: CommunityTile,
   jail: JailTile,
   gotojail: GoToJailTile,
-  casino: CasinoTile,
+  parking: ParkingTile,
   start: StartTile,
 };

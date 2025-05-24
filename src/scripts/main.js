@@ -2,14 +2,13 @@ import Board from './Board.js';
 import Game from './Game.js';
 import GameUI from './ui/GameUI.js';
 import Trade from './Trade.js';
-import CardManager from './CardManager.js';
+import { initCardGenerators } from './eventCards.js';
 import { modalService } from './ui/modalService.js';
 
 const board = new Board();
 await board.init();
 
-const cardManager = new CardManager(board.tiles);
-await cardManager.loadCards();
+await initCardGenerators();
 
 const gameUI = new GameUI();
 
@@ -49,7 +48,7 @@ startGameButton.addEventListener('click', () => {
   document.getElementById('player-setup').style.display = 'none';
   document.getElementById('game-container').classList.remove('hidden');
 
-  const game = new Game(board, gameUI, cardManager, modalService);
+  const game = new Game(board, gameUI, modalService);
   game.init(playerNames);
 
   const trade = new Trade(game.players);
