@@ -24,19 +24,7 @@ class Game {
   }
 
   async startGame() {
-    await this.startTurn();
-  }
-
-  get players() {
-    return [...this.#players];
-  }
-
-  get currentPlayer() {
-    return this.#players[this.#currentPlayerIndex];
-  }
-
-  get currentPlayerIndex() {
-    return this.#currentPlayerIndex;
+    await this.#startTurn();
   }
 
   rollDice() {
@@ -64,28 +52,73 @@ class Game {
     player.updateDisplay();
   }
 
-  async startTurn() {
+  async #startTurn() {
     const player = this.currentPlayer;
 
     if (player.inJail) {
-      const freed = player.tryExitJail();
+      const freed = await this.#handleJail(player);
+
       if (!freed) {
-        await this.endTurn();
+        await this.#endTurn();
         return;
       }
     }
 
     if (player.shouldSkipTurn()) {
-      await this.endTurn();
+      await this.#endTurn();
       return;
     }
 
     this.ui.setActivePlayer(this.currentPlayerIndex);
-    await this.modalService.turnModal.show(player.name);
-    await this.handleRollDice();
+    await this.modalService.turnModal.show(player);
+    await this.#handleRollDice();
   }
 
-  async handleTile(player) {
+  async #handleJail(player) {
+    const choice = await this.modalService.jailModal.show(player);
+
+    if (choice === 'pay') {
+      this.gameNotifier.message(
+        `${player.name} сплатив штраф 50₴ і виходить з в'язниці.`,
+      );
+      player.pay(50);
+      player.releaseFromJail();
+      return true;
+    }
+
+    if (choice === 'roll') {
+      const { firstDice, secondDice } = player.rollDiceForJail();
+
+      if (firstDice === secondDice) {
+        this.gameNotifier.message(
+          `${player.name} вибив дубль і виходить з в'язниці.`,
+        );
+        player.releaseFromJail();
+        return true;
+      }
+
+      player.incrementJailTurns();
+
+      if (player.jailTurns === 3) {
+        this.gameNotifier.message(
+          `${player.name} не вибив дубль за 3 спроби, тому сплачує штраф 50₴`,
+        );
+        player.pay(50);
+        player.releaseFromJail();
+        return true;
+      } else {
+        this.gameNotifier.message(
+          `${player.name} не вибив дубль (спроба ${player.jailTurns} з 3).`,
+        );
+      }
+
+      return false;
+    }
+
+    return false;
+  }
+
+  async #handleTile(player) {
     let currentTile;
     let moved;
 
@@ -110,7 +143,7 @@ class Game {
     } while (moved);
   }
 
-  async handleRollDice() {
+  async #handleRollDice() {
     const player = this.currentPlayer;
     const { firstDice, secondDice, total: steps } = this.rollDice();
 
@@ -124,15 +157,15 @@ class Game {
         player.goToJail();
         player.resetDoubleRolls();
         this.board.updatePlayerPositions(this.#players);
-        await this.endTurn();
+        await this.#endTurn();
         return;
       } else {
         this.gameNotifier.message(
           `${player.name} викинув дубль і ходить ще раз.`,
         );
         this.movePlayer(player, steps);
-        await this.handleTile(player);
-        await this.startTurn();
+        await this.#handleTile(player);
+        await this.#startTurn();
         return;
       }
     } else {
@@ -140,17 +173,29 @@ class Game {
     }
 
     this.movePlayer(player, steps);
-    await this.handleTile(player);
-    await this.endTurn();
+    await this.#handleTile(player);
+    await this.#endTurn();
   }
 
-  async endTurn() {
+  async #endTurn() {
     this.modalService.modalManager.clearStack();
     this.#currentPlayerIndex =
       (this.#currentPlayerIndex + 1) % this.#players.length;
     this.ui.updatePlayers(this.players);
     this.ui.setActivePlayer(this.currentPlayerIndex);
-    await this.startTurn();
+    await this.#startTurn();
+  }
+
+  get players() {
+    return [...this.#players];
+  }
+
+  get currentPlayer() {
+    return this.#players[this.#currentPlayerIndex];
+  }
+
+  get currentPlayerIndex() {
+    return this.#currentPlayerIndex;
   }
 }
 

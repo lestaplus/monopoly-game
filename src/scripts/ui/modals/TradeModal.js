@@ -1,19 +1,17 @@
 export default class TradeModal {
-  #moneyInputHandlers = {};
-  #targetChangeHandler = null;
-  #validationHandlers = [];
-
   constructor(modalManager) {
     this.modalManager = modalManager;
   }
 
   show(players, currentPlayerIndex) {
     this.players = players;
+    this.currentPlayerIndex = currentPlayerIndex;
+
     const container = this.#renderForm(players, currentPlayerIndex);
     this.modalManager.open(container);
 
     return new Promise((resolve) => {
-      this.#bindHandlers(resolve, currentPlayerIndex);
+      this.#bindHandlers(container, resolve);
     });
   }
 
@@ -76,16 +74,6 @@ export default class TradeModal {
     `;
   }
 
-  #bindElements() {
-    this.moneyFrom = document.getElementById('money-from');
-    this.moneyTo = document.getElementById('money-to');
-    this.tilesFrom = document.getElementById('tiles-from');
-    this.tilesTo = document.getElementById('tiles-to');
-    this.confirmBtn = document.getElementById('confirm-btn');
-    this.cancelBtn = document.getElementById('cancel-btn');
-    this.tradeTarget = document.getElementById('trade-target');
-  }
-
   #fillTiles(container, tiles, prefix) {
     container.innerHTML = '';
     (tiles || []).forEach((tile, index) => {
@@ -97,95 +85,127 @@ export default class TradeModal {
     });
   }
 
-  #bindHandlers(resolve, currentPlayerIndex) {
-    const fromPlayer = this.players[currentPlayerIndex];
-    const toPlayer = this.#getInitialToPlayer(currentPlayerIndex);
+  #bindHandlers(container, resolve) {
+    const confirmBtn = container.querySelector('#confirm-btn');
+    const cancelBtn = container.querySelector('#cancel-btn');
 
-    this.#bindElements();
-    this.#bindActionButtons(resolve, currentPlayerIndex);
-    this.#bindMoneyLimits(fromPlayer, toPlayer);
-    this.#bindTargetChangeHandler(fromPlayer);
-    this.#bindValidationInputs();
-    this.#updateConfirmButton();
-  }
-
-  #bindMoneyLimits(fromPlayer, toPlayer) {
-    const bind = (input, max, key) => {
-      if (this.#moneyInputHandlers[key]) {
-        input.removeEventListener('input', this.#moneyInputHandlers[key]);
-      }
-
-      input.min = '0';
-      input.max = String(max);
-
-      const check = () => {
-        let value = parseInt(input.value);
-        if (isNaN(value) || value < 0) value = 0;
-        if (value > max) value = max;
-        input.value = String(value);
-      };
-
-      input.addEventListener('input', check);
-      this.#moneyInputHandlers[key] = check;
-      check();
-    };
-
-    if (this.moneyFrom) bind(this.moneyFrom, fromPlayer.balance, 'from');
-    if (this.moneyTo) bind(this.moneyTo, toPlayer.balance, 'to');
-  }
-
-  #bindActionButtons(resolve, currentPlayerIndex) {
-    this.confirmBtn?.addEventListener(
+    confirmBtn.addEventListener(
       'click',
       () => {
-        const data = this.#collectData(currentPlayerIndex);
-        this.modalManager.close();
-        resolve(data);
+        this.#handleAction(container, 'confirm', resolve);
       },
       { once: true },
     );
 
-    this.cancelBtn?.addEventListener(
+    cancelBtn.addEventListener(
       'click',
       () => {
-        this.modalManager.close();
-        resolve(null);
+        this.#handleAction(container, 'cancel', resolve);
       },
       { once: true },
     );
+
+    this.#bindMoneyInputs(container);
+    this.#bindTileInputs(container);
+    this.#bindTargetSelector(container);
+    this.#updateConfirmButton(container);
   }
 
-  #getInitialToPlayer(currentPlayerIndex) {
-    const toIndex = this.tradeTarget
-      ? parseInt(this.tradeTarget.value)
-      : this.players.findIndex((_, i) => i !== currentPlayerIndex);
-
-    return this.players[toIndex];
-  }
-
-  #bindTargetChangeHandler(fromPlayer) {
-    if (!this.tradeTarget) return;
-
-    if (this.#targetChangeHandler) {
-      this.tradeTarget.removeEventListener('change', this.#targetChangeHandler);
+  #handleAction(container, action, resolve) {
+    if (action === 'confirm') {
+      const data = this.#collectData(container);
+      this.modalManager.close();
+      resolve(data);
+    } else if (action === 'cancel') {
+      this.modalManager.close();
+      resolve(null);
     }
+  }
+
+  #bindMoneyInputs(container) {
+    const fromPlayer = this.players[this.currentPlayerIndex];
+    const toPlayer = this.#getInitialToPlayer();
+
+    const moneyFrom = container.querySelector('#money-from');
+    const moneyTo = container.querySelector('#money-to');
+
+    this.#validateMoneyInput(container, moneyFrom, fromPlayer.balance);
+    this.#validateMoneyInput(container, moneyTo, toPlayer.balance);
+  }
+
+  #validateMoneyInput(container, input, max) {
+    const clonedInput = input.cloneNode(true);
+    input.replaceWith(clonedInput);
+
+    const handler = () => {
+      let value = parseInt(clonedInput.value);
+      if (isNaN(value) || value < 0) value = 0;
+      if (value > max) value = max;
+      clonedInput.value = String(value);
+      this.#updateConfirmButton(container);
+    };
+    clonedInput.addEventListener('input', handler);
+    handler();
+  }
+
+  #bindTileInputs(container) {
+    const tilesFrom = container.querySelector('#tiles-from');
+    const tilesTo = container.querySelector('#tiles-to');
+
+    [tilesFrom, tilesTo].forEach((el) => {
+      el.addEventListener('input', () => this.#updateConfirmButton(container));
+      el.addEventListener('change', () => this.#updateConfirmButton(container));
+    });
+  }
+
+  #bindTargetSelector(container) {
+    const tradeTarget = container.querySelector('#trade-target');
 
     const handler = (e) => {
       const toIndex = parseInt(e.target.value);
       const toPlayer = this.players[toIndex];
 
-      const tilesToSelect = this.tilesTo;
-      this.#fillTiles(tilesToSelect, toPlayer.properties, 'to');
+      const tilesTo = container.querySelector('#tiles-to');
+      const toName = container.querySelector('#to-name');
+      const moneyTo = container.querySelector('#money-to');
 
-      const header = document.getElementById('to-name');
-      if (header) header.textContent = `Гравець: ${toPlayer.name}`;
+      this.#fillTiles(tilesTo, toPlayer.properties, 'to');
+      toName.textContent = `Гравець: ${toPlayer.name}`;
 
-      this.#bindMoneyLimits(fromPlayer, toPlayer);
-      this.#updateConfirmButton();
+      this.#validateMoneyInput(container, moneyTo, toPlayer.balance);
+
+      this.#updateConfirmButton(container);
     };
 
-    this.tradeTarget.addEventListener('change', handler);
-    this.#targetChangeHandler = handler;
+    tradeTarget.addEventListener('change', handler);
+  }
+
+  #updateConfirmButton(container) {
+    const moneyFrom =
+      parseInt(container.querySelector('#money-from').value) || 0;
+    const moneyTo = parseInt(container.querySelector('#money-to').value) || 0;
+    const tilesFrom = this.#getSelectedTileValues(
+      container.querySelector('#tiles-from'),
+    );
+    const tilesTo = this.#getSelectedTileValues(
+      container.querySelector('#tiles-to'),
+    );
+
+    const isValid =
+      moneyFrom > 0 ||
+      moneyTo > 0 ||
+      tilesFrom.length > 0 ||
+      tilesTo.length > 0;
+
+    const confirmBtn = container.querySelector('#confirm-btn');
+    confirmBtn.disabled = !isValid;
+  }
+
+  #getInitialToPlayer() {
+    const otherPlayers = this.players.filter(
+      (_, i) => i !== this.currentPlayerIndex,
+    );
+    return otherPlayers[0];
   }
 
   #getSelectedTileValues(container) {
@@ -194,61 +214,29 @@ export default class TradeModal {
     ).map((checkbox) => checkbox.value);
   }
 
-  #collectData(currentPlayerIndex) {
-    const fromIndex = currentPlayerIndex;
-    const toIndex = parseInt(this.tradeTarget.value);
+  #collectData(container) {
+    const fromIndex = this.currentPlayerIndex;
+    const toIndex = parseInt(container.querySelector('#trade-target').value);
 
     const fromPlayer = this.players[fromIndex];
     const toPlayer = this.players[toIndex];
 
-    let moneyFrom = parseInt(this.moneyFrom.value) || 0;
-    let moneyTo = parseInt(this.moneyTo.value) || 0;
+    let moneyFrom = parseInt(container.querySelector('#money-from').value) || 0;
+    let moneyTo = parseInt(container.querySelector('#money-to').value) || 0;
 
     moneyFrom = Math.max(0, Math.min(moneyFrom, fromPlayer.balance));
     moneyTo = Math.max(0, Math.min(moneyTo, toPlayer.balance));
 
-    const tilesFrom = this.#getSelectedTileValues(this.tilesFrom);
-    const tilesTo = this.#getSelectedTileValues(this.tilesTo);
+    const tilesFrom = this.#getSelectedTileValues(
+      container.querySelector('#tiles-from'),
+    );
+    const tilesTo = this.#getSelectedTileValues(
+      container.querySelector('#tiles-to'),
+    );
 
     return {
       from: { fromIndex, moneyFrom, tilesFrom },
       to: { toIndex, moneyTo, tilesTo },
     };
-  }
-
-  #bindValidationInputs() {
-    this.#validationHandlers.forEach(({ el, fn }) => {
-      el.removeEventListener('input', fn);
-      el.removeEventListener('change', fn);
-    });
-    this.#validationHandlers = [];
-
-    const elements = [
-      this.moneyFrom,
-      this.moneyTo,
-      this.tilesFrom,
-      this.tilesTo,
-    ];
-    elements.forEach((el) => {
-      const fn = () => this.#updateConfirmButton();
-      el?.addEventListener('input', fn);
-      el?.addEventListener('change', fn);
-      this.#validationHandlers.push({ el, fn });
-    });
-  }
-
-  #updateConfirmButton() {
-    const moneyFrom = parseInt(this.moneyFrom.value) || 0;
-    const moneyTo = parseInt(this.moneyTo.value) || 0;
-    const tilesFrom = this.#getSelectedTileValues(this.tilesFrom);
-    const tilesTo = this.#getSelectedTileValues(this.tilesTo);
-
-    const isValid =
-      moneyFrom > 0 ||
-      moneyTo > 0 ||
-      tilesFrom.length > 0 ||
-      tilesTo.length > 0;
-
-    this.confirmBtn.disabled = !isValid;
   }
 }

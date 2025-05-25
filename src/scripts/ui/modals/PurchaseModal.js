@@ -8,7 +8,7 @@ export default class PurchaseModal {
     this.modalManager.open(container);
 
     return new Promise((resolve) => {
-      this.#bindHandlers(resolve);
+      this.#bindHandlers(container, resolve);
     });
   }
 
@@ -27,23 +27,29 @@ export default class PurchaseModal {
     return container;
   }
 
-  #bindHandlers(resolve) {
-    document.getElementById('buy-btn')?.addEventListener(
+  #bindHandlers(container, resolve) {
+    const buyBtn = container.querySelector('#buy-btn');
+    const auctionBtn = container.querySelector('#auction-btn');
+
+    buyBtn.addEventListener(
       'click',
       () => {
-        this.modalManager.close();
-        resolve('buy');
+        this.#handleAction('buy', resolve);
       },
       { once: true },
     );
 
-    document.getElementById('auction-btn')?.addEventListener(
+    auctionBtn.addEventListener(
       'click',
       () => {
-        this.modalManager.close();
-        resolve('auction');
+        this.#handleAction('auction', resolve);
       },
       { once: true },
     );
+  }
+
+  #handleAction(action, resolve) {
+    this.modalManager.close();
+    resolve(action);
   }
 }

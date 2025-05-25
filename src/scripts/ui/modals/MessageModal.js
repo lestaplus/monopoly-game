@@ -4,11 +4,11 @@ export default class MessageModal {
   }
 
   show(message) {
-    this.container = this.#createContainer(message);
-    this.modalManager.open(this.container);
+    const container = this.#createContainer(message);
+    this.modalManager.open(container);
 
     return new Promise((resolve) => {
-      this.#bindHandler(resolve);
+      this.#bindHandler(container, resolve);
     });
   }
 
@@ -26,15 +26,19 @@ export default class MessageModal {
     return container;
   }
 
-  #bindHandler(resolve) {
-    const continueBtn = this.container.querySelector('#continue-btn');
-    continueBtn?.addEventListener(
+  #bindHandler(container, resolve) {
+    const continueBtn = container.querySelector('#continue-btn');
+    continueBtn.addEventListener(
       'click',
       () => {
-        this.modalManager.close();
-        resolve();
+        this.#handleContinue(resolve);
       },
       { once: true },
     );
+  }
+
+  #handleContinue(resolve) {
+    this.modalManager.close();
+    resolve();
   }
 }

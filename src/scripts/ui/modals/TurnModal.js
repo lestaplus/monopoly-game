@@ -3,34 +3,43 @@ export default class TurnModal {
     this.modalManager = modalManager;
   }
 
-  show(playerName) {
-    const container = this.#createContainer(playerName);
+  show(player) {
+    const container = this.#createContainer(player);
     this.modalManager.open(container);
 
     return new Promise((resolve) => {
-      this.#bindHandler(resolve);
+      this.#bindHandler(container, resolve);
     });
   }
 
-  #createContainer(playerName) {
+  #createContainer(player) {
     const container = document.createElement('div');
     container.className = 'turn-modal';
+
     container.innerHTML = `
       <h2>Хід гравця</h2>
-      <p class="turn-name">${playerName}</p>
-      <button id="dice-btn">Кинути кубики</button>
+      <p class="turn-name">${player.name}</p>
+      <div class="turn-actions">
+        <button id="dice-btn">Кинути кубики</button>
+      </div>
     `;
+
     return container;
   }
 
-  #bindHandler(resolve) {
-    document.getElementById('dice-btn')?.addEventListener(
+  #bindHandler(container, resolve) {
+    const diceBtn = container.querySelector('#dice-btn');
+    diceBtn.addEventListener(
       'click',
       () => {
-        this.modalManager.close();
-        resolve();
+        this.#handleRoll(resolve);
       },
       { once: true },
     );
+  }
+
+  #handleRoll(resolve) {
+    this.modalManager.close();
+    resolve();
   }
 }

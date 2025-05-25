@@ -1,27 +1,23 @@
 export default class AuctionModal {
-  #moneyInputHandler = null;
-
   constructor(modalManager) {
     this.modalManager = modalManager;
   }
 
   show(tile, players) {
     this.tile = tile;
-    this.players = players;
-    this.active = [...players];
+    this.players = [...players];
     this.bids = new Map();
     this.passed = new Set();
     this.currentPlayerIndex = 0;
     this.highestBid = tile.price;
     this.highestBidder = null;
 
-    this.container = this.#createContainer();
-    this.#bindElements();
-    this.modalManager.open(this.container);
-    this.#updateInfo();
+    const container = this.#createContainer();
+    this.modalManager.open(container);
+    this.#updateInfo(container);
 
     return new Promise((resolve) => {
-      this.#bindHandlers(resolve);
+      this.#bindHandlers(container, resolve);
     });
   }
 
@@ -30,10 +26,10 @@ export default class AuctionModal {
     container.className = 'auction-modal';
 
     container.innerHTML = `
-      <h2>Аукціон: ${this.tile.name}</h2>
-      <div id="current-info"></div>
-      <input type="number" id="bid-input" placeholder="Ваша ставка">
-      <div id="bid-error"></div>
+      <h2 class="auction-title">Аукціон: ${this.tile.name}</h2>
+      <div class="auction-info" id="auction-info"></div>
+      <input type="number" class="auction-input" id="auction-input" placeholder="Ваша ставка">
+      <div class="auction-error" id="auction-error"></div>
       <div class="auction-actions">
         <button class="bid-btn" id="bid-btn">Ставка</button>
         <button class="pass-btn" id="pass-btn">Пропустити</button>
@@ -43,98 +39,69 @@ export default class AuctionModal {
     return container;
   }
 
-  #bindElements() {
-    this.info = this.container.querySelector('#current-info');
-    this.input = this.container.querySelector('#bid-input');
-    this.errorBox = this.container.querySelector('#bid-error');
+  #bindHandlers(container, resolve) {
+    const bidBtn = container.querySelector('#bid-btn');
+    const passBtn = container.querySelector('#pass-btn');
+
+    bidBtn.addEventListener('click', () => this.#handleBid(container, resolve));
+    passBtn.addEventListener('click', () =>
+      this.#handlePass(container, resolve),
+    );
+
+    const input = container.querySelector('#auction-input');
+    input.addEventListener('input', () => this.#validateInput(container));
   }
 
-  #bindHandlers(resolve) {
-    if (this.clickHandler) {
-      document
-        .getElementById('modal-body')
-        ?.removeEventListener('click', this.clickHandler);
-    }
+  #validateInput(container) {
+    const input = container.querySelector('#auction-input');
+    const errorBox = container.querySelector('#auction-error');
+    const player = this.players[this.currentPlayerIndex];
 
-    this.clickHandler = (e) => {
-      if (e.target.id === 'bid-btn') {
-        this.#handleBid(resolve);
-      }
+    errorBox.textContent = '';
 
-      if (e.target.id === 'pass-btn') {
-        this.#handlePass(resolve);
-      }
-    };
+    let value = parseInt(input.value);
 
-    document
-      .getElementById('modal-body')
-      .addEventListener('click', this.clickHandler);
+    if (isNaN(value) || value < 0) value = 0;
+    if (value > player.balance) value = player.balance;
+    input.value = String(value);
   }
 
-  #bindMoneyLimits(player) {
-    if (!this.input) return;
-
-    const max = player.balance;
-
-    if (this.#moneyInputHandler) {
-      this.input.removeEventListener('input', this.#moneyInputHandler);
-    }
-
-    this.input.min = '0';
-    this.input.max = String(max);
-
-    const check = () => {
-      this.errorBox.textContent = '';
-      let value = parseInt(this.input.value);
-      if (isNaN(value) || value < 0) value = 0;
-      if (value > max) value = max;
-      this.input.value = String(value);
-    };
-
-    this.input.addEventListener('input', check);
-    this.#moneyInputHandler = check;
-    check();
-  }
-
-  #handleBid(resolve) {
-    const value = parseInt(this.input.value);
-    const player = this.active[this.currentPlayerIndex];
+  #handleBid(container, resolve) {
+    const input = container.querySelector('#auction-input');
+    const errorBox = container.querySelector('#auction-error');
+    const player = this.players[this.currentPlayerIndex];
+    const value = parseInt(input.value);
 
     const minBid = this.highestBidder ? this.highestBid + 1 : this.tile.price;
 
     if (isNaN(value) || value < minBid || value > player.balance) {
-      this.errorBox.textContent = 'Ставка не валідна';
+      errorBox.textContent = `Ставка не валідна`;
       return;
     }
-
-    this.errorBox.textContent = '';
 
     this.highestBid = value;
     this.highestBidder = player;
     this.bids.set(player, value);
-    this.#nextPlayer(resolve);
+
+    this.#nextPlayer(container, resolve);
   }
 
-  #handlePass(resolve) {
-    const player = this.active[this.currentPlayerIndex];
+  #handlePass(container, resolve) {
+    const player = this.players[this.currentPlayerIndex];
     this.passed.add(player);
-    this.#nextPlayer(resolve);
+    this.#nextPlayer(container, resolve);
   }
 
-  #nextPlayer(resolve) {
-    const activePlayers = this.#getActivePlayers();
+  #nextPlayer(container, resolve) {
+    const remaining = this.players.filter((p) => !this.passed.has(p));
 
-    if (
-      activePlayers.length === 1 &&
-      this.highestBidder &&
-      activePlayers[0] === this.highestBidder
-    ) {
+    if (remaining.length === 1 && this.highestBidder === remaining[0]) {
       this.modalManager.close();
       resolve({ winner: this.highestBidder, price: this.highestBid });
       return;
     }
 
-    if (activePlayers.length === 0) {
+    if (remaining.length === 0) {
       this.modalManager.close();
       resolve({ winner: null, price: null });
       return;
@@ -142,31 +109,30 @@ export default class AuctionModal {
 
     do {
       this.currentPlayerIndex =
-        (this.currentPlayerIndex + 1) % this.active.length;
-    } while (this.passed.has(this.active[this.currentPlayerIndex]));
+        (this.currentPlayerIndex + 1) % this.players.length;
+    } while (this.passed.has(this.players[this.currentPlayerIndex]));
 
-    this.#updateInfo();
+    this.#updateInfo(container);
   }
 
-  #getActivePlayers() {
-    return this.active.filter((p) => !this.passed.has(p));
-  }
+  #updateInfo(container) {
+    const info = container.querySelector('#auction-info');
+    const input = container.querySelector('#auction-input');
+    const errorBox = container.querySelector('#auction-error');
+    const player = this.players[this.currentPlayerIndex];
+    const minBid = this.highestBidder ? this.highestBid + 1 : this.tile.price;
 
-  #updateInfo() {
-    const player = this.active[this.currentPlayerIndex];
-
-    const hasBid = this.highestBidder !== null;
-    const currentBidText = hasBid ? `${this.highestBid}₴` : 'немає';
-
-    const minBid = hasBid ? this.highestBid + 1 : this.tile.price;
-
-    this.info.innerHTML = `
+    info.innerHTML = `
       <p><strong>Мінімальна ставка:</strong> ${minBid}₴</p>
-      <p><strong>Поточна ставка:</strong> ${currentBidText}</p>
+      <p><strong>Поточна ставка:</strong> ${this.highestBidder ? this.highestBid + '₴' : 'немає'}</p>
       <p><strong>Хід гравця:</strong> ${player.name}</p>
     `;
-    this.input.value = '';
-    this.input.focus();
-    this.#bindMoneyLimits(player);
+
+    input.value = '';
+    input.min = '0';
+    input.max = player.balance;
+    input.focus();
+
+    errorBox.textContent = '';
   }
 }

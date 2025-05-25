@@ -8,7 +8,7 @@ export default class NoFundsModal {
     this.modalManager.open(container);
 
     return new Promise((resolve) => {
-      this.#bindHandler(resolve);
+      this.#bindHandler(container, resolve);
     });
   }
 
@@ -19,20 +19,27 @@ export default class NoFundsModal {
     container.innerHTML = `
       <h2>Недостатньо грошей</h2>
       <p>Починаємо аукціон.</p>
-      <button id="auction-btn">Аукціон</button>
+      <div class="funds-actions">
+        <button id="auction-btn">Аукціон</button>
+      </div>
     `;
 
     return container;
   }
 
-  #bindHandler(resolve) {
-    document.getElementById('auction-btn')?.addEventListener(
+  #bindHandler(container, resolve) {
+    const auctionBtn = container.querySelector('#auction-btn');
+    auctionBtn.addEventListener(
       'click',
       () => {
-        this.modalManager.close();
-        resolve();
+        this.#handleAuction(resolve);
       },
       { once: true },
     );
+  }
+
+  #handleAuction(resolve) {
+    this.modalManager.close();
+    resolve();
   }
 }
