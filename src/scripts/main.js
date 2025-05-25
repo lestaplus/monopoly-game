@@ -33,7 +33,7 @@ playerCountSelect.addEventListener('change', () => {
 
 playerCountSelect.dispatchEvent(new Event('change'));
 
-startGameButton.addEventListener('click', () => {
+startGameButton.addEventListener('click', async () => {
   const inputs = document.querySelectorAll('#player-names input');
   const playerNames = Array.from(inputs)
     .map((name) => name.value.trim())
@@ -49,20 +49,19 @@ startGameButton.addEventListener('click', () => {
   document.getElementById('game-container').classList.remove('hidden');
 
   const game = new Game(board, gameUI, modalService);
+
   game.init(playerNames);
 
   const trade = new Trade(game.players);
 
   document.getElementById('trade-btn')?.addEventListener('click', async () => {
-    gameUI.disableButton('dice-btn');
     gameUI.disableButton('trade-btn');
 
-    const currentPlayerIndex = game.currentPlayerIndex;
-    await trade.startTrade(currentPlayerIndex, modalService.tradeModal);
+    await trade.startTrade(game.currentPlayerIndex, modalService.tradeModal);
 
     gameUI.enableButton('trade-btn');
-    gameUI.enableButton('dice-btn');
   });
   gameUI.enableButton('trade-btn');
-  gameUI.enableButton('dice-btn');
+
+  await game.startGame();
 });

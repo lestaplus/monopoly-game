@@ -20,12 +20,11 @@ class Game {
     });
 
     this.board.updatePlayerPositions(this.#players);
-    document.getElementById('dice-btn')?.addEventListener('click', async () => {
-      await this.handleRollDice();
-    });
     this.ui.setActivePlayer(this.#currentPlayerIndex);
+  }
 
-    setTimeout(() => this.startTurn(), 0);
+  async startGame() {
+    await this.startTurn();
   }
 
   get players() {
@@ -65,25 +64,25 @@ class Game {
     player.updateDisplay();
   }
 
-  startTurn() {
+  async startTurn() {
     const player = this.currentPlayer;
 
     if (player.inJail) {
       const freed = player.tryExitJail();
       if (!freed) {
-        this.endTurn();
+        await this.endTurn();
         return;
       }
     }
 
     if (player.shouldSkipTurn()) {
-      this.endTurn();
+      await this.endTurn();
       return;
     }
 
     this.ui.setActivePlayer(this.currentPlayerIndex);
-    setTimeout(() => this.modalService.turnModal.show(player.name), 0);
-    this.ui.enableButton('dice-btn');
+    await this.modalService.turnModal.show(player.name);
+    await this.handleRollDice();
   }
 
   async handleTile(player) {
@@ -112,8 +111,6 @@ class Game {
   }
 
   async handleRollDice() {
-    this.ui.disableButton('dice-btn');
-
     const player = this.currentPlayer;
     const { firstDice, secondDice, total: steps } = this.rollDice();
 
@@ -127,7 +124,7 @@ class Game {
         player.goToJail();
         player.resetDoubleRolls();
         this.board.updatePlayerPositions(this.#players);
-        this.endTurn();
+        await this.endTurn();
         return;
       } else {
         this.gameNotifier.message(
@@ -135,7 +132,7 @@ class Game {
         );
         this.movePlayer(player, steps);
         await this.handleTile(player);
-        this.startTurn();
+        await this.startTurn();
         return;
       }
     } else {
@@ -144,16 +141,16 @@ class Game {
 
     this.movePlayer(player, steps);
     await this.handleTile(player);
-    this.endTurn();
+    await this.endTurn();
   }
 
-  endTurn() {
+  async endTurn() {
     this.modalService.modalManager.clearStack();
     this.#currentPlayerIndex =
       (this.#currentPlayerIndex + 1) % this.#players.length;
     this.ui.updatePlayers(this.players);
     this.ui.setActivePlayer(this.currentPlayerIndex);
-    setTimeout(() => this.startTurn(), 0);
+    await this.startTurn();
   }
 }
 

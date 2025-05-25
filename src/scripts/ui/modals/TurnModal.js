@@ -6,7 +6,10 @@ export default class TurnModal {
   show(playerName) {
     const container = this.#createContainer(playerName);
     this.modalManager.open(container);
-    this.#waitForRoll();
+
+    return new Promise((resolve) => {
+      this.#bindHandler(resolve);
+    });
   }
 
   #createContainer(playerName) {
@@ -15,21 +18,17 @@ export default class TurnModal {
     container.innerHTML = `
       <h2>Хід гравця</h2>
       <p class="turn-name">${playerName}</p>
-      <p class="roll-hint">Кидайте кубики</p>
+      <button id="dice-btn">Кинути кубики</button>
     `;
     return container;
   }
 
-  #waitForRoll() {
-    const diceBtn = document.getElementById('dice-btn');
-
-    diceBtn?.addEventListener(
+  #bindHandler(resolve) {
+    document.getElementById('dice-btn')?.addEventListener(
       'click',
       () => {
-        const modalContent = this.modalManager.modalBody.firstChild;
-        if (modalContent?.classList.contains('turn-modal')) {
-          this.modalManager.close();
-        }
+        this.modalManager.close();
+        resolve();
       },
       { once: true },
     );

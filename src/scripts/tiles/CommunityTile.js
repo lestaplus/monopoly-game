@@ -23,7 +23,7 @@ class CommunityTile extends BaseTile {
         player.receive(card.amount);
         break;
       case 'skipTurn':
-        player.skipTurn(true);
+        player.skipNextTurn = true;
         break;
     }
   }
