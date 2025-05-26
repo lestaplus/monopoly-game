@@ -76,7 +76,6 @@ class Player {
   shouldSkipTurn() {
     if (this.#skipTurn) {
       this.#skipTurn = false;
-      this.gameNotifier.message(`${this.name} пропускає хід.`);
       return true;
     }
     return false;
@@ -119,10 +118,6 @@ class Player {
   }
 
   set hasJailKey(value) {
-    if (this.hasJailKey) {
-      this.gameNotifier.message(`${this.name} вже має ключ від в'язниці.`);
-      return;
-    }
     this.#hasJailKey = value;
   }
 

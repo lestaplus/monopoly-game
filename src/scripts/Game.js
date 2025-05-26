@@ -55,6 +55,12 @@ class Game {
   async #startTurn(fromDoubleRoll = false) {
     const player = this.currentPlayer;
 
+    if (!fromDoubleRoll && player.shouldSkipTurn()) {
+      this.gameNotifier.message(`${player.name} пропускає хід.`);
+      await this.#endTurn();
+      return;
+    }
+
     if (player.inJail) {
       const freed = await this.#handleJail(player);
 
@@ -62,11 +68,6 @@ class Game {
         await this.#endTurn();
         return;
       }
-    }
-
-    if (!fromDoubleRoll && player.shouldSkipTurn()) {
-      await this.#endTurn();
-      return;
     }
 
     this.ui.setActivePlayer(this.currentPlayerIndex);
@@ -200,6 +201,12 @@ class Game {
         );
         this.movePlayer(player, steps);
         await this.#handleTile(player);
+
+        if (player.inJail) {
+          await this.#endTurn();
+          return;
+        }
+
         await this.#startTurn(true);
         return;
       }

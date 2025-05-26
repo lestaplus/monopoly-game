@@ -32,10 +32,16 @@ class ChanceTile extends BaseTile {
         );
         break;
       case 'getOutOfJailKey':
-        player.hasJailKey = true;
-        player.gameNotifier.message(
-          `${player.name} отримує ключ від в'язниці через подію.`,
-        );
+        if (player.hasJailKey) {
+          player.gameNotifier.message(
+            `${player.name} вже має ключ від в'язниці. Другий ключ подія не дає.`,
+          );
+        } else {
+          player.hasJailKey = true;
+          player.gameNotifier.message(
+            `${player.name} отримує ключ від в'язниці через подію.`,
+          );
+        }
         break;
     }
   }
