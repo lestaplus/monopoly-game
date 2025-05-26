@@ -64,7 +64,7 @@ class PropertyTile extends BaseTile {
     player.pay(rent);
     this.owner.receive(rent);
     this.gameNotifier.message(
-      `${player.name} сплачує ${rent}₴ гравцю ${this.owner.name}.`,
+      `${player.name} сплачує ${rent}₴ за оренду поля "${this.name}" гравцю ${this.owner.name}.`,
     );
   }
 

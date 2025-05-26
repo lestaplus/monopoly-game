@@ -21,35 +21,51 @@ class ChanceTile extends BaseTile {
         break;
       case 'goToJail':
         player.goToJail();
+        player.gameNotifier.message(
+          `${player.name} відправляється до в'язниці через подію.`,
+        );
         break;
       case 'skipTurn':
-        player.skipNextTurn = true;
+        player.skipTurn = true;
+        player.gameNotifier.message(
+          `${player.name} пропускає наступний хід через подію.`,
+        );
         break;
       case 'getOutOfJailKey':
         player.hasJailKey = true;
+        player.gameNotifier.message(
+          `${player.name} отримує ключ від в'язниці через подію.`,
+        );
         break;
     }
   }
 
   #handleMove(card, player, board) {
     const total = board.tiles.length;
+    let newPosition = player.position;
 
     if ('toTile' in card) {
       const index = board.tiles.findIndex((tile) => tile.name === card.toTile);
       if (index !== -1) {
-        player.position = index;
+        newPosition = index;
       }
     } else if ('relative' in card) {
-      player.position = (player.position + card.relative + total) % total;
+      newPosition = (player.position + card.relative + total) % total;
     } else if ('toNearest' in card) {
       for (let i = 1; i < total; i++) {
         const index = (player.position + i) % total;
         if (board.tiles[index].type === card.toNearest) {
-          player.position = index;
+          newPosition = index;
           break;
         }
       }
     }
+
+    player.position = newPosition;
+    const targetTile = board.tiles[newPosition];
+    player.gameNotifier.message(
+      `${player.name} переміщується на поле "${targetTile.name}" через подію.`,
+    );
   }
 }
 

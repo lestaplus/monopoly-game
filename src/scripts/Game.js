@@ -43,7 +43,7 @@ class Game {
     if (player.position > 0 && player.position < prevPosition) {
       player.receive(200);
       this.gameNotifier.message(
-        `${player.name} проходить повз старт та отримує 200₴.`,
+        `${player.name} проходить повз "Старт" та отримує 200₴.`,
       );
     }
 
@@ -52,7 +52,7 @@ class Game {
     player.updateDisplay();
   }
 
-  async #startTurn() {
+  async #startTurn(fromDoubleRoll = false) {
     const player = this.currentPlayer;
 
     if (player.inJail) {
@@ -64,7 +64,7 @@ class Game {
       }
     }
 
-    if (player.shouldSkipTurn()) {
+    if (!fromDoubleRoll && player.shouldSkipTurn()) {
       await this.#endTurn();
       return;
     }
@@ -77,42 +77,77 @@ class Game {
   async #handleJail(player) {
     const choice = await this.modalService.jailModal.show(player);
 
-    if (choice === 'pay') {
-      this.gameNotifier.message(
-        `${player.name} сплатив штраф 50₴ і виходить з в'язниці.`,
-      );
-      player.pay(50);
-      player.releaseFromJail();
-      return true;
+    switch (choice) {
+      case 'key':
+        return this.#handleJailKey(player);
+      case 'pay':
+        return this.#handleJailPay(player);
+      case 'roll':
+        return this.#handleJailRoll(player);
+      default:
+        return false;
     }
+  }
 
-    if (choice === 'roll') {
-      const { firstDice, secondDice } = player.rollDiceForJail();
-
-      if (firstDice === secondDice) {
-        this.gameNotifier.message(
-          `${player.name} вибив дубль і виходить з в'язниці.`,
-        );
-        player.releaseFromJail();
-        return true;
-      }
-
+  #handleJailKey(player) {
+    if (!player.hasJailKey) {
+      this.gameNotifier.message(
+        `${player.name} намагається використати ключ якого не існує. Хід втрачається.`,
+      );
       player.incrementJailTurns();
 
       if (player.jailTurns === 3) {
         this.gameNotifier.message(
-          `${player.name} не вибив дубль за 3 спроби, тому сплачує штраф 50₴`,
+          `${player.name} не виходить з в'язниці за 3 спроби та сплачує штраф 50₴.`,
         );
         player.pay(50);
         player.releaseFromJail();
         return true;
-      } else {
-        this.gameNotifier.message(
-          `${player.name} не вибив дубль (спроба ${player.jailTurns} з 3).`,
-        );
       }
 
       return false;
+    }
+
+    this.gameNotifier.message(
+      `${player.name} використовує ключ для виходу з в'язниці.`,
+    );
+    player.useJailKey();
+    return true;
+  }
+
+  #handleJailPay(player) {
+    this.gameNotifier.message(
+      `${player.name} сплачує штраф 50₴ і виходить з в'язниці.`,
+    );
+    player.pay(50);
+    player.releaseFromJail();
+    return true;
+  }
+
+  #handleJailRoll(player) {
+    const { firstDice, secondDice } = player.rollDiceForJail();
+
+    if (firstDice === secondDice) {
+      this.gameNotifier.message(
+        `${player.name} вибиває дубль і виходить з в'язниці.`,
+      );
+      player.releaseFromJail();
+      return true;
+    }
+
+    player.incrementJailTurns();
+
+    if (player.jailTurns === 3) {
+      this.gameNotifier.message(
+        `${player.name} не вибиває дубль за 3 спроби та сплачує штраф 50₴.`,
+      );
+      player.pay(50);
+      player.releaseFromJail();
+      return true;
+    } else {
+      this.gameNotifier.message(
+        `${player.name} не вибиває дубль. Спроба ${player.jailTurns} з 3.`,
+      );
     }
 
     return false;
@@ -152,7 +187,7 @@ class Game {
 
       if (player.doubleRollsCount === 3) {
         this.gameNotifier.message(
-          `${player.name} викинув 3 дублі поспіль і йде до в'язниці!`,
+          `${player.name} вибиває 3 дублі поспіль і йде до в'язниці!`,
         );
         player.goToJail();
         player.resetDoubleRolls();
@@ -161,11 +196,11 @@ class Game {
         return;
       } else {
         this.gameNotifier.message(
-          `${player.name} викинув дубль і ходить ще раз.`,
+          `${player.name} вибиває дубль і ходить ще раз.`,
         );
         this.movePlayer(player, steps);
         await this.#handleTile(player);
-        await this.#startTurn();
+        await this.#startTurn(true);
         return;
       }
     } else {

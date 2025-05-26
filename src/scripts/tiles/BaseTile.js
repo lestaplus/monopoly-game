@@ -44,17 +44,17 @@ class BaseTile {
       if (player.balance >= this.price) {
         this.assignOwner(player);
         player.pay(this.price);
-        this.gameNotifier.message(`${player.name} купив ${this.name}.`);
+        this.gameNotifier.message(`${player.name} купує поле "${this.name}".`);
       } else {
         await modals.noFundsModal.show();
         this.gameNotifier.message(
-          `${player.name} не має достатньо грошей. Починаємо аукціон.`,
+          `${player.name} не має достатньо грошей, щоб купити поле "${this.name}". Стартує аукціон!.`,
         );
         await startAuction(this, players, ui);
       }
     } else if (choice === 'auction') {
       this.gameNotifier.message(
-        `${player.name} не купив ${this.name}. Починаємо аукціон.`,
+        `${player.name} не купує поле "${this.name}". Стартує аукціон!`,
       );
       await startAuction(this, players, ui);
     }

@@ -8,7 +8,7 @@ class StartTile extends BaseTile {
   activate(player) {
     player.receive(200);
     this.gameNotifier.message(
-      `${player.name} стає на клітинку Старт та отримує 200₴.`,
+      `${player.name} стає на поле "${this.name}" та отримує 200₴.`,
     );
   }
 }

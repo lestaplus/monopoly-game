@@ -68,10 +68,15 @@ class Player {
     this.#jailTurns++;
   }
 
+  useJailKey() {
+    this.#hasJailKey = false;
+    this.releaseFromJail();
+  }
+
   shouldSkipTurn() {
     if (this.#skipTurn) {
       this.#skipTurn = false;
-      this.gameNotifier.message(`${this.name} пропускає хід`);
+      this.gameNotifier.message(`${this.name} пропускає хід.`);
       return true;
     }
     return false;
@@ -115,10 +120,9 @@ class Player {
 
   set hasJailKey(value) {
     if (this.hasJailKey) {
-      console.log(`${this.name} вже має ключ від в'язниці.`);
+      this.gameNotifier.message(`${this.name} вже має ключ від в'язниці.`);
       return;
     }
-    console.log(`${this.name} отримує ключ від в'язниці.`);
     this.#hasJailKey = value;
   }
 

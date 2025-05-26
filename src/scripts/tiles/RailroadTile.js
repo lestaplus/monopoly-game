@@ -33,7 +33,7 @@ class RailroadTile extends BaseTile {
   #handleRent(player) {
     const rent = this.getRent(this.owner);
     this.gameNotifier.message(
-      `${player.name} сплачує ${rent}₴ за оренду залізниці гравцю ${this.owner.name}.`,
+      `${player.name} сплачує ${rent}₴ за оренду поля "${this.name}" гравцю ${this.owner.name}.`,
     );
   }
 }

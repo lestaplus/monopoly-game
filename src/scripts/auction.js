@@ -7,7 +7,7 @@ export async function startAuction(tile, players, ui) {
   const gameNotifier = GameNotifier.getInstance();
 
   if (!winner || !price || price < tile.price) {
-    gameNotifier.message(`Поле ${tile.name} залишилось без власника.`);
+    gameNotifier.message(`Поле "${tile.name}" залишається без власника.`);
     ui.enableButton('trade-btn');
     return;
   }
@@ -16,7 +16,7 @@ export async function startAuction(tile, players, ui) {
   winner.pay(price);
 
   gameNotifier.message(
-    `${winner.name} виграв аукціон і купив ${tile.name} за ${price}₴.`,
+    `${winner.name} виграє аукціон і купує поле "${tile.name}" за ${price}₴.`,
   );
   ui.enableButton('trade-btn');
 }

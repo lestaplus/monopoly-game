@@ -8,7 +8,7 @@ export default class JailModal {
     this.modalManager.open(container);
 
     return new Promise((resolve) => {
-      this.#bindHandlers(container, resolve);
+      this.#bindHandlers(container, resolve, player);
     });
   }
 
@@ -18,10 +18,11 @@ export default class JailModal {
 
     container.innerHTML = `
       <h2>${player.name}, ви у в'язниці!</h2>
-      <p>Ви можете спробувати кинути дубль <span id="double-attempt"></span>, щоб вийти, або сплатити штраф у 50₴.</p>
+      <p>Ви можете спробувати кинути дубль <span id="double-attempt"></span>, сплатити штраф 50₴ або використати ключ (якщо є).</p>
       <div class="jail-actions">
-        <button id="double-btn">Спробувати дубль </button>
-        <button id="fine-btn">Сплатити штраф</button>
+        <button id="double-btn">Дубль</button>
+        <button id="fine-btn">Штраф</button>
+        <button id="key-btn">Ключ</button>
       </div>
     `;
     const doubleAttempt = container.querySelector('#double-attempt');
@@ -30,9 +31,15 @@ export default class JailModal {
     return container;
   }
 
-  #bindHandlers(container, resolve) {
+  #bindHandlers(container, resolve, player) {
     const doubleBtn = container.querySelector('#double-btn');
     const fineBtn = container.querySelector('#fine-btn');
+    const keyBtn = container.querySelector('#key-btn');
+
+    if (!player.hasJailKey) {
+      keyBtn.disabled = true;
+      keyBtn.title = 'У вас немає ключа';
+    }
 
     doubleBtn.addEventListener(
       'click',
@@ -46,6 +53,14 @@ export default class JailModal {
       'click',
       () => {
         this.#handleAction('pay', resolve);
+      },
+      { once: true },
+    );
+
+    keyBtn.addEventListener(
+      'click',
+      () => {
+        this.#handleAction('key', resolve);
       },
       { once: true },
     );

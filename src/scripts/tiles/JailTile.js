@@ -7,7 +7,9 @@ class JailTile extends BaseTile {
 
   activate(player, players, context) {
     if (!player.inJail) {
-      this.gameNotifier.message(`${player.name} просто відвідує в'язницю.`);
+      this.gameNotifier.message(
+        `${player.name} відвідує в'язницю на екскурсії.`,
+      );
     }
   }
 }
