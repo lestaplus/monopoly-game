@@ -15,7 +15,7 @@ class Board {
   }
 
   async #loadTiles() {
-    const res = await fetch('src/assets/data/tiles.json');
+    const res = await fetch('/assets/data/tiles.json');
     if (!res.ok) {
       throw new Error(`Помилка завантаження клітинок: ${res.status}`);
     }

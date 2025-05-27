@@ -3,8 +3,8 @@ let communityGen;
 
 export async function initCardGenerators() {
   const [chanceRes, communityRes] = await Promise.all([
-    fetch('src/assets/data/chance.json'),
-    fetch('src/assets/data/community.json'),
+    fetch('/assets/data/chance.json'),
+    fetch('/assets/data/community.json'),
   ]);
 
   const chanceCards = await chanceRes.json();
