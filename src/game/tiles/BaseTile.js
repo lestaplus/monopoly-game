@@ -1,5 +1,5 @@
-import { startAuction } from '../auction.js';
-import GameNotifier from '../ui/GameNotifier.js';
+import { startAuction } from '../actions/auction.js';
+import GameNotifier from '../../ui/services/GameNotifier.js';
 
 class BaseTile {
   #name;

@@ -1,5 +1,5 @@
-import PlayerUI from './ui/PlayerUI.js';
-import GameNotifier from './ui/GameNotifier.js';
+import PlayerUI from '../ui/PlayerUI.js';
+import GameNotifier from '../ui/services/GameNotifier.js';
 
 class Player {
   #balance = 1500;

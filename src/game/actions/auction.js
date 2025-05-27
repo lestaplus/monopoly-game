@@ -1,5 +1,5 @@
-import { modalService } from './ui/modalService.js';
-import GameNotifier from './ui/GameNotifier.js';
+import { modalService } from '../../ui/services/modalService.js';
+import GameNotifier from '../../ui/services/GameNotifier.js';
 
 export async function startAuction(tile, players, ui) {
   ui.disableButton('trade-btn');

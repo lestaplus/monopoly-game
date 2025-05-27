@@ -1,5 +1,5 @@
 import Player from './Player.js';
-import GameNotifier from './ui/GameNotifier.js';
+import GameNotifier from '../ui/services/GameNotifier.js';
 
 class Game {
   #players = [];

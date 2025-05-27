@@ -1,5 +1,5 @@
-import { createTile } from './createTile.js';
-import BoardRenderer from './ui/BoardRenderer.js';
+import { createTile } from './factories/createTile.js';
+import BoardRenderer from '../ui/layout/BoardRenderer.js';
 
 class Board {
   #tiles = [];
@@ -15,7 +15,7 @@ class Board {
   }
 
   async #loadTiles() {
-    const res = await fetch('src/data/tiles.json');
+    const res = await fetch('src/assets/data/tiles.json');
     if (!res.ok) {
       throw new Error(`Помилка завантаження клітинок: ${res.status}`);
     }

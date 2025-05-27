@@ -1,9 +1,9 @@
-import Board from './Board.js';
-import Game from './Game.js';
+import Board from './game/Board.js';
+import Game from './game/Game.js';
 import GameUI from './ui/GameUI.js';
-import Trade from './Trade.js';
-import { initCardGenerators } from './eventCards.js';
-import { modalService } from './ui/modalService.js';
+import Trade from './game/Trade.js';
+import { initCardGenerators } from './game/eventCards.js';
+import { modalService } from './ui/services/modalService.js';
 
 const board = new Board();
 await board.init();
