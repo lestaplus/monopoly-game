@@ -11,8 +11,8 @@ class RailroadTile extends BaseTile {
       .length;
   }
 
-  getRent(owner) {
-    const count = this.getOwnedRailroadsCount(owner);
+  getRent() {
+    const count = this.getOwnedRailroadsCount(this.owner);
     return this.rentMap[count];
   }
 
@@ -23,18 +23,11 @@ class RailroadTile extends BaseTile {
     }
 
     if (this.owner !== player) {
-      this.#handleRent(player);
+      await this.handleRentPayment(player, context);
       return;
     }
 
     console.log(`${player.name} вже володіє залізницею.`);
-  }
-
-  #handleRent(player) {
-    const rent = this.getRent(this.owner);
-    this.gameNotifier.message(
-      `${player.name} сплачує ${rent}₴ за оренду поля "${this.name}" гравцю ${this.owner.name}.`,
-    );
   }
 }
 

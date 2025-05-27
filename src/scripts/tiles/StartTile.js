@@ -5,7 +5,13 @@ class StartTile extends BaseTile {
     super(data);
   }
 
-  activate(player) {
+  async activate(player, players, context) {
+    const modals = context.modals;
+    await modals.messageModal.show({
+      title: 'Старт',
+      message: `Ви стаєте на поле "${this.name}" та отримуєте 200₴`,
+    });
+
     player.receive(200);
     this.gameNotifier.message(
       `${player.name} стає на поле "${this.name}" та отримує 200₴.`,

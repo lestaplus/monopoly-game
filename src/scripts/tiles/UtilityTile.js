@@ -17,8 +17,8 @@ class UtilityTile extends BaseTile {
     return die1 + die2;
   }
 
-  getRent(owner) {
-    const utilityCount = this.getOwnedUtilityCount(owner);
+  getRent() {
+    const utilityCount = this.getOwnedUtilityCount(this.owner);
     const multiplier = utilityCount === 2 ? 10 : 4;
     const dice = this.rollDice();
     return dice * multiplier;
@@ -31,18 +31,11 @@ class UtilityTile extends BaseTile {
     }
 
     if (this.owner !== player) {
-      this.#handleRent(player);
+      await this.handleRentPayment(player, context);
       return;
     }
 
     console.log(`${player.name} вже володіє ${this.name}.`);
-  }
-
-  #handleRent(player) {
-    const rent = this.getRent(this.owner);
-    this.gameNotifier.message(
-      `${player.name} сплачує ${rent}₴ за оренду поля "${this.name}" гравцю ${this.owner.name}.`,
-    );
   }
 }
 

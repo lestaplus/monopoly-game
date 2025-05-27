@@ -60,7 +60,22 @@ class BaseTile {
     }
   }
 
-  activate(player, players) {
+  async handleRentPayment(player, context) {
+    const rent = this.getRent();
+
+    await context.modals.messageModal.show({
+      title: 'Оренда',
+      message: `Ви сплачуєте ${rent}₴ за оренду поля "${this.name}" гравцю ${this.owner.name}`,
+    });
+
+    player.pay(rent);
+    this.owner.receive(rent);
+    this.gameNotifier.message(
+      `${player.name} сплачує ${rent}₴ за оренду поля "${this.name}" гравцю ${this.owner.name}.`,
+    );
+  }
+
+  activate(player, players, context) {
     throw new Error(
       `Клітинка ${this.#name}: метод activate() не використовується в базовому класі`,
     );

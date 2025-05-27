@@ -3,8 +3,8 @@ export default class TurnModal {
     this.modalManager = modalManager;
   }
 
-  show(player) {
-    const container = this.#createContainer(player);
+  show(player, isDoubleRoll = false) {
+    const container = this.#createContainer(player, isDoubleRoll);
     this.modalManager.open(container);
 
     return new Promise((resolve) => {
@@ -12,12 +12,13 @@ export default class TurnModal {
     });
   }
 
-  #createContainer(player) {
+  #createContainer(player, isDoubleRoll) {
     const container = document.createElement('div');
     container.className = 'turn-modal';
 
+    const title = isDoubleRoll ? 'Хід гравця (дубль)' : 'Хід гравця';
     container.innerHTML = `
-      <h2>Хід гравця</h2>
+      <h2>${title}</h2>
       <p class="turn-name">${player.name}</p>
       <div class="turn-actions">
         <button id="dice-btn">Кинути кубики</button>

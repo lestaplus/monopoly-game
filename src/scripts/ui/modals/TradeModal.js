@@ -24,6 +24,7 @@ export default class TradeModal {
     const toPlayer = otherPlayers[0];
 
     container.innerHTML = `
+        <h2>Торгівля</h2>
         ${this.#renderPlayerSection(fromPlayer, 'from')}
         ${this.#renderPlayerSection(toPlayer, 'to', otherPlayers)}
       <div class="trade-actions">

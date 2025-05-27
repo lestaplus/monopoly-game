@@ -3,8 +3,8 @@ export default class MessageModal {
     this.modalManager = modalManager;
   }
 
-  show(message) {
-    const container = this.#createContainer(message);
+  show({ title = 'Повідомлення', message }) {
+    const container = this.#createContainer(title, message);
     this.modalManager.open(container);
 
     return new Promise((resolve) => {
@@ -12,11 +12,12 @@ export default class MessageModal {
     });
   }
 
-  #createContainer(message) {
+  #createContainer(title, message) {
     const container = document.createElement('div');
     container.className = 'message-modal';
 
     container.innerHTML = `
+      <h2>${title}</h2>
       <p class="modal-text">${message}</p>
       <div class="message-actions">
         <button id="continue-btn">Продовжити</button>

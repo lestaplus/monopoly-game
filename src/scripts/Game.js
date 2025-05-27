@@ -71,7 +71,7 @@ class Game {
     }
 
     this.ui.setActivePlayer(this.currentPlayerIndex);
-    await this.modalService.turnModal.show(player);
+    await this.modalService.turnModal.show(player, fromDoubleRoll);
     await this.#handleRollDice();
   }
 

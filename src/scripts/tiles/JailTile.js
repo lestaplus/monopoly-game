@@ -5,8 +5,15 @@ class JailTile extends BaseTile {
     super(data);
   }
 
-  activate(player, players, context) {
+  async activate(player, players, context) {
+    const modals = context.modals;
+
     if (!player.inJail) {
+      await modals.messageModal.show({
+        title: 'Екскурсія',
+        message: `Ви відвідуєте в'язницю на екскурсії`,
+      });
+
       this.gameNotifier.message(
         `${player.name} відвідує в'язницю на екскурсії.`,
       );

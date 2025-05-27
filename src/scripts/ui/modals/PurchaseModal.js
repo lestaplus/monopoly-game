@@ -17,7 +17,8 @@ export default class PurchaseModal {
     container.className = 'purchase-modal';
 
     container.innerHTML = `
-      <h2>Ви можете купити ${tile.name} за ${tile.price}₴.</h2>
+      <h2>Купівля</h2>
+      <p>Ви можете купити ${tile.name} за ${tile.price}₴.</p>
         <div class="purchase-actions">
           <button class="buy-btn" id="buy-btn">Купити</button>
           <button class="auction-btn" id="auction-btn">Аукціон</button>

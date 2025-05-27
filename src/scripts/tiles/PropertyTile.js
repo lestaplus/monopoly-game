@@ -59,15 +59,6 @@ class PropertyTile extends BaseTile {
     return sameColorTiles.length === requiredCount;
   }
 
-  #handleRentPayment(player) {
-    const rent = this.getRent();
-    player.pay(rent);
-    this.owner.receive(rent);
-    this.gameNotifier.message(
-      `${player.name} сплачує ${rent}₴ за оренду поля "${this.name}" гравцю ${this.owner.name}.`,
-    );
-  }
-
   #handlePropertyUpgrades(player) {
     if (this.canBuyHotel(player)) {
       const upgrade = confirm(
@@ -89,7 +80,7 @@ class PropertyTile extends BaseTile {
     }
 
     if (this.owner !== player) {
-      this.#handleRentPayment(player);
+      await this.handleRentPayment(player, context);
       return;
     }
 

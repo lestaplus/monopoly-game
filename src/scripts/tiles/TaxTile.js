@@ -5,7 +5,13 @@ class TaxTile extends BaseTile {
     super(data);
   }
 
-  activate(player) {
+  async activate(player, players, context) {
+    const modals = context.modals;
+    await modals.messageModal.show({
+      title: 'Податок',
+      message: `Ви сплачуєте податок ${this.amount}₴`,
+    });
+
     player.pay(this.amount);
     this.gameNotifier.message(
       `${player.name} сплачує податок ${this.amount}₴.`,

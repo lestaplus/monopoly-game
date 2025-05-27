@@ -10,7 +10,10 @@ class CommunityTile extends BaseTile {
     const { modals } = context;
 
     const card = drawCard('community');
-    await modals.messageModal.show(card.text);
+    await modals.messageModal.show({
+      title: 'Громадська скарбниця',
+      message: card.text,
+    });
     this.#applyCardEvent(card, player);
   }
 

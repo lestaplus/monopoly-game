@@ -10,7 +10,10 @@ class ChanceTile extends BaseTile {
     const { board, modals } = context;
 
     const card = drawCard('chance');
-    await modals.messageModal.show(card.text);
+    await modals.messageModal.show({
+      title: 'Шанс',
+      message: card.text,
+    });
     this.#applyCardEvent(card, player, board);
   }
 
