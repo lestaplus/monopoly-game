@@ -41,7 +41,7 @@ startGameButton.addEventListener('click', async () => {
 
   const expectedCount = getPlayerCount();
   if (playerNames.length < expectedCount) {
-    alert(`Введіть імена для всіх ${expectedCount} гравців`);
+    console.log(`Введіть імена для всіх ${expectedCount} гравців`);
     return;
   }
 

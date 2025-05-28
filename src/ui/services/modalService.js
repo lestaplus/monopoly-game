@@ -6,8 +6,10 @@ import AuctionModal from '../modals/AuctionModal.js';
 import TurnModal from '../modals/TurnModal.js';
 import MessageModal from '../modals/MessageModal.js';
 import JailModal from '../modals/JailModal.js';
+import DiceModal from '../modals/DiceModal.js';
 
 const modalManager = new ModalManager();
+const diceModal = new DiceModal(modalManager);
 
 export const modalService = {
   modalManager,
@@ -15,7 +17,8 @@ export const modalService = {
   noFundsModal: new NoFundsModal(modalManager),
   tradeModal: new TradeModal(modalManager),
   auctionModal: new AuctionModal(modalManager),
-  turnModal: new TurnModal(modalManager),
+  turnModal: new TurnModal(modalManager, diceModal),
   messageModal: new MessageModal(modalManager),
   jailModal: new JailModal(modalManager),
+  diceModal: diceModal,
 };

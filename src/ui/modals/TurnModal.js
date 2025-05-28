@@ -1,6 +1,7 @@
 export default class TurnModal {
-  constructor(modalManager) {
+  constructor(modalManager, diceModal) {
     this.modalManager = modalManager;
+    this.diceModal = diceModal;
   }
 
   show(player, isDoubleRoll = false) {
@@ -32,15 +33,16 @@ export default class TurnModal {
     const diceBtn = container.querySelector('#dice-btn');
     diceBtn.addEventListener(
       'click',
-      () => {
-        this.#handleRoll(resolve);
+      async () => {
+        await this.#handleRoll(resolve);
       },
       { once: true },
     );
   }
 
-  #handleRoll(resolve) {
+  async #handleRoll(resolve) {
     this.modalManager.close();
-    resolve();
+    const { dice1, dice2 } = await this.diceModal.show();
+    resolve({ dice1, dice2 });
   }
 }

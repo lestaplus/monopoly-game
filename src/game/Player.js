@@ -58,7 +58,7 @@ class Player {
     const firstDice = Math.floor(Math.random() * 6) + 1;
     const secondDice = Math.floor(Math.random() * 6) + 1;
 
-    alert(
+    console.log(
       `${this.name} кидає кубики для виходу з в'язниці: ${firstDice} + ${secondDice}`,
     );
     return { firstDice, secondDice };

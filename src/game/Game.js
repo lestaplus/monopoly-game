@@ -27,15 +27,6 @@ class Game {
     await this.#startTurn();
   }
 
-  rollDice() {
-    const firstDice = Math.floor(Math.random() * 6) + 1;
-    const secondDice = Math.floor(Math.random() * 6) + 1;
-    const total = firstDice + secondDice;
-
-    alert(`Випало ${firstDice} + ${secondDice} = ${total}`);
-    return { firstDice, secondDice, total };
-  }
-
   movePlayer(player, steps) {
     const prevPosition = player.position;
     player.move(steps, this.board.tiles.length);
@@ -47,7 +38,7 @@ class Game {
       );
     }
 
-    alert(`${player.name} переміщується на позицію ${player.position}`);
+    console.log(`${player.name} переміщується на позицію ${player.position}`);
     this.board.updatePlayerPositions(this.#players);
     player.updateDisplay();
   }
@@ -71,8 +62,9 @@ class Game {
     }
 
     this.ui.setActivePlayer(this.currentPlayerIndex);
-    await this.modalService.turnModal.show(player, fromDoubleRoll);
-    await this.#handleRollDice();
+    const { dice1: firstDice, dice2: secondDice } =
+      await this.modalService.turnModal.show(player, fromDoubleRoll);
+    await this.#handleRollDice(firstDice, secondDice);
   }
 
   async #handleJail(player) {
@@ -162,7 +154,7 @@ class Game {
       const previousPosition = player.position;
       currentTile = this.board.tiles[previousPosition];
 
-      alert(`${player.name} стоїть на клітинці ${currentTile.name}`);
+      console.log(`${player.name} стоїть на клітинці ${currentTile.name}`);
 
       await currentTile.activate(player, this.players, {
         board: this.board,
@@ -179,9 +171,9 @@ class Game {
     } while (moved);
   }
 
-  async #handleRollDice() {
+  async #handleRollDice(firstDice, secondDice) {
     const player = this.currentPlayer;
-    const { firstDice, secondDice, total: steps } = this.rollDice();
+    const steps = firstDice + secondDice;
 
     if (firstDice === secondDice) {
       player.incrementDoubleRolls();

@@ -69,7 +69,7 @@ class PropertyTile extends BaseTile {
       const build = confirm(`Побудувати будинок за ${this.buildingCost}₴?`);
       if (build) this.buyHouse(player);
     } else {
-      alert(`${player.name} вже володіє ${this.name}.`);
+      console.log(`${player.name} вже володіє ${this.name}.`);
     }
   }
 
