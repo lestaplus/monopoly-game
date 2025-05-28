@@ -1,4 +1,4 @@
-class TileRenderer {
+export default class TileRenderer {
   constructor(data, index) {
     this.name = data.name;
     this.price = data.price;
@@ -8,64 +8,30 @@ class TileRenderer {
     this.index = index;
   }
 
+  #getSide() {
+    const i = this.index;
+    if (i <= 10) return 'top';
+    if (i <= 19) return 'right';
+    if (i <= 30) return 'bottom';
+    return 'left';
+  }
+
   render() {
+    const side = this.#getSide();
+
     const tile = document.createElement('div');
-    tile.className = 'tile';
-
-    if (this.color) {
-      tile.classList.add(this.color);
-    }
-
-    const content = document.createElement('div');
-    content.className = 'tile-content';
-    content.innerText = this.name;
-
-    if (this.price) {
-      const priceDiv = document.createElement('div');
-      priceDiv.className = 'tile-price';
-      priceDiv.innerText = `${this.price}₴`;
-      content.appendChild(priceDiv);
-    }
-
-    const sideClasses = {
-      top: {
-        range: [0, 10],
-        tileLine: 'line-top',
-        textClass: '',
-      },
-      right: {
-        range: [11, 19],
-        tileLine: 'line-right',
-        textClass: 'text-right',
-      },
-      bottom: {
-        range: [20, 30],
-        tileLine: 'line-bottom',
-        textClass: '',
-      },
-      left: {
-        range: [31, 39],
-        tileLine: 'line-left',
-        textClass: 'text-left',
-      },
-    };
-
-    for (const side in sideClasses) {
-      const { range, tileLine, textClass } = sideClasses[side];
-      if (this.index >= range[0] && this.index <= range[1]) {
-        tile.classList.add(tileLine);
-        if (textClass) {
-          content.classList.add(textClass);
-        }
-      }
-    }
-
-    tile.appendChild(content);
-    tile.dataset.type = this.type;
+    tile.className = `tile ${this.color || ''}`.trim();
     tile.dataset.index = this.index;
+    tile.dataset.type = this.type;
+    tile.dataset.side = side;
+
+    tile.innerHTML = `
+      <div class="tile-content">
+        <span>${this.name}</span>
+        ${this.price ? `<div class="tile-price">${this.price}₴</div>` : ''}
+      </div>
+    `;
 
     return tile;
   }
 }
-
-export default TileRenderer;

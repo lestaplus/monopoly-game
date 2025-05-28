@@ -1,8 +1,12 @@
 import TileRenderer from './TileRenderer.js';
 
-class BoardRenderer {
-  renderTiles(tiles) {
-    const sectors = [
+export default class BoardRenderer {
+  constructor() {
+    this.sectors = this.#createSectors();
+  }
+
+  #createSectors() {
+    return [
       {
         element: document.getElementById('top-row'),
         range: [0, 10],
@@ -24,36 +28,36 @@ class BoardRenderer {
         step: -1,
       },
     ];
+  }
 
-    sectors.forEach(({ element, range, step }) => {
+  render(tiles) {
+    for (const { element, range, step } of this.sectors) {
       for (
         let i = range[0];
         step > 0 ? i <= range[1] : i >= range[1];
         i += step
       ) {
-        const renderer = new TileRenderer(tiles[i], i);
-        element.appendChild(renderer.render());
+        const tile = new TileRenderer(tiles[i], i).render();
+        element.appendChild(tile);
       }
-    });
+    }
   }
 
-  updatePlayerPositions(players) {
-    players.forEach((player, index) => {
-      document
-        .querySelectorAll(`.player-token.player-${index + 1}`)
-        .forEach((element) => element.remove());
+  updatePlayerTokens(players) {
+    document.querySelectorAll('.player-token').forEach((el) => el.remove());
 
-      const tileElement = document.querySelector(
+    players.forEach((player, i) => {
+      const tile = document.querySelector(
         `.tile[data-index="${player.position}"]`,
       );
-      if (tileElement) {
-        const token = document.createElement('div');
-        token.className = `player-token player-${index + 1}`;
-        token.innerText = index + 1;
-        tileElement.appendChild(token);
+      if (tile) {
+        tile.insertAdjacentHTML(
+          'beforeend',
+          `
+          <div class="player-token player-${i + 1}">${i + 1}</div>
+        `,
+        );
       }
     });
   }
 }
-
-export default BoardRenderer;

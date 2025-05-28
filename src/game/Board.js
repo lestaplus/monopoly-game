@@ -11,7 +11,7 @@ class Board {
 
   async init() {
     this.#tiles = await this.#loadTiles();
-    this.#renderer.renderTiles(this.#tiles);
+    this.#renderer.render(this.#tiles);
   }
 
   async #loadTiles() {
@@ -26,8 +26,8 @@ class Board {
     });
   }
 
-  updatePlayerPositions(players) {
-    this.#renderer.updatePlayerPositions(players);
+  updatePlayerTokens(players) {
+    this.#renderer.updatePlayerTokens(players);
   }
 
   get tiles() {

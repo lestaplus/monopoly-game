@@ -15,11 +15,6 @@
     height: 80px;
 }
 
-.top-row {
-    top: 0;
-    left: 0;
-}
-
 .bottom-row {
     bottom: 0;
     left: 0;
@@ -44,6 +39,25 @@
     top: 80px;
 }
 
+.player-token {
+    width: 16px;
+    height: 16px;
+    border-radius: 25%;
+    color: white;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    bottom: 2px;
+    left: 2px;
+}
+
+.player-token.player-1 { background-color: red; }
+.player-token.player-2 { background-color: blue; }
+.player-token.player-3 { background-color: green; }
+.player-token.player-4 { background-color: purple; }
+
 .tile {
     flex: 1;
     border: 1px solid #a5a3a3;
@@ -64,40 +78,51 @@
     position: absolute;
 }
 
-.tile.line-top::before,
-.tile.line-bottom::before{
-    content: '';
+.tile.brown::before { background-color: #8b4513; }
+.tile.blue::before { background-color: #0000ff; }
+.tile.green::before { background-color: #008000; }
+.tile.orange::before { background-color: #ffa500; }
+.tile.pink::before { background-color: #ff69b4; }
+.tile.purple::before { background-color: #952def; }
+.tile.red::before { background-color: #ff0000; }
+.tile.yellow::before { background-color: #ffff00; }
+
+.tile[data-side="bottom"]::before {
     width: 100%;
     height: 10px;
     top: 0;
     left: 0;
 }
 
-.tile.line-left::before {
-    content: '';
+.tile[data-side="left"]::before {
     width: 10px;
     height: 100%;
     top: 0;
     left: 0;
 }
 
-.tile.line-right::before {
-    content: '';
+.tile[data-side="left"] .tile-content {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+}
+
+.tile[data-side="right"]::before {
     width: 10px;
     height: 100%;
     top: 0;
-    left: auto;
     right: 0;
 }
 
-.tile.brown::before { background-color: #8b4513; }
-.tile.purple::before { background-color: #952def; }
-.tile.pink::before { background-color: #ff69b4; }
-.tile.orange::before { background-color: #ffa500; }
-.tile.red::before { background-color: #ff0000; }
-.tile.yellow::before { background-color: #ffff00; }
-.tile.green::before { background-color: #008000; }
-.tile.blue::before { background-color: #0000ff; }
+.tile[data-side="right"] .tile-content {
+    writing-mode: vertical-rl;
+}
+
+.tile[data-side="top"]::before {
+    width: 100%;
+    height: 10px;
+    top: 0;
+    left: 0;
+}
 
 .tile[data-type="start"],
 .tile[data-type="jail"],
@@ -117,36 +142,7 @@
     padding-top: 8px;
 }
 
-.text-left {
-    writing-mode: vertical-rl;
-    transform: rotate(180deg);
-}
-
-.text-right {
-    writing-mode: vertical-rl;
-    transform: none;
-}
-
 .tile-price {
     font-size: 0.7rem;
     color: #353535;
 }
-
-.player-token {
-    width: 16px;
-    height: 16px;
-    border-radius: 25%;
-    color: white;
-    font-size: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    bottom: 2px;
-    left: 2px;
-}
-
-.player-token.player-1 { background-color: red; }
-.player-token.player-2 { background-color: blue; }
-.player-token.player-3 { background-color: green; }
-.player-token.player-4 { background-color: purple; }

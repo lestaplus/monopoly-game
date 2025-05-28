@@ -19,7 +19,7 @@ class Game {
       return player;
     });
 
-    this.board.updatePlayerPositions(this.#players);
+    this.board.updatePlayerTokens(this.#players);
     this.ui.setActivePlayer(this.#currentPlayerIndex);
   }
 
@@ -39,7 +39,7 @@ class Game {
     }
 
     console.log(`${player.name} переміщується на позицію ${player.position}`);
-    this.board.updatePlayerPositions(this.#players);
+    this.board.updatePlayerTokens(this.#players);
     player.updateDisplay();
   }
 
@@ -165,7 +165,7 @@ class Game {
       });
 
       if (player.position !== previousPosition) {
-        this.board.updatePlayerPositions(this.players);
+        this.board.updatePlayerTokens(this.players);
       }
       moved = player.position !== previousPosition;
     } while (moved);
@@ -184,7 +184,7 @@ class Game {
         );
         player.goToJail();
         player.resetDoubleRolls();
-        this.board.updatePlayerPositions(this.#players);
+        this.board.updatePlayerTokens(this.#players);
         await this.#endTurn();
         return;
       } else {
