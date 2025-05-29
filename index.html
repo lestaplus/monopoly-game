@@ -24,23 +24,25 @@
     </div>
     <div id="game-container" class="game-container hidden">
         <div class="player-panel" id="player-panel">
-            <div id="player-list"></div>
-            <div id="menu">
+            <div class="player-list" id="player-list"></div>
+            <div class="menu" id="menu">
                 <button id="trade-btn" disabled>Торгівля</button>
             </div>
         </div>
-        <div class="board" id="board">
-            <div class="top-row" id="top-row"></div>
-            <div class="right-col" id="right-col"></div>
-            <div class="bottom-row" id="bottom-row"></div>
-            <div class="left-col" id="left-col"></div>
+        <div class="board-wrapper">
+            <div class="board" id="board">
+                <div class="top-row" id="top-row"></div>
+                <div class="right-col" id="right-col"></div>
+                <div class="bottom-row" id="bottom-row"></div>
+                <div class="left-col" id="left-col"></div>
+            </div>
             <div id="modal" class="modal hidden">
                 <div class="modal-content">
                     <div class="modal-body" id="modal-body"></div>
                 </div>
             </div>
+            <div class="game-notifier" id="game-notifier"></div>
         </div>
-        <div class="game-notifier" id="game-notifier"></div>
     </div>
     <script type="module" src="src/index.js"></script>
 </body>

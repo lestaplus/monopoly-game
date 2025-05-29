@@ -4,11 +4,13 @@
     left: 50%;
     transform: translate(-50%, -50%);
     pointer-events: none;
+    z-index: 100;
 }
 
 .modal-content {
-    background: white;
+    background: #ffffff;
     padding: 16px;
+    border: 1px solid #a8a8a8;
     border-radius: 8px;
     width: 360px;
     max-width: 90vw;

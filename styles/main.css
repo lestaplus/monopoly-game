@@ -1,24 +1,19 @@
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
 .game-container {
     display: flex;
-    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 7vw;
+    height: 100vh;
     padding: 1rem;
+    box-sizing: border-box;
 }
 
 .game-container.hidden {
     display: none;
-}
-
-.game-notifier {
-    width: 250px;
-    max-height: 500px;
-    background-color: #f6f5f5;
-    border: 1px solid #c8c8c8;
-    border-radius: 10px;
-    padding: 10px;
-    overflow-y: auto;
-}
-
-.notification {
-    margin-bottom: 8px;
-    color: #474747;
 }

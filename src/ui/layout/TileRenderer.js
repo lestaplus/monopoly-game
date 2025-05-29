@@ -18,9 +18,11 @@ export default class TileRenderer {
 
   render() {
     const side = this.#getSide();
+    const hasColor = !!this.color;
 
     const tile = document.createElement('div');
-    tile.className = `tile ${this.color || ''}`.trim();
+    tile.className =
+      `tile ${this.color || ''} ${hasColor ? 'tile-color' : ''}`.trim();
     tile.dataset.index = this.index;
     tile.dataset.type = this.type;
     tile.dataset.side = side;
