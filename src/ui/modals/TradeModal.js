@@ -9,6 +9,8 @@ export default class TradeModal {
 
     const container = this.#renderForm(players, currentPlayerIndex);
     this.modalManager.open(container);
+    this.modalManager.setModalBlocked(true);
+    this.modalManager.setPlayerMenuDisabled(true);
 
     return new Promise((resolve) => {
       this.#bindHandlers(container, resolve);
@@ -116,9 +118,13 @@ export default class TradeModal {
     if (action === 'confirm') {
       const data = this.#collectData(container);
       this.modalManager.close();
+      this.modalManager.setModalBlocked(false);
+      this.modalManager.setPlayerMenuDisabled(false);
       resolve(data);
     } else if (action === 'cancel') {
       this.modalManager.close();
+      this.modalManager.setModalBlocked(false);
+      this.modalManager.setPlayerMenuDisabled(false);
       resolve(null);
     }
   }

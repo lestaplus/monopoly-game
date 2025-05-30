@@ -11,17 +11,16 @@ class UtilityTile extends BaseTile {
       .length;
   }
 
-  rollDice() {
-    const die1 = Math.floor(Math.random() * 6) + 1;
-    const die2 = Math.floor(Math.random() * 6) + 1;
-    return die1 + die2;
-  }
+  async getRent(context) {
+    const { dice1, dice2 } = await context.modals.diceModal.show(
+      'Кидаємо кубики для оренди...',
+    );
+    const total = dice1 + dice2;
 
-  getRent() {
     const utilityCount = this.getOwnedUtilityCount(this.owner);
     const multiplier = utilityCount === 2 ? 10 : 4;
-    const dice = this.rollDice();
-    return dice * multiplier;
+
+    return total * multiplier;
   }
 
   async activate(player, players, context) {

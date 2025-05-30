@@ -7,6 +7,9 @@ import TurnModal from '../modals/TurnModal.js';
 import MessageModal from '../modals/MessageModal.js';
 import JailModal from '../modals/JailModal.js';
 import DiceModal from '../modals/DiceModal.js';
+import PropertyModal from '../modals/PropertyModal.js';
+import RailroadModal from '../modals/RailroadModal.js';
+import UtilityModal from '../modals/UtilityModal.js';
 
 const modalManager = new ModalManager();
 const diceModal = new DiceModal(modalManager);
@@ -21,4 +24,7 @@ export const modalService = {
   messageModal: new MessageModal(modalManager),
   jailModal: new JailModal(modalManager),
   diceModal: diceModal,
+  propertyModal: new PropertyModal(modalManager),
+  railroadModal: new RailroadModal(modalManager),
+  utilityModal: new UtilityModal(modalManager),
 };

@@ -1,8 +1,9 @@
 import TileRenderer from './TileRenderer.js';
 
 export default class BoardRenderer {
-  constructor() {
+  constructor(modalService) {
     this.sectors = this.#createSectors();
+    this.modalService = modalService;
   }
 
   #createSectors() {
@@ -37,7 +38,7 @@ export default class BoardRenderer {
         step > 0 ? i <= range[1] : i >= range[1];
         i += step
       ) {
-        const tile = new TileRenderer(tiles[i], i).render();
+        const tile = new TileRenderer(tiles[i], i, this.modalService).render();
         element.appendChild(tile);
       }
     }

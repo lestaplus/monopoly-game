@@ -5,8 +5,8 @@ class Board {
   #tiles = [];
   #renderer;
 
-  constructor() {
-    this.#renderer = new BoardRenderer();
+  constructor(modalService) {
+    this.#renderer = new BoardRenderer(modalService);
   }
 
   async init() {

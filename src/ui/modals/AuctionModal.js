@@ -14,6 +14,8 @@ export default class AuctionModal {
 
     const container = this.#createContainer();
     this.modalManager.open(container);
+    this.modalManager.setModalBlocked(true);
+    this.modalManager.setPlayerMenuDisabled(true);
     this.#updateInfo(container);
 
     return new Promise((resolve) => {
@@ -97,12 +99,16 @@ export default class AuctionModal {
 
     if (remaining.length === 1 && this.highestBidder === remaining[0]) {
       this.modalManager.close();
+      this.modalManager.setModalBlocked(false);
+      this.modalManager.setPlayerMenuDisabled(false);
       resolve({ winner: this.highestBidder, price: this.highestBid });
       return;
     }
 
     if (remaining.length === 0) {
       this.modalManager.close();
+      this.modalManager.setModalBlocked(false);
+      this.modalManager.setPlayerMenuDisabled(false);
       resolve({ winner: null, price: null });
       return;
     }

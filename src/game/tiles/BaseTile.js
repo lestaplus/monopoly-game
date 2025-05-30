@@ -37,7 +37,7 @@ class BaseTile {
   }
 
   async handleUnowned(player, players, context) {
-    const { modals, ui } = context;
+    const { modals } = context;
     const choice = await modals.purchaseModal.show(this);
 
     if (choice === 'buy') {
@@ -50,18 +50,18 @@ class BaseTile {
         this.gameNotifier.message(
           `${player.name} не має достатньо грошей, щоб купити поле "${this.name}". Стартує аукціон!.`,
         );
-        await startAuction(this, players, ui);
+        await startAuction(this, players);
       }
     } else if (choice === 'auction') {
       this.gameNotifier.message(
         `${player.name} не купує поле "${this.name}". Стартує аукціон!`,
       );
-      await startAuction(this, players, ui);
+      await startAuction(this, players);
     }
   }
 
   async handleRentPayment(player, context) {
-    const rent = this.getRent();
+    const rent = await this.getRent(context);
 
     await context.modals.messageModal.show({
       title: 'Оренда',

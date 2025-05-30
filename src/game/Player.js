@@ -54,16 +54,6 @@ class Player {
     this.#jailTurns = 0;
   }
 
-  rollDiceForJail() {
-    const firstDice = Math.floor(Math.random() * 6) + 1;
-    const secondDice = Math.floor(Math.random() * 6) + 1;
-
-    console.log(
-      `${this.name} кидає кубики для виходу з в'язниці: ${firstDice} + ${secondDice}`,
-    );
-    return { firstDice, secondDice };
-  }
-
   incrementJailTurns() {
     this.#jailTurns++;
   }

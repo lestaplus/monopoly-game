@@ -8,6 +8,8 @@ export default class DiceModal {
   show(title = 'Кидаємо кубики...') {
     const container = this.#createContainer(title);
     this.modalManager.open(container);
+    this.modalManager.setModalBlocked(true);
+    this.modalManager.setPlayerMenuDisabled(true);
 
     return new Promise((resolve) => {
       const diceImg1 = container.querySelector('#dice1');
@@ -72,6 +74,8 @@ export default class DiceModal {
 
       setTimeout(() => {
         this.modalManager.close();
+        this.modalManager.setModalBlocked(false);
+        this.modalManager.setPlayerMenuDisabled(false);
         resolve({ dice1: finalDice1, dice2: finalDice2 });
       }, 1500);
     }, 1500);

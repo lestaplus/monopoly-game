@@ -3,6 +3,7 @@
     flex-direction: column;
     align-items: center;
     width: 240px;
+    gap: 1rem;
 }
 
 .player-card {
@@ -41,7 +42,7 @@
     margin-top: 1.5rem;
 }
 
-.player-panel button {
+.player-menu button {
     padding: 10px 20px;
     border: 1px solid #a8a8a8;
     border-radius: 6px;
@@ -49,11 +50,11 @@
     transition: background-color 0.2s;
 }
 
-.player-panel button:hover:not(:disabled) {
+.player-menu button:hover:not(:disabled) {
     background-color: #e8e8e8;
 }
 
-.player-panel button:disabled {
-    background-color: #c8c7c7;
+.player-menu button:disabled {
+    background-color: #d6d6d6;
     cursor: not-allowed;
 }

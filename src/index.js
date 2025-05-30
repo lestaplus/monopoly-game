@@ -5,7 +5,7 @@ import Trade from './game/Trade.js';
 import { initCardGenerators } from './game/eventCards.js';
 import { modalService } from './ui/services/modalService.js';
 
-const board = new Board();
+const board = new Board(modalService);
 await board.init();
 
 await initCardGenerators();
@@ -55,13 +55,8 @@ startGameButton.addEventListener('click', async () => {
   const trade = new Trade(game.players);
 
   document.getElementById('trade-btn')?.addEventListener('click', async () => {
-    gameUI.disableButton('trade-btn');
-
     await trade.startTrade(game.currentPlayerIndex, modalService.tradeModal);
-
-    gameUI.enableButton('trade-btn');
   });
-  gameUI.enableButton('trade-btn');
 
   await game.startGame();
 });

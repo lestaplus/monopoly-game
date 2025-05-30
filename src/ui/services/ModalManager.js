@@ -1,8 +1,10 @@
 export default class ModalManager {
-  constructor() {
+  constructor(gameUI) {
     this.modal = document.getElementById('modal');
     this.modalBody = document.getElementById('modal-body');
     this.stack = [];
+    this.isModalBlocked = false;
+    this.gameUI = gameUI;
   }
 
   open(contentElement) {
@@ -29,5 +31,20 @@ export default class ModalManager {
 
   clearStack() {
     this.stack = [];
+  }
+
+  setModalBlocked(state) {
+    this.isModalBlocked = state;
+  }
+
+  getModalBlocked() {
+    return this.isModalBlocked;
+  }
+
+  setPlayerMenuDisabled(disabled) {
+    const buttons = document.querySelectorAll('.player-menu button');
+    buttons.forEach((btn) => {
+      btn.disabled = !!disabled;
+    });
   }
 }

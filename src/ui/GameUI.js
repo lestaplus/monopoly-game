@@ -30,16 +30,6 @@ class GameUI {
       this.#players.push(player);
     });
   }
-
-  enableButton(id) {
-    const btn = document.getElementById(id);
-    if (btn) btn.disabled = false;
-  }
-
-  disableButton(id) {
-    const btn = document.getElementById(id);
-    if (btn) btn.disabled = true;
-  }
 }
 
 export default GameUI;

@@ -117,8 +117,9 @@ class Game {
     return true;
   }
 
-  #handleJailRoll(player) {
-    const { firstDice, secondDice } = player.rollDiceForJail();
+  async #handleJailRoll(player) {
+    const { dice1: firstDice, dice2: secondDice } =
+      await this.modalService.diceModal.show("Кидаємо кубики з в'язниці...");
 
     if (firstDice === secondDice) {
       this.gameNotifier.message(
