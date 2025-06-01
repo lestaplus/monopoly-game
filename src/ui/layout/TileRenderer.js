@@ -25,6 +25,7 @@ export default class TileRenderer {
     tile.dataset.side = side;
 
     tile.innerHTML = `
+      <div class="tile-buildings"></div>
       <div class="tile-content">
         <span>${this.data.name}</span>
         ${this.data.price ? `<div class="tile-price">${this.data.price}₴</div>` : ''}
@@ -34,6 +35,28 @@ export default class TileRenderer {
     this.#bindHandlers(tile);
 
     return tile;
+  }
+
+  updateBuildings() {
+    const container = document.querySelector(
+      `.tile[data-index="${this.index}"] .tile-buildings`,
+    );
+    if (!container) return;
+
+    let html = '';
+    if (this.data.hotel) {
+      html = `
+        <img src="/assets/images/buildings/hotel.svg" alt="Hotel" width="20" height="20" />
+      `;
+    } else {
+      for (let i = 0; i < this.data.houses; i++) {
+        html += `
+          <img src="/assets/images/buildings/house.svg" alt="House" width="20" height="20" />
+        `;
+      }
+    }
+
+    container.innerHTML = html;
   }
 
   #bindHandlers(tile) {

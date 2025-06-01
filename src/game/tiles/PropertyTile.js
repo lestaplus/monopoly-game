@@ -9,37 +9,82 @@ class PropertyTile extends BaseTile {
     this.hotel = false;
   }
 
+  getHouseCount() {
+    return this.hotel ? 5 : this.houses;
+  }
+
   getRent() {
     const baseRent = this.price * 0.1;
-    const multIndex = this.hotel ? 5 : this.houses;
-    const multiplier = this.rentLevels[multIndex] ?? 1;
+    const multiplier = this.rentLevels[this.getHouseCount()] ?? 1;
     return Math.floor(baseRent * multiplier);
   }
 
   canBuyHouse(player) {
-    return (
-      this.owner === player &&
-      this.hasSameColorTiles(player) &&
-      this.houses < 4 &&
-      !this.hotel &&
-      player.balance >= this.buildingCost
+    if (
+      this.owner !== player ||
+      !this.hasSameColorTiles(player) ||
+      this.getHouseCount() >= 4 ||
+      player.balance < this.buildingCost
+    ) {
+      return false;
+    }
+
+    const sameTiles = this.getSameColorTiles(player);
+    const minHouses = Math.min(
+      ...sameTiles.map((tile) => tile.getHouseCount()),
     );
+
+    return this.getHouseCount() === minHouses;
   }
 
   buyHouse(player) {
     if (this.canBuyHouse(player)) {
       this.houses++;
       player.pay(this.buildingCost);
+      console.log('Buying House');
+    }
+  }
+
+  canSellHouse(player) {
+    if (this.owner !== player || this.houses === 0) {
+      return false;
+    }
+
+    const sameTiles = this.getSameColorTiles(player);
+
+    const houseCounts = sameTiles.map((tile) => {
+      let houses = tile.getHouseCount();
+      if (tile === this) {
+        return houses - 1;
+      }
+      return houses;
+    });
+
+    const minHouses = Math.min(...houseCounts);
+    const maxHouses = Math.max(...houseCounts);
+
+    return maxHouses - minHouses <= 1;
+  }
+
+  sellHouse(player) {
+    if (this.canSellHouse(player)) {
+      this.houses--;
+      player.receive(Math.floor(this.buildingCost / 2));
+      console.log('Selling House');
     }
   }
 
   canBuyHotel(player) {
-    return (
-      this.owner === player &&
-      this.houses === 4 &&
-      !this.hotel &&
-      player.balance >= this.buildingCost
-    );
+    if (
+      this.owner !== player ||
+      this.hotel ||
+      player.balance < this.buildingCost
+    ) {
+      return false;
+    }
+
+    const sameTiles = this.getSameColorTiles(player);
+    return sameTiles.every((tile) => tile.hotel || tile.getHouseCount() === 4);
   }
 
   buyHotel(player) {
@@ -47,30 +92,36 @@ class PropertyTile extends BaseTile {
       this.hotel = true;
       this.houses = 0;
       player.pay(this.buildingCost);
+      console.log('Buying Hotel');
     }
+  }
+
+  canSellHotel(player) {
+    if (this.owner !== player || !this.hotel) {
+      return false;
+    }
+
+    const sameTiles = this.getSameColorTiles(player);
+    return sameTiles.every((tile) => tile.hotel || tile.getHouseCount() === 4);
+  }
+
+  sellHotel(player) {
+    if (this.canSellHotel(player)) {
+      this.hotel = false;
+      this.houses = 4;
+      player.receive(Math.floor(this.buildingCost / 2));
+      console.log('Selling Hotel');
+    }
+  }
+
+  getSameColorTiles(player) {
+    return player.properties.filter((tile) => tile.color === this.color);
   }
 
   hasSameColorTiles(player) {
-    const sameColorTiles = player.properties.filter(
-      (tile) => tile.color === this.color,
-    );
-
+    const sameColorTiles = this.getSameColorTiles(player);
     const requiredCount = PropertyTile.colorGroups[this.color];
     return sameColorTiles.length === requiredCount;
-  }
-
-  #handlePropertyUpgrades(player) {
-    if (this.canBuyHotel(player)) {
-      const upgrade = confirm(
-        `У тебе є 4 будинки. Побудувати готель за ${this.buildingCost}₴?`,
-      );
-      if (upgrade) this.buyHotel(player);
-    } else if (this.canBuyHouse(player)) {
-      const build = confirm(`Побудувати будинок за ${this.buildingCost}₴?`);
-      if (build) this.buyHouse(player);
-    } else {
-      console.log(`${player.name} вже володіє ${this.name}.`);
-    }
   }
 
   async activate(player, players, context) {
@@ -81,10 +132,7 @@ class PropertyTile extends BaseTile {
 
     if (this.owner !== player) {
       await this.handleRentPayment(player, context);
-      return;
     }
-
-    this.#handlePropertyUpgrades(player);
   }
 
   static colorGroups = {

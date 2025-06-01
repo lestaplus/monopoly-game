@@ -20,7 +20,7 @@ export default class RailroadModal {
     container.innerHTML = `
       <button class="modal-close" id="close-btn">&#x2715;</button>
       <h2>${this.tile.name}</h2><hr>
-      <h4>Ціна: ${this.tile.price}</h4><hr>
+      <h4>Ціна: ${this.tile.price}₴</h4><hr>
       <div>Оренда залежить від кількості залізниць у власності:</div>
       <div>1 залізниця: ${this.tile.rentMap['1']}₴</div>
       <div>2 залізниці: ${this.tile.rentMap['2']}₴</div>

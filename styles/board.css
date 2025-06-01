@@ -204,6 +204,51 @@
     padding-left: 30px;
 }
 
+.tile-buildings {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2px;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.tile-buildings img {
+    width: 14px;
+    height: 14px;
+}
+
+.tile-color[data-side="top"] .tile-buildings {
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 20px;
+}
+
+.tile-color[data-side="bottom"] .tile-buildings {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 20px;
+}
+
+.tile-color[data-side="left"] .tile-buildings {
+    top: 0;
+    right: 0;
+    width: 20px;
+    height: 100%;
+    flex-direction: column;
+}
+
+.tile-color[data-side="right"] .tile-buildings {
+    top: 0;
+    left: 0;
+    width: 20px;
+    height: 100%;
+    flex-direction: column;
+}
+
 .game-notifier {
     position: absolute;
     top: 90px;

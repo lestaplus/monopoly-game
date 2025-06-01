@@ -33,6 +33,10 @@ class Board {
   get tiles() {
     return [...this.#tiles];
   }
+
+  get renderer() {
+    return this.#renderer;
+  }
 }
 
 export default Board;

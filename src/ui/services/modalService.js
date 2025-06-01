@@ -10,6 +10,7 @@ import DiceModal from '../modals/DiceModal.js';
 import PropertyModal from '../modals/PropertyModal.js';
 import RailroadModal from '../modals/RailroadModal.js';
 import UtilityModal from '../modals/UtilityModal.js';
+import BuildPropertyModal from '../modals/BuildPropertyModal.js';
 
 const modalManager = new ModalManager();
 const diceModal = new DiceModal(modalManager);
@@ -27,4 +28,5 @@ export const modalService = {
   propertyModal: new PropertyModal(modalManager),
   railroadModal: new RailroadModal(modalManager),
   utilityModal: new UtilityModal(modalManager),
+  buildPropertyModal: new BuildPropertyModal(modalManager),
 };

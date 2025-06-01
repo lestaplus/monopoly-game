@@ -58,5 +58,9 @@ startGameButton.addEventListener('click', async () => {
     await trade.startTrade(game.currentPlayerIndex, modalService.tradeModal);
   });
 
+  document.getElementById('build-btn')?.addEventListener('click', async () => {
+    await modalService.buildPropertyModal.show(board, game.currentPlayer);
+  });
+
   await game.startGame();
 });

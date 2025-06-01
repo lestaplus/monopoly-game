@@ -4,6 +4,7 @@ export default class BoardRenderer {
   constructor(modalService) {
     this.sectors = this.#createSectors();
     this.modalService = modalService;
+    this.tileRenderers = new Map();
   }
 
   #createSectors() {
@@ -38,7 +39,9 @@ export default class BoardRenderer {
         step > 0 ? i <= range[1] : i >= range[1];
         i += step
       ) {
-        const tile = new TileRenderer(tiles[i], i, this.modalService).render();
+        const tileRenderer = new TileRenderer(tiles[i], i, this.modalService);
+        const tile = tileRenderer.render();
+        this.tileRenderers.set(i, tileRenderer);
         element.appendChild(tile);
       }
     }
@@ -60,5 +63,9 @@ export default class BoardRenderer {
         );
       }
     });
+  }
+
+  getTileRendererByIndex(index) {
+    return this.tileRenderers.get(index);
   }
 }
