@@ -19,8 +19,8 @@ class Game {
       return player;
     });
 
-    this.board.updatePlayerTokens(this.#players);
-    this.ui.setActivePlayer(this.#currentPlayerIndex);
+    this.board.updatePlayerTokens(this.players);
+    this.ui.setActivePlayer(this.currentPlayerIndex);
   }
 
   async startGame() {
@@ -39,7 +39,7 @@ class Game {
     }
 
     console.log(`${player.name} переміщується на позицію ${player.position}`);
-    this.board.updatePlayerTokens(this.#players);
+    this.board.updatePlayerTokens(this.players);
     player.updateDisplay();
   }
 
@@ -159,10 +159,7 @@ class Game {
 
       await currentTile.activate(player, this.players, {
         board: this.board,
-        players: this.#players,
-        game: this,
         modals: this.modalService,
-        ui: this.ui,
       });
 
       if (player.position !== previousPosition) {
@@ -185,7 +182,7 @@ class Game {
         );
         player.goToJail();
         player.resetDoubleRolls();
-        this.board.updatePlayerTokens(this.#players);
+        this.board.updatePlayerTokens(this.players);
         await this.#endTurn();
         return;
       } else {

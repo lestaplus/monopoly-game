@@ -61,9 +61,10 @@ class BaseTile {
   }
 
   async handleRentPayment(player, context) {
+    const { modals } = context;
     const rent = await this.getRent(context);
 
-    await context.modals.messageModal.show({
+    await modals.messageModal.show({
       title: 'Оренда',
       message: `Ви сплачуєте ${rent}₴ за оренду поля "${this.name}" гравцю ${this.owner.name}`,
     });

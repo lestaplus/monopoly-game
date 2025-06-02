@@ -1,10 +1,9 @@
 export default class ModalManager {
-  constructor(gameUI) {
+  constructor() {
     this.modal = document.getElementById('modal');
     this.modalBody = document.getElementById('modal-body');
     this.stack = [];
     this.isModalBlocked = false;
-    this.gameUI = gameUI;
   }
 
   open(contentElement) {

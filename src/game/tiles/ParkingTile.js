@@ -6,7 +6,7 @@ class ParkingTile extends BaseTile {
   }
 
   async activate(player, players, context) {
-    const modals = context.modals;
+    const { modals } = context;
     await modals.messageModal.show({
       title: 'Безкоштовна стоянка',
       message: `Ви відпочиваєте на безкоштовній стоянці`,

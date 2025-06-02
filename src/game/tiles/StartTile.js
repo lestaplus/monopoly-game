@@ -6,7 +6,7 @@ class StartTile extends BaseTile {
   }
 
   async activate(player, players, context) {
-    const modals = context.modals;
+    const { modals } = context;
     await modals.messageModal.show({
       title: 'Старт',
       message: `Ви стаєте на поле "${this.name}" та отримуєте 200₴`,

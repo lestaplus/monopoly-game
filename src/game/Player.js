@@ -17,7 +17,7 @@ class Player {
 
     this.ui = new PlayerUI(name, index);
     this.element = this.ui.element;
-    this.ui.updateDisplay(this.#balance);
+    this.ui.updateDisplay(this.balance);
     this.gameNotifier = GameNotifier.getInstance();
   }
 
@@ -27,12 +27,12 @@ class Player {
 
   pay(amount) {
     this.#balance -= amount;
-    this.ui.updateDisplay(this.#balance);
+    this.ui.updateDisplay(this.balance);
   }
 
   receive(amount) {
     this.#balance += amount;
-    this.ui.updateDisplay(this.#balance);
+    this.ui.updateDisplay(this.balance);
   }
 
   incrementDoubleRolls() {
@@ -80,7 +80,7 @@ class Player {
   }
 
   updateDisplay() {
-    this.ui.updateDisplay(this.#balance);
+    this.ui.updateDisplay(this.balance);
   }
 
   setActive(isActive) {

@@ -6,7 +6,7 @@ class JailTile extends BaseTile {
   }
 
   async activate(player, players, context) {
-    const modals = context.modals;
+    const { modals } = context;
 
     if (!player.inJail) {
       await modals.messageModal.show({
