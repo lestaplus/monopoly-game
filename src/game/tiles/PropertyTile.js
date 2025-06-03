@@ -51,7 +51,9 @@ class PropertyTile extends BaseTile {
       this.#houses++;
       player.pay(this.buildingCost);
       console.log('Buying House');
+      return true;
     }
+    return false;
   }
 
   canSellHouse(player) {
@@ -80,7 +82,9 @@ class PropertyTile extends BaseTile {
       this.#houses--;
       player.receive(Math.floor(this.buildingCost / 2));
       console.log('Selling House');
+      return true;
     }
+    return false;
   }
 
   canBuyHotel(player) {
@@ -108,7 +112,9 @@ class PropertyTile extends BaseTile {
       this.#houses = 0;
       player.pay(this.buildingCost);
       console.log('Buying Hotel');
+      return true;
     }
+    return false;
   }
 
   canSellHotel(player) {
@@ -126,7 +132,9 @@ class PropertyTile extends BaseTile {
       this.#houses = 4;
       player.receive(Math.floor(this.buildingCost / 2));
       console.log('Selling Hotel');
+      return true;
     }
+    return false;
   }
 
   getSameColorTiles(player) {

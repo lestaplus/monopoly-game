@@ -79,8 +79,21 @@ export default class TradeModal {
 
   #fillTiles(container, tiles, prefix) {
     container.innerHTML = '';
+
+    const colorGroups = {};
+
+    (tiles || []).forEach((tile) => {
+      const color = tile.color;
+      if (!colorGroups[color]) {
+        colorGroups[color] = false;
+      }
+      if (tile.houses > 0 || tile.hotel) {
+        colorGroups[color] = true;
+      }
+    });
+
     (tiles || []).forEach((tile, index) => {
-      const disabled = tile.houses > 0 || tile.hotel ? 'disabled' : '';
+      const disabled = colorGroups[tile.color] ? 'disabled' : '';
 
       const label = document.createElement('label');
       label.innerHTML = `

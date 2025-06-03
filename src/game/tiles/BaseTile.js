@@ -41,34 +41,33 @@ class BaseTile {
   }
 
   mortgage(player) {
-    if (this.#owner !== player || this.#mortgaged) {
-      return false;
+    if (this.canMortgage(player)) {
+      this.#mortgaged = true;
+      console.log('tile mortgage');
+      player.receive(Math.floor(this.#price / 2));
+      return true;
     }
-
-    this.#mortgaged = true;
-    console.log('tile mortgage');
-    player.receive(Math.floor(this.#price / 2));
-    return true;
+    return false;
   }
 
   canRedeem(player) {
-    return this.#owner === player && this.#mortgaged;
-  }
-
-  redeem(player) {
     if (this.#owner !== player || !this.#mortgaged) {
       return false;
     }
 
     const repayAmount = Math.floor((this.#price / 2) * 1.1);
-    if (player.balance < repayAmount) {
-      return false;
-    }
+    return player.balance >= repayAmount;
+  }
 
-    player.pay(repayAmount);
-    this.#mortgaged = false;
-    console.log('tile redeem');
-    return true;
+  redeem(player) {
+    if (this.canRedeem(player)) {
+      const repayAmount = Math.floor((this.#price / 2) * 1.1);
+      player.pay(repayAmount);
+      this.#mortgaged = false;
+      console.log('tile redeem');
+      return true;
+    }
+    return false;
   }
 
   async handleUnowned(player, players, context) {

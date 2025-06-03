@@ -115,9 +115,7 @@ export default class MortgageModal {
         );
         const property = this.#getPropertyByIndex(propertyIndex);
 
-        if (property && property.canMortgage(this.player)) {
-          property.mortgage(this.player);
-
+        if (property && property.mortgage(this.player)) {
           this.#syncAndRender(property);
           this.#updatePropertyList(container);
         }
@@ -131,9 +129,7 @@ export default class MortgageModal {
         );
         const property = this.#getPropertyByIndex(propertyIndex);
 
-        if (property && property.canRedeem(this.player)) {
-          property.redeem(this.player);
-
+        if (property && property.redeem(this.player)) {
           this.#syncAndRender(property);
           this.#updatePropertyList(container);
         }

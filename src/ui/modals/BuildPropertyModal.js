@@ -182,17 +182,13 @@ export default class BuildPropertyModal {
         );
         const property = this.#getPropertyByIndex(propertyIndex);
 
-        if (property) {
-          if (property.canBuyHotel(this.player)) {
-            property.buyHotel(this.player);
-          } else if (property.canBuyHouse(this.player)) {
-            property.buyHouse(this.player);
-          }
-
+        if (
+          property &&
+          (property.buyHotel(this.player) || property.buyHouse(this.player))
+        ) {
           this.#syncAndRender(property);
+          this.#updatePropertyList(container);
         }
-
-        this.#updatePropertyList(container);
       });
     });
 
@@ -201,17 +197,13 @@ export default class BuildPropertyModal {
         const propertyIndex = Number(button.getAttribute('data-sell-property'));
         const property = this.#getPropertyByIndex(propertyIndex);
 
-        if (property) {
-          if (property.canSellHotel(this.player)) {
-            property.sellHotel(this.player);
-          } else if (property.canSellHouse(this.player)) {
-            property.sellHouse(this.player);
-          }
-
+        if (
+          property &&
+          (property.sellHotel(this.player) || property.sellHouse(this.player))
+        ) {
           this.#syncAndRender(property);
+          this.#updatePropertyList(container);
         }
-
-        this.#updatePropertyList(container);
       });
     });
 

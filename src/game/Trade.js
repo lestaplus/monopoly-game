@@ -33,10 +33,18 @@ class Trade {
     );
 
     props.forEach((tile) => {
-      if (tile.houses > 0 || tile.hotel) {
+      const color = tile.color;
+
+      const colorGroupTiles = player1.properties.filter(
+        (t) => t.color === color,
+      );
+      const blocked = colorGroupTiles.some((t) => t.houses > 0 || t.hotel);
+
+      if (blocked) {
         alert(
-          `Не можна передати ${tile.name}, поки на ньому є будинки або готель.`,
+          `Не можна передати поле, якщо на ньому або на інших полях цієї кольорової групи є будинки або готель.`,
         );
+        return;
       }
 
       tile.changeOwner(player1, player2);
