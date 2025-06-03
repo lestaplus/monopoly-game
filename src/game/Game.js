@@ -63,6 +63,10 @@ class Game {
       }
     }
 
+    if (fromDoubleRoll) {
+      this.gameNotifier.message(`${player.name} ходить ще раз після дубля.`);
+    }
+
     this.ui.setActivePlayer(this.currentPlayerIndex);
     const { dice1: firstDice, dice2: secondDice } =
       await this.modalService.turnModal.show(player, fromDoubleRoll);
@@ -190,7 +194,7 @@ class Game {
         return;
       } else {
         this.gameNotifier.message(
-          `${player.name} вибиває дубль і ходить ще раз.`,
+          `${player.name} вибиває дубль та отримує додатковий хід.`,
         );
         this.movePlayer(player, steps);
         await this.#handleTile(player);

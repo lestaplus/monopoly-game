@@ -32,7 +32,15 @@ class Trade {
       tileNames.includes(tile.name),
     );
 
-    props.forEach((tile) => tile.changeOwner(player1, player2));
+    props.forEach((tile) => {
+      if (tile.houses > 0 || tile.hotel) {
+        alert(
+          `Не можна передати ${tile.name}, поки на ньому є будинки або готель.`,
+        );
+      }
+
+      tile.changeOwner(player1, player2);
+    });
   }
 
   #transferMoney(player1, player2, moneyFrom, moneyTo) {

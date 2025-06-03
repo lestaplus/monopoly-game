@@ -80,9 +80,11 @@ export default class TradeModal {
   #fillTiles(container, tiles, prefix) {
     container.innerHTML = '';
     (tiles || []).forEach((tile, index) => {
+      const disabled = tile.houses > 0 || tile.hotel ? 'disabled' : '';
+
       const label = document.createElement('label');
       label.innerHTML = `
-        <input type="checkbox" id="tile-${prefix}-${index}" value="${tile.name}"> ${tile.name}
+        <input type="checkbox" id="tile-${prefix}-${index}" value="${tile.name}" ${disabled}> ${tile.name}
         `;
       container.appendChild(label);
     });

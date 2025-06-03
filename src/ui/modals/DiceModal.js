@@ -64,7 +64,7 @@ export default class DiceModal {
       this.#updateDiceImage(diceImg2, value2);
     };
 
-    timeoutIterator(pairGen, 0.15, callback, 100);
+    timeoutIterator(pairGen, 1.5, callback, 100);
 
     setTimeout(() => {
       title.textContent = 'Кубики випали!';
@@ -77,7 +77,7 @@ export default class DiceModal {
         this.modalManager.setModalBlocked(false);
         this.modalManager.setPlayerMenuDisabled(false);
         resolve({ dice1: finalDice1, dice2: finalDice2 });
-      }, 150);
-    }, 150);
+      }, 1500);
+    }, 1500);
   }
 }
