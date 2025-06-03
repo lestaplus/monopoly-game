@@ -7,14 +7,15 @@
 }
 
 .modal-content {
+    position: relative;
     background: #ffffff;
     border: 1px solid #cccccc;
     border-radius: 8px;
-    padding: 16px;
+    padding: 12px;
     box-sizing: border-box;
     width: 380px;
     max-width: 90vw;
-    max-height: 90vh;
+    max-height: 70vh;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -26,9 +27,42 @@
     display: none;
 }
 
-.purchase-actions {
-    display: flex;
-    justify-content: center;
+.modal-content button:not(.modal-close) {
+    padding: 10px 20px;
+    border: 1px solid #a8a8a8;
+    border-radius: 6px;
+    cursor: pointer;
+    width: auto;
+    margin: 0 auto;
+    transition: background-color 0.2s;
+}
+
+.modal-content button:hover:not(:disabled) {
+    background-color: #e8e8e8;
+}
+
+.modal-content button:disabled {
+    background-color: #d6d6d6;
+    cursor: not-allowed;
+}
+
+.modal-content input[type="text"],
+.modal-content input[type="number"],
+.modal-content select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 14px;
+    background: #ffffff;
+    outline: none;
+}
+
+.modal-content input[type="text"]:focus,
+.modal-content input[type="number"]:focus,
+.modal-content select:focus {
+    border-color: #9f9f9f;
 }
 
 .trade-modal {
@@ -41,11 +75,6 @@
     flex-direction: column;
 }
 
-.trade-actions {
-    display: flex;
-    justify-content: center;
-}
-
 .tile-checkboxes {
     display: flex;
     flex-direction: column;
@@ -54,7 +83,7 @@
     padding: 4px;
     overflow-y: auto;
     min-height: 30px;
-    max-height: 80px;
+    max-height: 120px;
 }
 
 .tile-checkboxes label {
@@ -64,7 +93,10 @@
 
 .property-modal .modal-close,
 .railroad-modal .modal-close,
-.utility-modal .modal-close {
+.utility-modal .modal-close,
+.trade-modal .modal-close,
+.build-property-modal .modal-close,
+.mortgage-modal .modal-close {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -120,4 +152,41 @@
 .auction-history li {
     padding: 4px 0;
     font-size: 14px;
+}
+
+.property-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.property-item span {
+    margin-bottom: 8px;
+}
+
+.property-buttons {
+    display: flex;
+    flex-direction: row;
+    padding: 8px;
+    gap: 10px;
+}
+
+.build-btn,
+.sell-btn,
+.mortgage-btn,
+.redeem-btn {
+    width: 100%;
+    margin: 4px 0;
+}
+
+.jail-actions,
+.auction-actions,
+.purchase-actions,
+.message-actions,
+.trade-actions {
+    display: flex;
+    flex-direction: row;
+    padding: 8px;
+    gap: 10px;
 }

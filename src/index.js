@@ -54,13 +54,23 @@ startGameButton.addEventListener('click', async () => {
 
   const trade = new Trade(game.players);
 
-  document.getElementById('trade-btn')?.addEventListener('click', async () => {
-    await trade.startTrade(game.currentPlayerIndex, modalService.tradeModal);
-  });
+  document
+    .getElementById('trade-btn-menu')
+    ?.addEventListener('click', async () => {
+      await trade.startTrade(game.currentPlayerIndex, modalService.tradeModal);
+    });
 
-  document.getElementById('build-btn')?.addEventListener('click', async () => {
-    await modalService.buildPropertyModal.show(board, game.currentPlayer);
-  });
+  document
+    .getElementById('build-btn-menu')
+    ?.addEventListener('click', async () => {
+      await modalService.buildPropertyModal.show(board, game.currentPlayer);
+    });
+
+  document
+    .getElementById('mortgage-btn-menu')
+    ?.addEventListener('click', async () => {
+      await modalService.mortgageModal.show(board, game.currentPlayer);
+    });
 
   await game.startGame();
 });

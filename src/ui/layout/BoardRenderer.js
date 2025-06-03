@@ -51,11 +51,11 @@ export default class BoardRenderer {
     document.querySelectorAll('.player-token').forEach((el) => el.remove());
 
     players.forEach((player, i) => {
-      const tile = document.querySelector(
-        `.tile[data-index="${player.position}"]`,
+      const tilePlayersContainer = document.querySelector(
+        `.tile[data-index="${player.position}"] .tile-players`,
       );
-      if (tile) {
-        tile.insertAdjacentHTML(
+      if (tilePlayersContainer) {
+        tilePlayersContainer.insertAdjacentHTML(
           'beforeend',
           `
           <div class="player-token player-${i + 1}">${i + 1}</div>

@@ -18,7 +18,7 @@ export default class UtilityModal {
     container.className = 'utility-modal';
 
     container.innerHTML = `
-      <button class="modal-close" id="close-btn">&#x2715;</button>
+      <button class="modal-close" id="close-btn-utility">&#x2715;</button>
       <h2>${this.tile.name}</h2><hr>
       <h4>Ціна: ${this.tile.price}₴</h4><hr>
       <div>Оренда залежить від кількості служб у власності:</div>
@@ -30,7 +30,7 @@ export default class UtilityModal {
   }
 
   #bindHandler(container) {
-    const closeBtn = container.querySelector('#close-btn');
+    const closeBtn = container.querySelector('#close-btn-utility');
     closeBtn.addEventListener(
       'click',
       () => {

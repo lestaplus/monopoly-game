@@ -30,6 +30,7 @@ export default class TileRenderer {
         <span>${this.data.name}</span>
         ${this.data.price ? `<div class="tile-price">${this.data.price}₴</div>` : ''}
       </div>
+      <div class="tile-players"></div>
     `;
 
     this.#bindHandlers(tile);
@@ -57,6 +58,17 @@ export default class TileRenderer {
     }
 
     container.innerHTML = html;
+  }
+
+  updateMortgageStatus() {
+    const tile = document.querySelector(`.tile[data-index="${this.index}"]`);
+    if (!tile) return;
+
+    if (this.data.mortgaged) {
+      tile.classList.add('mortgaged');
+    } else {
+      tile.classList.remove('mortgaged');
+    }
   }
 
   #bindHandlers(tile) {

@@ -22,7 +22,7 @@ export default class TurnModal {
       <h2>${title}</h2>
       <p class="turn-name">${player.name}</p>
       <div class="turn-actions">
-        <button id="dice-btn">Кинути кубики</button>
+        <button id="dice-btn-turn">Кинути кубики</button>
       </div>
     `;
 
@@ -30,7 +30,7 @@ export default class TurnModal {
   }
 
   #bindHandler(container, resolve) {
-    const diceBtn = container.querySelector('#dice-btn');
+    const diceBtn = container.querySelector('#dice-btn-turn');
     diceBtn.addEventListener(
       'click',
       async () => {

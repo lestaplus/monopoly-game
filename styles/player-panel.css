@@ -38,8 +38,11 @@
     gap: 1rem;
 }
 
-.menu {
-    margin-top: 1.5rem;
+.player-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 1rem;
 }
 
 .player-menu button {
@@ -47,6 +50,7 @@
     border: 1px solid #a8a8a8;
     border-radius: 6px;
     cursor: pointer;
+    width: 100%;
     transition: background-color 0.2s;
 }
 

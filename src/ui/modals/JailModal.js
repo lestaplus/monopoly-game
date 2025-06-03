@@ -20,9 +20,9 @@ export default class JailModal {
       <h2>${player.name}, ви у в'язниці!</h2>
       <p>Ви можете спробувати кинути дубль <span id="double-attempt"></span>, сплатити штраф 50₴ або використати ключ (якщо є).</p>
       <div class="jail-actions">
-        <button id="double-btn">Дубль</button>
-        <button id="fine-btn">Штраф</button>
-        <button id="key-btn">Ключ</button>
+        <button id="double-btn-jail">Дубль</button>
+        <button id="fine-btn-jail">Штраф</button>
+        <button id="key-btn-jail">Ключ</button>
       </div>
     `;
     const doubleAttempt = container.querySelector('#double-attempt');
@@ -32,9 +32,9 @@ export default class JailModal {
   }
 
   #bindHandlers(container, resolve, player) {
-    const doubleBtn = container.querySelector('#double-btn');
-    const fineBtn = container.querySelector('#fine-btn');
-    const keyBtn = container.querySelector('#key-btn');
+    const doubleBtn = container.querySelector('#double-btn-jail');
+    const fineBtn = container.querySelector('#fine-btn-jail');
+    const keyBtn = container.querySelector('#key-btn-jail');
 
     if (!player.hasJailKey) {
       keyBtn.disabled = true;

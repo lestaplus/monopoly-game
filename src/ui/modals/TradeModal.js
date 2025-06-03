@@ -30,8 +30,8 @@ export default class TradeModal {
         ${this.#renderPlayerSection(fromPlayer, 'from')}
         ${this.#renderPlayerSection(toPlayer, 'to', otherPlayers)}
       <div class="trade-actions">
-        <button class="confirm-btn" id="confirm-btn">Підтвердити</button>
-        <button class="cancel-btn" id="cancel-btn">Скасувати</button>
+        <button id="confirm-btn-trade">Підтвердити</button>
+        <button class="modal-close" id="cancel-btn-trade">&#x2715;</button>
       </div>
     `;
 
@@ -89,8 +89,8 @@ export default class TradeModal {
   }
 
   #bindHandlers(container, resolve) {
-    const confirmBtn = container.querySelector('#confirm-btn');
-    const cancelBtn = container.querySelector('#cancel-btn');
+    const confirmBtn = container.querySelector('#confirm-btn-trade');
+    const cancelBtn = container.querySelector('#cancel-btn-trade');
 
     confirmBtn.addEventListener(
       'click',
@@ -204,7 +204,7 @@ export default class TradeModal {
       tilesFrom.length > 0 ||
       tilesTo.length > 0;
 
-    const confirmBtn = container.querySelector('#confirm-btn');
+    const confirmBtn = container.querySelector('#confirm-btn-trade');
     confirmBtn.disabled = !isValid;
   }
 

@@ -36,8 +36,8 @@ export default class AuctionModal {
         <input type="number" class="auction-input" id="auction-input" placeholder="Ваша ставка">
         <div class="auction-error" id="auction-error"></div>
         <div class="auction-actions">
-          <button class="bid-btn" id="bid-btn">Ставка</button>
-          <button class="pass-btn" id="pass-btn">Пропустити</button>
+          <button id="bid-btn-auction">Ставка</button>
+          <button id="pass-btn-auction">Пропустити</button>
         </div>
       </div>
       <div class="auction-history-block">
@@ -50,8 +50,8 @@ export default class AuctionModal {
   }
 
   #bindHandlers(container) {
-    const bidBtn = container.querySelector('#bid-btn');
-    const passBtn = container.querySelector('#pass-btn');
+    const bidBtn = container.querySelector('#bid-btn-auction');
+    const passBtn = container.querySelector('#pass-btn-auction');
 
     bidBtn.addEventListener('click', () => this.#handleBid(container));
     passBtn.addEventListener('click', () => this.#handlePass(container));

@@ -1,9 +1,11 @@
 import BaseTile from './BaseTile.js';
 
 class RailroadTile extends BaseTile {
+  #rentMap;
+
   constructor(data) {
     super(data);
-    this.rentMap = data.rentMap;
+    this.#rentMap = data.rentMap;
   }
 
   getOwnedRailroadsCount(player) {
@@ -13,7 +15,7 @@ class RailroadTile extends BaseTile {
 
   getRent() {
     const count = this.getOwnedRailroadsCount(this.owner);
-    return this.rentMap[count];
+    return this.#rentMap[count];
   }
 
   async activate(player, players, context) {
@@ -28,6 +30,10 @@ class RailroadTile extends BaseTile {
     }
 
     console.log(`${player.name} вже володіє залізницею.`);
+  }
+
+  get rentMap() {
+    return this.#rentMap;
   }
 }
 

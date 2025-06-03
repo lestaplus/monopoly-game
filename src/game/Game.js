@@ -1,5 +1,6 @@
 import Player from './Player.js';
 import GameNotifier from '../ui/services/GameNotifier.js';
+import Auction from './Auction.js';
 
 class Game {
   #players = [];
@@ -9,6 +10,7 @@ class Game {
     this.board = board;
     this.ui = ui;
     this.modalService = modalService;
+    this.auction = new Auction(modalService);
     this.gameNotifier = GameNotifier.getInstance();
   }
 
@@ -160,6 +162,7 @@ class Game {
       await currentTile.activate(player, this.players, {
         board: this.board,
         modals: this.modalService,
+        auction: this.auction,
       });
 
       if (player.position !== previousPosition) {

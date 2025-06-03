@@ -20,8 +20,8 @@ export default class PurchaseModal {
       <h2>Купівля</h2>
       <p>Ви можете купити ${tile.name} за ${tile.price}₴.</p>
         <div class="purchase-actions">
-          <button class="buy-btn" id="buy-btn">Купити</button>
-          <button class="auction-btn" id="auction-btn">Аукціон</button>
+          <button id="buy-btn-purchase">Купити</button>
+          <button id="auction-btn-purchase">Аукціон</button>
         </div>
     `;
 
@@ -29,8 +29,8 @@ export default class PurchaseModal {
   }
 
   #bindHandlers(container, resolve) {
-    const buyBtn = container.querySelector('#buy-btn');
-    const auctionBtn = container.querySelector('#auction-btn');
+    const buyBtn = container.querySelector('#buy-btn-purchase');
+    const auctionBtn = container.querySelector('#auction-btn-purchase');
 
     buyBtn.addEventListener(
       'click',

@@ -20,7 +20,7 @@ export default class NoFundsModal {
       <h2>Недостатньо грошей</h2>
       <p>Починаємо аукціон.</p>
       <div class="funds-actions">
-        <button id="auction-btn">Аукціон</button>
+        <button id="auction-btn-funds">Аукціон</button>
       </div>
     `;
 
@@ -28,7 +28,7 @@ export default class NoFundsModal {
   }
 
   #bindHandler(container, resolve) {
-    const auctionBtn = container.querySelector('#auction-btn');
+    const auctionBtn = container.querySelector('#auction-btn-funds');
     auctionBtn.addEventListener(
       'click',
       () => {

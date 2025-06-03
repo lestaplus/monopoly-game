@@ -1,4 +1,3 @@
-import { startAuction } from '../actions/auction.js';
 import GameNotifier from '../../ui/services/GameNotifier.js';
 
 class BaseTile {
@@ -9,6 +8,7 @@ class BaseTile {
   #index;
   #color;
   #owner = null;
+  #mortgaged = false;
 
   constructor(data) {
     this.#name = data.name;
@@ -36,8 +36,43 @@ class BaseTile {
     this.#owner = toPlayer;
   }
 
+  canMortgage(player) {
+    return this.#owner === player && !this.#mortgaged;
+  }
+
+  mortgage(player) {
+    if (this.#owner !== player || this.#mortgaged) {
+      return false;
+    }
+
+    this.#mortgaged = true;
+    console.log('tile mortgage');
+    player.receive(Math.floor(this.#price / 2));
+    return true;
+  }
+
+  canRedeem(player) {
+    return this.#owner === player && this.#mortgaged;
+  }
+
+  redeem(player) {
+    if (this.#owner !== player || !this.#mortgaged) {
+      return false;
+    }
+
+    const repayAmount = Math.floor((this.#price / 2) * 1.1);
+    if (player.balance < repayAmount) {
+      return false;
+    }
+
+    player.pay(repayAmount);
+    this.#mortgaged = false;
+    console.log('tile redeem');
+    return true;
+  }
+
   async handleUnowned(player, players, context) {
-    const { modals } = context;
+    const { modals, auction } = context;
     const choice = await modals.purchaseModal.show(this);
 
     if (choice === 'buy') {
@@ -48,19 +83,23 @@ class BaseTile {
       } else {
         await modals.noFundsModal.show();
         this.gameNotifier.message(
-          `${player.name} не має достатньо грошей, щоб купити поле "${this.name}". Стартує аукціон!.`,
+          `${player.name} не має достатньо грошей, щоб купити поле "${this.name}". Стартує аукціон!`,
         );
-        await startAuction(this, players);
+        await auction.start(this, players);
       }
     } else if (choice === 'auction') {
       this.gameNotifier.message(
         `${player.name} не купує поле "${this.name}". Стартує аукціон!`,
       );
-      await startAuction(this, players);
+      await auction.start(this, players);
     }
   }
 
   async handleRentPayment(player, context) {
+    if (this.mortgaged) {
+      return;
+    }
+
     const { modals } = context;
     const rent = await this.getRent(context);
 
@@ -108,6 +147,10 @@ class BaseTile {
 
   get owner() {
     return this.#owner;
+  }
+
+  get mortgaged() {
+    return this.#mortgaged;
   }
 }
 

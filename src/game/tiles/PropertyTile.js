@@ -1,21 +1,24 @@
 import BaseTile from './BaseTile.js';
 
 class PropertyTile extends BaseTile {
+  #rentLevels;
+  #buildingCost;
+  #houses = 0;
+  #hotel = false;
+
   constructor(data) {
     super(data);
-    this.rentLevels = data.rentLevels;
-    this.buildingCost = data.buildingCost;
-    this.houses = 0;
-    this.hotel = false;
+    this.#rentLevels = data.rentLevels;
+    this.#buildingCost = data.buildingCost;
   }
 
   getHouseCount() {
-    return this.hotel ? 5 : this.houses;
+    return this.#hotel ? 5 : this.#houses;
   }
 
   getRent() {
     const baseRent = this.price * 0.1;
-    const multiplier = this.rentLevels[this.getHouseCount()] ?? 1;
+    const multiplier = this.#rentLevels[this.getHouseCount()] ?? 1;
     return Math.floor(baseRent * multiplier);
   }
 
@@ -24,12 +27,18 @@ class PropertyTile extends BaseTile {
       this.owner !== player ||
       !this.hasSameColorTiles(player) ||
       this.getHouseCount() >= 4 ||
-      player.balance < this.buildingCost
+      player.balance < this.#buildingCost
     ) {
       return false;
     }
 
     const sameTiles = this.getSameColorTiles(player);
+
+    const anyMortgaged = sameTiles.some((tile) => tile.mortgaged);
+    if (anyMortgaged) {
+      return false;
+    }
+
     const minHouses = Math.min(
       ...sameTiles.map((tile) => tile.getHouseCount()),
     );
@@ -39,14 +48,14 @@ class PropertyTile extends BaseTile {
 
   buyHouse(player) {
     if (this.canBuyHouse(player)) {
-      this.houses++;
+      this.#houses++;
       player.pay(this.buildingCost);
       console.log('Buying House');
     }
   }
 
   canSellHouse(player) {
-    if (this.owner !== player || this.houses === 0) {
+    if (this.owner !== player || this.#houses === 0) {
       return false;
     }
 
@@ -68,7 +77,7 @@ class PropertyTile extends BaseTile {
 
   sellHouse(player) {
     if (this.canSellHouse(player)) {
-      this.houses--;
+      this.#houses--;
       player.receive(Math.floor(this.buildingCost / 2));
       console.log('Selling House');
     }
@@ -77,38 +86,44 @@ class PropertyTile extends BaseTile {
   canBuyHotel(player) {
     if (
       this.owner !== player ||
-      this.hotel ||
-      player.balance < this.buildingCost
+      this.#hotel ||
+      player.balance < this.#buildingCost
     ) {
       return false;
     }
 
     const sameTiles = this.getSameColorTiles(player);
-    return sameTiles.every((tile) => tile.hotel || tile.getHouseCount() === 4);
+
+    const anyMortgaged = sameTiles.some((tile) => tile.mortgaged);
+    if (anyMortgaged) {
+      return false;
+    }
+
+    return sameTiles.every((tile) => tile.#hotel || tile.getHouseCount() === 4);
   }
 
   buyHotel(player) {
     if (this.canBuyHotel(player)) {
-      this.hotel = true;
-      this.houses = 0;
+      this.#hotel = true;
+      this.#houses = 0;
       player.pay(this.buildingCost);
       console.log('Buying Hotel');
     }
   }
 
   canSellHotel(player) {
-    if (this.owner !== player || !this.hotel) {
+    if (this.owner !== player || !this.#hotel) {
       return false;
     }
 
     const sameTiles = this.getSameColorTiles(player);
-    return sameTiles.every((tile) => tile.hotel || tile.getHouseCount() === 4);
+    return sameTiles.every((tile) => tile.#hotel || tile.getHouseCount() === 4);
   }
 
   sellHotel(player) {
     if (this.canSellHotel(player)) {
-      this.hotel = false;
-      this.houses = 4;
+      this.#hotel = false;
+      this.#houses = 4;
       player.receive(Math.floor(this.buildingCost / 2));
       console.log('Selling Hotel');
     }
@@ -122,6 +137,24 @@ class PropertyTile extends BaseTile {
     const sameColorTiles = this.getSameColorTiles(player);
     const requiredCount = PropertyTile.colorGroups[this.color];
     return sameColorTiles.length === requiredCount;
+  }
+
+  canMortgage(player) {
+    if (
+      this.owner !== player ||
+      this.mortgaged ||
+      this.houses > 0 ||
+      this.hotel
+    ) {
+      return false;
+    }
+
+    const sameTiles = this.getSameColorTiles(player);
+    const anyBuildings = sameTiles.some(
+      (tile) => tile.houses > 0 || tile.hotel,
+    );
+
+    return !anyBuildings;
   }
 
   async activate(player, players, context) {
@@ -145,6 +178,22 @@ class PropertyTile extends BaseTile {
     yellow: 3,
     green: 3,
   };
+
+  get rentLevels() {
+    return this.#rentLevels;
+  }
+
+  get buildingCost() {
+    return this.#buildingCost;
+  }
+
+  get houses() {
+    return this.#houses;
+  }
+
+  get hotel() {
+    return this.#hotel;
+  }
 }
 
 export default PropertyTile;

@@ -49,7 +49,7 @@ export default class BuildPropertyModal {
         ${this.#renderProperties()}
       </div>
       <div class="build-property-actions">
-        <button id="close-btn">Закрити</button>
+        <button class="modal-close" id="close-btn-build">&#x2715;</button>
       </div>
     `;
 
@@ -86,13 +86,15 @@ export default class BuildPropertyModal {
 
         return `
       <div class="property-item">
-        <span data-property-name="${property.index}">${property.name} (${this.#getBuildingStatus(property)})</span>
-        <button id="build-btn" data-build-property="${property.index}" ${buildDisabled ? 'disabled' : ''}>
-          ${buildBtnLabel}
-        </button>
-        <button id="sell-btn" data-sell-property="${property.index}" ${sellDisabled ? 'disabled' : ''}>
-          ${sellBtnLabel}
-        </button>
+        <span data-property-index="${property.index}">${property.name} (${this.#getBuildingStatus(property)})</span>
+        <div class="property-buttons">
+          <button class="build-btn" data-build-property="${property.index}" ${buildDisabled ? 'disabled' : ''}>
+            ${buildBtnLabel}
+          </button>
+          <button class="sell-btn" data-sell-property="${property.index}" ${sellDisabled ? 'disabled' : ''}>
+            ${sellBtnLabel}
+          </button>
+        </div>
       </div>
     `;
       })
@@ -106,7 +108,7 @@ export default class BuildPropertyModal {
   }
 
   #updateBuildButtons(container) {
-    const buildButtons = container.querySelectorAll('#build-btn');
+    const buildButtons = container.querySelectorAll('.build-btn');
 
     buildButtons.forEach((button) => {
       const propertyIndex = Number(button.getAttribute('data-build-property'));
@@ -128,7 +130,7 @@ export default class BuildPropertyModal {
   }
 
   #updateSellButtons(container) {
-    const sellButtons = container.querySelectorAll('#sell-btn');
+    const sellButtons = container.querySelectorAll('.sell-btn');
 
     sellButtons.forEach((button) => {
       const propertyIndex = Number(button.getAttribute('data-sell-property'));
@@ -150,10 +152,10 @@ export default class BuildPropertyModal {
   }
 
   #updatePropertyNames(container) {
-    const names = container.querySelectorAll('span[data-property-name]');
+    const names = container.querySelectorAll('span[data-property-index]');
 
     names.forEach((name) => {
-      const propertyIndex = Number(name.getAttribute('data-property-name'));
+      const propertyIndex = Number(name.getAttribute('data-property-index'));
       const property = this.#getPropertyByIndex(propertyIndex);
       if (!property) return;
 
@@ -165,17 +167,13 @@ export default class BuildPropertyModal {
     const tileRenderer = this.board.renderer.getTileRendererByIndex(
       property.index,
     );
-    if (tileRenderer) {
-      tileRenderer.data.houses = property.houses;
-      tileRenderer.data.hotel = property.hotel;
-      tileRenderer.updateBuildings();
-    }
+    tileRenderer.updateBuildings();
   }
 
   #bindHandlers(container) {
-    const buildButtons = container.querySelectorAll('#build-btn');
-    const sellButtons = container.querySelectorAll('#sell-btn');
-    const closeBtn = container.querySelector('#close-btn');
+    const buildButtons = container.querySelectorAll('.build-btn');
+    const sellButtons = container.querySelectorAll('.sell-btn');
+    const closeBtn = container.querySelector('#close-btn-build');
 
     buildButtons.forEach((button) => {
       button.addEventListener('click', () => {

@@ -12,8 +12,8 @@ export default class DiceModal {
     this.modalManager.setPlayerMenuDisabled(true);
 
     return new Promise((resolve) => {
-      const diceImg1 = container.querySelector('#dice1');
-      const diceImg2 = container.querySelector('#dice2');
+      const diceImg1 = container.querySelector('#diceImg1');
+      const diceImg2 = container.querySelector('#diceImg2');
 
       this.#rollDice(container, diceImg1, diceImg2, resolve);
     });
@@ -26,8 +26,8 @@ export default class DiceModal {
     container.innerHTML = `
       <h2 id="dice-title">${title}</h2>
       <div class="dice-display">
-        <img id="dice1" class="dice-svg" width="60" height="60" alt="Dice 1" />
-        <img id="dice2" class="dice-svg" width="60" height="60" alt="Dice 2" />
+        <img id="diceImg1" class="dice-svg" width="60" height="60" alt="Dice 1" />
+        <img id="diceImg2" class="dice-svg" width="60" height="60" alt="Dice 2" />
       </div>
     `;
 
@@ -64,7 +64,7 @@ export default class DiceModal {
       this.#updateDiceImage(diceImg2, value2);
     };
 
-    timeoutIterator(pairGen, 1.5, callback, 100);
+    timeoutIterator(pairGen, 0.15, callback, 100);
 
     setTimeout(() => {
       title.textContent = 'Кубики випали!';
@@ -77,7 +77,7 @@ export default class DiceModal {
         this.modalManager.setModalBlocked(false);
         this.modalManager.setPlayerMenuDisabled(false);
         resolve({ dice1: finalDice1, dice2: finalDice2 });
-      }, 1500);
-    }, 1500);
+      }, 150);
+    }, 150);
   }
 }

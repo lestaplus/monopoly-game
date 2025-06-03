@@ -20,7 +20,7 @@ export default class MessageModal {
       <h2>${title}</h2>
       <p class="modal-text">${message}</p>
       <div class="message-actions">
-        <button id="continue-btn">Продовжити</button>
+        <button id="continue-btn-message">Продовжити</button>
       </div>
     `;
 
@@ -28,7 +28,7 @@ export default class MessageModal {
   }
 
   #bindHandler(container, resolve) {
-    const continueBtn = container.querySelector('#continue-btn');
+    const continueBtn = container.querySelector('#continue-btn-message');
     continueBtn.addEventListener(
       'click',
       () => {

@@ -46,18 +46,31 @@
     top: 90px;
 }
 
+.tile-players {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    width: 40px;
+    height: 40px;
+    gap: 4px;
+    z-index: 10;
+}
+
 .player-token {
-    width: 16px;
-    height: 16px;
-    border-radius: 25%;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
     color: #ffffff;
     font-size: 10px;
+    font-weight: bold;
     display: flex;
     align-items: center;
     justify-content: center;
-    position: absolute;
-    bottom: 2px;
-    left: 2px;
 }
 
 .player-token.player-1 {
@@ -90,7 +103,6 @@
     overflow: hidden;
     position: relative;
     font-size: 0.9rem;
-    cursor: pointer;
 }
 
 .tile::before {
@@ -249,14 +261,26 @@
     flex-direction: column;
 }
 
+.tile[data-type="property"],
+.tile[data-type="railroad"],
+.tile[data-type="utility"] {
+    cursor: pointer;
+}
+
+.tile.mortgaged {
+    filter: grayscale(100%) brightness(80%);
+}
+
 .game-notifier {
     position: absolute;
     top: 90px;
     left: 90px;
     right: 90px;
     bottom: 90px;
-    overflow-y: auto;
-    display: block;
+    overflow-y: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
     font-size: 1rem;
     color: #353535;
     padding: 12px 16px;

@@ -1,9 +1,11 @@
 import BaseTile from './BaseTile.js';
 
 class UtilityTile extends BaseTile {
+  #utilityType;
+
   constructor(data) {
     super(data);
-    this.utilityType = data.utilityType;
+    this.#utilityType = data.utilityType;
   }
 
   getOwnedUtilityCount(player) {
@@ -12,7 +14,8 @@ class UtilityTile extends BaseTile {
   }
 
   async getRent(context) {
-    const { dice1, dice2 } = await context.modals.diceModal.show(
+    const { modals } = context;
+    const { dice1, dice2 } = await modals.diceModal.show(
       'Кидаємо кубики для оренди...',
     );
     const total = dice1 + dice2;
@@ -35,6 +38,10 @@ class UtilityTile extends BaseTile {
     }
 
     console.log(`${player.name} вже володіє ${this.name}.`);
+  }
+
+  get utilityType() {
+    return this.#utilityType;
   }
 }
 

@@ -20,13 +20,13 @@ export default class PropertyModal {
       Math.floor(baseRent * mult),
     );
     const mortgageValue = Math.floor(this.tile.price * 0.5);
-    const redemptionValue = Math.floor(mortgageValue * 1.1);
+    const redeemValue = Math.floor(mortgageValue * 1.1);
 
     return {
       baseRent,
       rentLevels,
       mortgageValue,
-      redemptionValue,
+      redeemValue,
     };
   }
 
@@ -34,11 +34,11 @@ export default class PropertyModal {
     const container = document.createElement('div');
     container.className = 'property-modal';
 
-    const { baseRent, rentLevels, mortgageValue, redemptionValue } =
+    const { baseRent, rentLevels, mortgageValue, redeemValue } =
       this.#getValues();
 
     container.innerHTML = `
-      <button class="modal-close" id="close-btn">&#x2715;</button>
+      <button class="modal-close" id="close-btn-property">&#x2715;</button>
       <h2>${this.tile.name}</h2><hr>
       <h4>Ціна: ${this.tile.price}₴</h4>
       <h4>Базова оренда: ${baseRent}₴</h4><hr>
@@ -49,15 +49,15 @@ export default class PropertyModal {
       <div>4 будинки: ${rentLevels[4]}₴</div>
       <div>Готель: ${rentLevels[5]}₴</div><hr>
       <div>Ціна будинку/готеля: ${this.tile.buildingCost}₴</div>
-      <div>Залог: ${mortgageValue}₴</div>
-      <div>Викуп: ${redemptionValue}₴</div>
+      <div>Застава: ${mortgageValue}₴</div>
+      <div>Викуп: ${redeemValue}₴</div>
     `;
 
     return container;
   }
 
   #bindHandler(container) {
-    const closeBtn = container.querySelector('#close-btn');
+    const closeBtn = container.querySelector('#close-btn-property');
     closeBtn.addEventListener(
       'click',
       () => {
