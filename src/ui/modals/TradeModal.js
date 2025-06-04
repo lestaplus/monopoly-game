@@ -22,13 +22,15 @@ export default class TradeModal {
     container.className = 'trade-modal';
 
     const fromPlayer = players[currentPlayerIndex];
-    const otherPlayers = players.filter((_, i) => i !== currentPlayerIndex);
-    const toPlayer = otherPlayers[0];
+    const otherPlayers = players.filter(
+      (p, i) => i !== currentPlayerIndex && !p.bankrupt,
+    );
+    const toPlayer = otherPlayers.length > 0 ? otherPlayers[0] : null;
 
     container.innerHTML = `
         <h2>Торгівля</h2>
         ${this.#renderPlayerSection(fromPlayer, 'from')}
-        ${this.#renderPlayerSection(toPlayer, 'to', otherPlayers)}
+        ${toPlayer ? this.#renderPlayerSection(toPlayer, 'to', otherPlayers) : `<p>Немає гравців для торгівлі.</p>`}
       <div class="trade-actions">
         <button id="confirm-btn-trade">Підтвердити</button>
         <button class="modal-close" id="cancel-btn-trade">&#x2715;</button>
@@ -51,7 +53,10 @@ export default class TradeModal {
 
   #renderPlayerOptions(players) {
     return players
-      .map((p) => `<option value="${p.index}">${p.name}</option>`)
+      .map((p) => {
+        const index = this.players.indexOf(p);
+        return `<option value="${index}">${p.name}</option>`;
+      })
       .join('');
   }
 

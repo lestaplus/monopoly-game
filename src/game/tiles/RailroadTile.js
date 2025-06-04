@@ -3,8 +3,8 @@ import BaseTile from './BaseTile.js';
 class RailroadTile extends BaseTile {
   #rentMap;
 
-  constructor(data) {
-    super(data);
+  constructor(data, board) {
+    super(data, board);
     this.#rentMap = data.rentMap;
   }
 

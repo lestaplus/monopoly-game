@@ -3,8 +3,8 @@ import BaseTile from './BaseTile.js';
 class UtilityTile extends BaseTile {
   #utilityType;
 
-  constructor(data) {
-    super(data);
+  constructor(data, board) {
+    super(data, board);
     this.#utilityType = data.utilityType;
   }
 

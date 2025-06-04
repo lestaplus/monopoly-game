@@ -6,8 +6,8 @@ class PropertyTile extends BaseTile {
   #houses = 0;
   #hotel = false;
 
-  constructor(data) {
-    super(data);
+  constructor(data, board) {
+    super(data, board);
     this.#rentLevels = data.rentLevels;
     this.#buildingCost = data.buildingCost;
   }
@@ -20,6 +20,23 @@ class PropertyTile extends BaseTile {
     const baseRent = this.price * 0.1;
     const multiplier = this.#rentLevels[this.getHouseCount()] ?? 1;
     return Math.floor(baseRent * multiplier);
+  }
+
+  removeOwner() {
+    if (this.owner) {
+      this.owner.removeProperty(this);
+      this.clearOwner();
+      this.clearMortgage();
+      this.#houses = 0;
+      this.#hotel = false;
+
+      const tileRenderer = this.board.renderer.getTileRendererByIndex(
+        this.index,
+      );
+      if (tileRenderer) {
+        tileRenderer.updateOwnership(null);
+      }
+    }
   }
 
   canBuyHouse(player) {

@@ -52,7 +52,7 @@ startGameButton.addEventListener('click', async () => {
 
   game.init(playerNames);
 
-  const trade = new Trade(game.players);
+  const trade = new Trade(game);
 
   document
     .getElementById('trade-btn-menu')

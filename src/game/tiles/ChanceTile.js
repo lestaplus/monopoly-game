@@ -41,6 +41,7 @@ class ChanceTile extends BaseTile {
           );
         } else {
           player.hasJailKey = true;
+          player.ui.showJailKey();
           player.gameNotifier.message(
             `${player.name} отримує ключ від в'язниці через подію.`,
           );

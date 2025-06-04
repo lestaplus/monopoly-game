@@ -1,5 +1,6 @@
 import PlayerUI from '../ui/PlayerUI.js';
 import GameNotifier from '../ui/services/GameNotifier.js';
+import EventEmitter from '../utils/EventEmitter.js';
 
 class Player {
   #balance = 1500;
@@ -10,10 +11,12 @@ class Player {
   #skipTurn = false;
   #doubleRollsCount = 0;
   #jailTurns = 0;
+  #bankrupt = false;
 
   constructor(name, index) {
     this.name = name;
     this.index = index;
+    this.events = new EventEmitter();
 
     this.ui = new PlayerUI(name, index);
     this.element = this.ui.element;
@@ -25,14 +28,22 @@ class Player {
     this.#position = (this.#position + steps) % boardLength;
   }
 
-  pay(amount) {
+  pay(amount, { emitEvents = true } = {}) {
     this.#balance -= amount;
-    this.ui.updateDisplay(this.balance);
+    this.updateDisplay();
+    if (emitEvents) {
+      this.events.emit('balanceChange', this.balance);
+
+      if (this.#balance < 0 && !this.bankrupt) {
+        this.events.emit('negativeBalance', this);
+      }
+    }
   }
 
   receive(amount) {
     this.#balance += amount;
-    this.ui.updateDisplay(this.balance);
+    this.updateDisplay();
+    this.events.emit('balanceChange', this.balance);
   }
 
   incrementDoubleRolls() {
@@ -60,6 +71,7 @@ class Player {
 
   useJailKey() {
     this.#hasJailKey = false;
+    this.ui.hideJailKey();
     this.releaseFromJail();
   }
 
@@ -77,6 +89,14 @@ class Player {
 
   removeProperty(property) {
     this.#properties = this.#properties.filter((p) => p !== property);
+  }
+
+  declareBankruptcy() {
+    this.#bankrupt = true;
+  }
+
+  clearBankruptcy() {
+    this.#bankrupt = false;
   }
 
   updateDisplay() {
@@ -125,6 +145,10 @@ class Player {
 
   get jailTurns() {
     return this.#jailTurns;
+  }
+
+  get bankrupt() {
+    return this.#bankrupt;
   }
 }
 

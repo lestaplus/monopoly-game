@@ -5,6 +5,9 @@ import Auction from './Auction.js';
 class Game {
   #players = [];
   #currentPlayerIndex = 0;
+  #bankruptcyModalOpen = false;
+  #balanceHandlers = new Map();
+  #gameOver = false;
 
   constructor(board, ui, modalService) {
     this.board = board;
@@ -18,6 +21,11 @@ class Game {
     this.#players = playersNames.map((name, index) => {
       const player = new Player(name, index);
       this.ui.addPlayer(player);
+
+      const balanceHandler = (player) => this.handleNegativeBalance(player);
+      player.events.on('negativeBalance', balanceHandler);
+      this.#balanceHandlers.set(player, balanceHandler);
+
       return player;
     });
 
@@ -46,7 +54,14 @@ class Game {
   }
 
   async #startTurn(fromDoubleRoll = false) {
+    if (this.#gameOver) return;
+
     const player = this.currentPlayer;
+
+    if (player.bankrupt) {
+      await this.#endTurn();
+      return;
+    }
 
     if (!fromDoubleRoll && player.shouldSkipTurn()) {
       this.gameNotifier.message(`${player.name} пропускає хід.`);
@@ -82,7 +97,7 @@ class Game {
       case 'pay':
         return this.#handleJailPay(player);
       case 'roll':
-        return this.#handleJailRoll(player);
+        return await this.#handleJailRoll(player);
       default:
         return false;
     }
@@ -114,11 +129,21 @@ class Game {
     return true;
   }
 
-  #handleJailPay(player) {
+  async #handleJailPay(player) {
     this.gameNotifier.message(
       `${player.name} сплачує штраф 50₴ і виходить з в'язниці.`,
     );
-    player.pay(50);
+
+    player.pay(50, { emitEvents: false });
+
+    if (player.balance < 0 && !player.bankrupt) {
+      await this.handleNegativeBalance(player, { endTurnAfter: false });
+    }
+
+    if (player.bankrupt) {
+      return false;
+    }
+
     player.releaseFromJail();
     return true;
   }
@@ -199,6 +224,10 @@ class Game {
         this.movePlayer(player, steps);
         await this.#handleTile(player);
 
+        if (this.#bankruptcyModalOpen || player.bankrupt) {
+          return;
+        }
+
         if (player.inJail) {
           await this.#endTurn();
           return;
@@ -213,16 +242,118 @@ class Game {
 
     this.movePlayer(player, steps);
     await this.#handleTile(player);
+
+    if (this.#bankruptcyModalOpen || player.bankrupt) {
+      return;
+    }
+
     await this.#endTurn();
   }
 
+  async handleBankruptcy(player) {
+    player.declareBankruptcy();
+    this.#removePlayer(player);
+
+    if (this.players.length === 1) {
+      await this.#handleVictory(this.players[0]);
+      return;
+    }
+
+    this.gameNotifier.message(
+      `${player.name} оголошує банкрутство та виходить з гри.`,
+    );
+    this.ui.updatePlayers(this.players);
+    this.ui.setActivePlayer(this.#currentPlayerIndex);
+    await this.#startTurn();
+  }
+
+  async handleNegativeBalance(player, { endTurnAfter = true } = {}) {
+    if (player.bankrupt || this.#bankruptcyModalOpen) return;
+
+    this.#bankruptcyModalOpen = true;
+
+    const choice = await this.modalService.bankruptcyModal.show(player);
+
+    this.#bankruptcyModalOpen = false;
+
+    if (choice === 'surrender') {
+      await this.handleBankruptcy(player);
+      await this.#endTurn();
+    } else if (choice === 'continue') {
+      player.clearBankruptcy();
+      this.gameNotifier.message(
+        `${player.name} покриває борг та продовжує гру.`,
+      );
+
+      if (endTurnAfter) {
+        const playerHadDouble = player.doubleRollsCount > 0;
+        if (playerHadDouble) {
+          await this.#startTurn(true);
+        } else {
+          await this.#endTurn();
+        }
+      }
+    }
+  }
+
   async #endTurn() {
+    if (this.#bankruptcyModalOpen || this.#gameOver) return;
+
     this.modalService.modalManager.clearStack();
-    this.#currentPlayerIndex =
-      (this.#currentPlayerIndex + 1) % this.#players.length;
+
+    do {
+      this.#currentPlayerIndex =
+        (this.#currentPlayerIndex + 1) % this.#players.length;
+    } while (this.currentPlayer.bankrupt);
+
     this.ui.updatePlayers(this.players);
     this.ui.setActivePlayer(this.currentPlayerIndex);
     await this.#startTurn();
+  }
+
+  #removePlayer(player) {
+    const removedIndex = this.#players.indexOf(player);
+    if (removedIndex === -1) return;
+
+    player.properties.forEach((property) => {
+      property.removeOwner();
+
+      const tileRenderer = this.board.renderer.getTileRendererByIndex(
+        property.index,
+      );
+      if (tileRenderer) {
+        tileRenderer.updateBuildings();
+        tileRenderer.updateMortgageStatus();
+      }
+    });
+
+    player.ui.removePlayerCard();
+    this.board.removePlayerToken(player);
+
+    const balanceHandler = this.#balanceHandlers.get(player);
+    if (balanceHandler) {
+      player.events.off('negativeBalance', balanceHandler);
+      this.#balanceHandlers.delete(player);
+    }
+
+    this.#players = this.#players.filter((p) => p !== player);
+
+    if (removedIndex < this.#currentPlayerIndex) {
+      this.#currentPlayerIndex--;
+    }
+
+    if (this.#currentPlayerIndex >= this.#players.length) {
+      this.#currentPlayerIndex = 0;
+    }
+  }
+
+  async #handleVictory(winner) {
+    this.gameNotifier.message(`${winner.name} перемагає у грі!`);
+    this.#gameOver = true;
+    await this.modalService.messageModal.show({
+      title: 'Перемога!',
+      message: `${winner.name} виграє гру! Вітаємо!`,
+    });
   }
 
   get players() {

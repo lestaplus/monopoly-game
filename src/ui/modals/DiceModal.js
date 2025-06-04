@@ -45,7 +45,7 @@ export default class DiceModal {
   }
 
   #updateDiceImage(img, value) {
-    img.setAttribute('src', `/assets/images/dice/dice-${value}.svg`);
+    img.setAttribute('src', `/assets/icons/dice/dice-${value}.svg`);
   }
 
   #rollDice(container, diceImg1, diceImg2, resolve) {

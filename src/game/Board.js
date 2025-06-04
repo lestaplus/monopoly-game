@@ -22,12 +22,16 @@ class Board {
     const tilesData = await res.json();
     return tilesData.map((data, index) => {
       data.index = index;
-      return createTile(data);
+      return createTile(data, this);
     });
   }
 
   updatePlayerTokens(players) {
     this.#renderer.updatePlayerTokens(players);
+  }
+
+  removePlayerToken(player) {
+    this.#renderer.removePlayerToken(player);
   }
 
   get tiles() {

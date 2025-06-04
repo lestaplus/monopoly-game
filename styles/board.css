@@ -271,6 +271,26 @@
     filter: grayscale(100%) brightness(80%);
 }
 
+.owned-by-1 {
+    box-shadow: 0 0 10px red;
+    z-index: 1;
+}
+
+.owned-by-2 {
+    box-shadow: 0 0 10px blue;
+    z-index: 1;
+}
+
+.owned-by-3 {
+    box-shadow: 0 0 10px green;
+    z-index: 1;
+}
+
+.owned-by-4 {
+    box-shadow: 0 0 10px purple;
+    z-index: 1;
+}
+
 .game-notifier {
     position: absolute;
     top: 90px;

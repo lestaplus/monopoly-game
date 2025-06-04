@@ -2,14 +2,16 @@ class PlayerUI {
   #name;
   #index;
   #element;
+  #keyElement;
 
   constructor(name, index) {
     this.#name = name;
     this.#index = index;
-    this.#element = this.#createElement();
+    this.#element = this.#createPlayerCard();
+    this.#keyElement = this.#createKeyElement();
   }
 
-  #createElement() {
+  #createPlayerCard() {
     const container = document.createElement('div');
     container.className = 'player-card';
     container.dataset.index = this.#index;
@@ -26,11 +28,32 @@ class PlayerUI {
     return container;
   }
 
+  #createKeyElement() {
+    const keyEl = document.createElement('div');
+    keyEl.className = 'jail-key hidden';
+    keyEl.innerHTML = `<img src="/assets/icons/keys/jail-key.svg" class="key-icon" width="30" height="30" alt="Jail Key" />`;
+
+    this.#element.append(keyEl);
+    return keyEl;
+  }
+
   updateDisplay(balance) {
     const balanceElement = this.#element.querySelector('.balance');
     if (balanceElement) {
       balanceElement.textContent = `${balance}₴`;
     }
+  }
+
+  removePlayerCard() {
+    this.#element?.remove();
+  }
+
+  showJailKey() {
+    this.#keyElement?.classList.remove('hidden');
+  }
+
+  hideJailKey() {
+    this.#keyElement?.classList.add('hidden');
   }
 
   setActive(isActive) {

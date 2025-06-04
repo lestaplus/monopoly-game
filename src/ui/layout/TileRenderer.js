@@ -47,12 +47,12 @@ export default class TileRenderer {
     let html = '';
     if (this.data.hotel) {
       html = `
-        <img src="/assets/images/buildings/hotel.svg" alt="Hotel" width="20" height="20" />
+        <img src="/assets/icons/buildings/hotel.svg" alt="Hotel" width="20" height="20" />
       `;
     } else {
       for (let i = 0; i < this.data.houses; i++) {
         html += `
-          <img src="/assets/images/buildings/house.svg" alt="House" width="20" height="20" />
+          <img src="/assets/icons/buildings/house.svg" alt="House" width="20" height="20" />
         `;
       }
     }
@@ -68,6 +68,21 @@ export default class TileRenderer {
       tile.classList.add('mortgaged');
     } else {
       tile.classList.remove('mortgaged');
+    }
+  }
+
+  updateOwnership(player) {
+    const tile = document.querySelector(`.tile[data-index="${this.index}"]`);
+    if (!tile) return;
+
+    tile.classList.forEach((tileClass) => {
+      if (tileClass.startsWith('owned-by-')) {
+        tile.classList.remove(tileClass);
+      }
+    });
+
+    if (player) {
+      tile.classList.add(`owned-by-${player.index + 1}`);
     }
   }
 

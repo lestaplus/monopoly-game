@@ -10,13 +10,15 @@ class BaseTile {
   #owner = null;
   #mortgaged = false;
 
-  constructor(data) {
+  constructor(data, board) {
     this.#name = data.name;
     this.#type = data.type;
     this.#price = data.price;
     this.#amount = data.amount;
     this.#index = data.index;
     this.#color = data.color;
+
+    this.board = board;
 
     this.gameNotifier = GameNotifier.getInstance();
   }
@@ -28,12 +30,45 @@ class BaseTile {
   assignOwner(player) {
     this.#owner = player;
     player.addProperty(this);
+
+    const tileRenderer = this.board.renderer.getTileRendererByIndex(this.index);
+    if (tileRenderer) {
+      tileRenderer.updateOwnership(player);
+    }
   }
 
   changeOwner(fromPlayer, toPlayer) {
     fromPlayer.removeProperty(this);
     toPlayer.addProperty(this);
     this.#owner = toPlayer;
+
+    const tileRenderer = this.board.renderer.getTileRendererByIndex(this.index);
+    if (tileRenderer) {
+      tileRenderer.updateOwnership(toPlayer);
+    }
+  }
+
+  removeOwner() {
+    if (this.#owner) {
+      this.#owner.removeProperty(this);
+      this.clearOwner();
+      this.clearMortgage();
+
+      const tileRenderer = this.board.renderer.getTileRendererByIndex(
+        this.index,
+      );
+      if (tileRenderer) {
+        tileRenderer.updateOwnership(null);
+      }
+    }
+  }
+
+  clearOwner() {
+    this.#owner = null;
+  }
+
+  clearMortgage() {
+    this.#mortgaged = false;
   }
 
   canMortgage(player) {

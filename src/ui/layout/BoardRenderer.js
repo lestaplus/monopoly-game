@@ -50,7 +50,7 @@ export default class BoardRenderer {
   updatePlayerTokens(players) {
     document.querySelectorAll('.player-token').forEach((el) => el.remove());
 
-    players.forEach((player, i) => {
+    players.forEach((player) => {
       const tilePlayersContainer = document.querySelector(
         `.tile[data-index="${player.position}"] .tile-players`,
       );
@@ -58,11 +58,20 @@ export default class BoardRenderer {
         tilePlayersContainer.insertAdjacentHTML(
           'beforeend',
           `
-          <div class="player-token player-${i + 1}">${i + 1}</div>
+          <div class="player-token player-${player.index + 1}">${player.index + 1}</div>
         `,
         );
       }
     });
+  }
+
+  removePlayerToken(player) {
+    const token = document.querySelector(
+      `.player-token.player-${player.index + 1}`,
+    );
+    if (token) {
+      token.remove();
+    }
   }
 
   getTileRendererByIndex(index) {

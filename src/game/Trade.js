@@ -1,12 +1,15 @@
 class Trade {
-  #players;
+  #game;
 
-  constructor(players) {
-    this.#players = players;
+  constructor(game) {
+    this.#game = game;
   }
 
   async startTrade(currentPlayerIndex, tradeModal) {
-    const result = await tradeModal.show(this.players, currentPlayerIndex);
+    const result = await tradeModal.show(
+      this.#game.players,
+      currentPlayerIndex,
+    );
     if (!result) {
       console.log('Торгівлю скасовано.');
       return;
@@ -18,8 +21,8 @@ class Trade {
 
   #executeTrade(result) {
     const { from, to } = result;
-    const fromPlayer = this.#players[from.fromIndex];
-    const toPlayer = this.#players[to.toIndex];
+    const fromPlayer = this.#game.players[from.fromIndex];
+    const toPlayer = this.#game.players[to.toIndex];
 
     this.#transferProperties(fromPlayer, toPlayer, from.tilesFrom);
     this.#transferProperties(toPlayer, fromPlayer, to.tilesTo);
@@ -57,10 +60,6 @@ class Trade {
 
     player2.pay(moneyTo);
     player2.receive(moneyFrom);
-  }
-
-  get players() {
-    return [...this.#players];
   }
 }
 
