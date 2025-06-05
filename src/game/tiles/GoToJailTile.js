@@ -1,12 +1,12 @@
 import BaseTile from './BaseTile.js';
 
 class GoToJailTile extends BaseTile {
-  constructor(data) {
-    super(data);
+  constructor(data, board) {
+    super(data, board);
   }
 
   async activate(player, players, context) {
-    const { board, modals } = context;
+    const { modals } = context;
     await modals.messageModal.show({
       title: 'Арешт',
       message: `Ви відправляєтесь до в'язниці`,
@@ -15,7 +15,7 @@ class GoToJailTile extends BaseTile {
     player.goToJail();
     this.gameNotifier.message(`${player.name} відправляється до в'язниці!`);
 
-    board.updatePlayerTokens(players);
+    this.board.updatePlayerTokens(players);
   }
 }
 

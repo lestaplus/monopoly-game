@@ -166,9 +166,7 @@ class Game {
       this.gameNotifier.message(
         `${player.name} не вибиває дубль за 3 спроби та сплачує штраф 50₴.`,
       );
-      player.pay(50);
-      player.releaseFromJail();
-      return true;
+      return await this.#handleJailPay(player);
     } else {
       this.gameNotifier.message(
         `${player.name} не вибиває дубль. Спроба ${player.jailTurns} з 3.`,
@@ -189,7 +187,6 @@ class Game {
       console.log(`${player.name} стоїть на клітинці ${currentTile.name}`);
 
       await currentTile.activate(player, this.players, {
-        board: this.board,
         modals: this.modalService,
         auction: this.auction,
       });

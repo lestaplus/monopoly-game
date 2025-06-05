@@ -2,25 +2,25 @@ import BaseTile from './BaseTile.js';
 import { drawCard } from '../eventCards.js';
 
 class ChanceTile extends BaseTile {
-  constructor(data) {
-    super(data);
+  constructor(data, board) {
+    super(data, board);
   }
 
   async activate(player, players, context) {
-    const { board, modals } = context;
+    const { modals } = context;
 
     const card = drawCard('chance');
     await modals.messageModal.show({
       title: 'Шанс',
       message: card.text,
     });
-    this.#applyCardEvent(card, player, board);
+    this.#applyCardEvent(card, player);
   }
 
-  #applyCardEvent(card, player, board) {
+  #applyCardEvent(card, player) {
     switch (card.action) {
       case 'move':
-        this.#handleMove(card, player, board);
+        this.#handleMove(card, player);
         break;
       case 'goToJail':
         player.goToJail();
@@ -50,12 +50,14 @@ class ChanceTile extends BaseTile {
     }
   }
 
-  #handleMove(card, player, board) {
-    const total = board.tiles.length;
+  #handleMove(card, player) {
+    const total = this.board.tiles.length;
     let newPosition = player.position;
 
     if ('toTile' in card) {
-      const index = board.tiles.findIndex((tile) => tile.name === card.toTile);
+      const index = this.board.tiles.findIndex(
+        (tile) => tile.name === card.toTile,
+      );
       if (index !== -1) {
         newPosition = index;
       }
@@ -64,7 +66,7 @@ class ChanceTile extends BaseTile {
     } else if ('toNearest' in card) {
       for (let i = 1; i < total; i++) {
         const index = (player.position + i) % total;
-        if (board.tiles[index].type === card.toNearest) {
+        if (this.board.tiles[index].type === card.toNearest) {
           newPosition = index;
           break;
         }
@@ -72,7 +74,7 @@ class ChanceTile extends BaseTile {
     }
 
     player.position = newPosition;
-    const targetTile = board.tiles[newPosition];
+    const targetTile = this.board.tiles[newPosition];
     player.gameNotifier.message(
       `${player.name} переміщується на поле "${targetTile.name}" через подію.`,
     );
